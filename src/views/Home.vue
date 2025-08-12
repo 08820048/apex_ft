@@ -363,7 +363,7 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
-import { articleApi, tagApi } from "../api";
+import { articleApi, tagApi, statsApi } from "../api";
 
 // 图标组件
 const TagIcon = {
@@ -466,7 +466,10 @@ const goToTag = (tagId) => {
 const loadArticles = async (page = 1) => {
   try {
     loading.value = true;
-    const data = await articleApi.getList({ page: page - 1, size: pageSize });
+    const data = await articleApi.getList({
+      page: page - 1,
+      size: pageSize,
+    });
 
     articles.value = data.content || [];
     currentPage.value = page;
@@ -545,20 +548,23 @@ const loadPopularTags = async () => {
 // 加载博客统计
 const loadStats = async () => {
   try {
-    // 使用静态数据，因为后端可能没有统计API
+    // 使用新的综合统计接口
+    const statsData = await statsApi.getOverview();
+
+    stats.value = {
+      articleCount: statsData.totalArticles || 0,
+      viewCount: statsData.totalVisits || 0,
+      tagCount: statsData.totalTags || 0,
+      categoryCount: statsData.totalCategories || 0,
+    };
+  } catch (error) {
+    console.error("加载统计数据失败:", error);
+    // 失败时使用静态数据作为后备
     stats.value = {
       articleCount: 5,
       viewCount: 1250,
       tagCount: 8,
       categoryCount: 4,
-    };
-  } catch (error) {
-    console.error("加载统计数据失败:", error);
-    stats.value = {
-      articleCount: 0,
-      viewCount: 0,
-      tagCount: 0,
-      categoryCount: 0,
     };
   }
 };
