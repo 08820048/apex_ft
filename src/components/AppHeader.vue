@@ -39,7 +39,7 @@
               @keyup.enter="handleSearch"
               type="text"
               placeholder="搜索文章..."
-              class="w-64 px-4 py-2 pl-10 bg-white/70 backdrop-blur-sm border border-white/30 rounded-full text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent focus:bg-white/90 transition-all shadow-sm"
+              class="w-64 px-4 py-2 pl-10 bg-white/70 backdrop-blur-sm border-2 border-[#a6afbd] rounded-full text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent focus:bg-white/90 transition-all shadow-sm"
             />
             <SearchIcon
               class="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-500"
@@ -100,7 +100,7 @@
                   @keyup.enter="handleSearch"
                   type="text"
                   placeholder="搜索文章..."
-                  class="w-full px-4 py-2 pl-10 bg-white/70 backdrop-blur-sm border border-white/30 rounded-lg text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent focus:bg-white/90 transition-all shadow-sm"
+                  class="w-full px-4 py-2 pl-10 bg-white/70 backdrop-blur-sm border-2 border-[#a6afbd] rounded-lg text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent focus:bg-white/90 transition-all shadow-sm"
                 />
                 <SearchIcon
                   class="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-500"
