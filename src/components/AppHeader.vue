@@ -14,7 +14,7 @@
           <span
             class="text-xl font-bold text-gray-900 group-hover:scale-105 transition-transform"
           >
-            ApexBlog
+            八尺妖剑
           </span>
         </RouterLink>
 
