@@ -82,15 +82,25 @@
               <h3 class="font-semibold text-gray-900 mb-1">邮箱</h3>
               <p class="text-gray-600 text-sm">ilikexff@gmail.com</p>
             </a>
-            <a href="#" class="contact-card">
+            <a
+              href="https://github.com/08820048"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="contact-card"
+            >
               <GithubIcon class="w-8 h-8 text-gray-700 mb-3" />
               <h3 class="font-semibold text-gray-900 mb-1">GitHub</h3>
-              <p class="text-gray-600 text-sm">@apexblog</p>
+              <p class="text-gray-600 text-sm">@08820048</p>
             </a>
-            <a href="#" class="contact-card">
+            <a
+              href="https://x.com/_Peter_You"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="contact-card"
+            >
               <TwitterIcon class="w-8 h-8 text-blue-400 mb-3" />
               <h3 class="font-semibold text-gray-900 mb-1">Twitter</h3>
-              <p class="text-gray-600 text-sm">@apexblog</p>
+              <p class="text-gray-600 text-sm">@_Peter_You</p>
             </a>
           </div>
         </div>
@@ -100,8 +110,6 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
-
 // 图标组件
 const EmailIcon = {
   template:
