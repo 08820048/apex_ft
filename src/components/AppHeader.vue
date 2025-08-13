@@ -12,7 +12,7 @@
             class="w-10 h-10 rounded-full object-cover group-hover:scale-105 transition-transform shadow-md"
           />
           <span
-            class="text-xl font-bold text-blue-600 group-hover:scale-105 transition-transform"
+            class="text-xl font-bold text-gray-900 group-hover:scale-105 transition-transform"
           >
             ApexBlog
           </span>
@@ -39,7 +39,7 @@
               @keyup.enter="handleSearch"
               type="text"
               placeholder="搜索文章..."
-              class="w-64 px-4 py-2 pl-10 bg-gray-100 border border-gray-300 rounded-full text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+              class="w-64 px-4 py-2 pl-10 bg-white/70 backdrop-blur-sm border border-white/30 rounded-full text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent focus:bg-white/90 transition-all shadow-sm"
             />
             <SearchIcon
               class="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-500"
@@ -47,7 +47,7 @@
           </div>
           <button
             @click="handleSearch"
-            class="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-full transition-colors"
+            class="px-4 py-2 bg-gray-900 hover:bg-black text-white rounded-full transition-colors"
           >
             搜索
           </button>
@@ -78,7 +78,7 @@
               alt="ApexBlog Logo"
               class="w-8 h-8 rounded-full object-cover mr-2 shadow-sm"
             />
-            <span class="text-lg font-bold text-blue-600">ApexBlog</span>
+            <span class="text-lg font-bold text-gray-900">ApexBlog</span>
           </div>
 
           <div class="flex flex-col space-y-4 pt-4">
@@ -100,10 +100,10 @@
                   @keyup.enter="handleSearch"
                   type="text"
                   placeholder="搜索文章..."
-                  class="w-full px-4 py-2 pl-10 bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  class="w-full px-4 py-2 pl-10 bg-white/70 backdrop-blur-sm border border-white/30 rounded-lg text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent focus:bg-white/90 transition-all shadow-sm"
                 />
                 <SearchIcon
-                  class="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-500 dark:text-gray-400"
+                  class="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-500"
                 />
               </div>
             </div>
@@ -192,10 +192,10 @@ const closeMobileMenu = () => {
 
 <style scoped>
 .nav-link {
-  @apply flex items-center px-3 py-2 text-gray-700 hover:text-blue-600 rounded-lg transition-all duration-200 hover:bg-blue-50;
+  @apply flex items-center px-3 py-2 text-gray-700 hover:text-gray-900 rounded-lg transition-all duration-200 hover:bg-gray-100;
 }
 
 .nav-link-active {
-  @apply text-blue-600 bg-blue-50;
+  @apply text-gray-900 bg-gray-100;
 }
 </style>
