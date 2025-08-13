@@ -1,15 +1,20 @@
 <template>
   <header
-    class="glass-effect sticky top-0 z-50 border-b border-white/20 dark:border-gray-700/50 bg-white/80 dark:bg-gray-900/80"
+    class="glass-effect sticky top-0 z-50 border-b border-white/20 bg-white/80"
   >
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex items-center justify-between h-16">
         <!-- Logo -->
-        <RouterLink to="/" class="group">
+        <RouterLink to="/" class="group flex items-center space-x-3">
+          <img
+            src="/apex.jpg"
+            alt="ApexBlog Logo"
+            class="w-10 h-10 rounded-full object-cover group-hover:scale-105 transition-transform shadow-md"
+          />
           <span
-            class="text-xl font-bold text-blue-600 dark:text-blue-400 group-hover:scale-105 transition-transform"
+            class="text-xl font-bold text-blue-600 group-hover:scale-105 transition-transform"
           >
-            慕予博客
+            ApexBlog
           </span>
         </RouterLink>
 
@@ -26,7 +31,7 @@
           </RouterLink>
         </nav>
 
-        <!-- 搜索框和主题切换 -->
+        <!-- 搜索框 -->
         <div class="hidden lg:flex items-center space-x-4">
           <div class="relative">
             <input
@@ -34,10 +39,10 @@
               @keyup.enter="handleSearch"
               type="text"
               placeholder="搜索文章..."
-              class="w-64 px-4 py-2 pl-10 bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-full text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+              class="w-64 px-4 py-2 pl-10 bg-gray-100 border border-gray-300 rounded-full text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
             />
             <SearchIcon
-              class="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-500 dark:text-gray-400"
+              class="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-500"
             />
           </div>
           <button
@@ -46,51 +51,15 @@
           >
             搜索
           </button>
-
-          <!-- 主题切换按钮 -->
-          <button
-            @click="handleThemeToggle"
-            class="p-2 rounded-full bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
-            :title="isDark ? '切换到亮色模式' : '切换到暗色模式'"
-            type="button"
-          >
-            <!-- 太阳图标 (亮色模式) -->
-            <svg
-              v-if="!isDark"
-              class="w-5 h-5 text-gray-600"
-              fill="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                d="M12 2.25a.75.75 0 01.75.75v2.25a.75.75 0 01-1.5 0V3a.75.75 0 01.75-.75zM7.5 12a4.5 4.5 0 119 0 4.5 4.5 0 01-9 0zM18.894 6.166a.75.75 0 00-1.06-1.06l-1.591 1.59a.75.75 0 101.06 1.061l1.591-1.59zM21.75 12a.75.75 0 01-.75.75h-2.25a.75.75 0 010-1.5H21a.75.75 0 01.75.75zM17.834 18.894a.75.75 0 001.06-1.06l-1.59-1.591a.75.75 0 10-1.061 1.06l1.59 1.591zM12 18a.75.75 0 01.75.75V21a.75.75 0 01-1.5 0v-2.25A.75.75 0 0112 18zM7.758 17.303a.75.75 0 00-1.061-1.06l-1.591 1.59a.75.75 0 001.06 1.061l1.591-1.59zM6 12a.75.75 0 01-.75.75H3a.75.75 0 010-1.5h2.25A.75.75 0 016 12zM6.697 7.757a.75.75 0 001.06-1.06l-1.59-1.591a.75.75 0 00-1.061 1.06l1.59 1.591z"
-              />
-            </svg>
-            <!-- 月亮图标 (暗色模式) -->
-            <svg
-              v-else
-              class="w-5 h-5 text-gray-300"
-              fill="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                fill-rule="evenodd"
-                d="M9.528 1.718a.75.75 0 01.162.819A8.97 8.97 0 009 6a9 9 0 009 9 8.97 8.97 0 003.463-.69.75.75 0 01.981.98 10.503 10.503 0 01-9.694 6.46c-5.799 0-10.5-4.701-10.5-10.5 0-4.368 2.667-8.112 6.46-9.694a.75.75 0 01.818.162z"
-                clip-rule="evenodd"
-              />
-            </svg>
-          </button>
         </div>
 
         <!-- 移动端菜单按钮 -->
         <button
           @click="toggleMobileMenu"
-          class="md:hidden p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+          class="md:hidden p-2 rounded-lg hover:bg-gray-100 transition-colors"
         >
-          <MenuIcon
-            v-if="!mobileMenuOpen"
-            class="w-6 h-6 text-gray-700 dark:text-gray-300"
-          />
-          <XIcon v-else class="w-6 h-6 text-gray-700 dark:text-gray-300" />
+          <MenuIcon v-if="!mobileMenuOpen" class="w-6 h-6 text-gray-700" />
+          <XIcon v-else class="w-6 h-6 text-gray-700" />
         </button>
       </div>
 
@@ -98,9 +67,21 @@
       <Transition name="slide-up">
         <div
           v-if="mobileMenuOpen"
-          class="md:hidden py-4 border-t border-gray-200 dark:border-gray-700"
+          class="md:hidden py-4 border-t border-gray-200"
         >
-          <div class="flex flex-col space-y-4">
+          <!-- 移动端Logo -->
+          <div
+            class="flex items-center justify-center px-4 pb-4 border-b border-gray-100"
+          >
+            <img
+              src="/apex.jpg"
+              alt="ApexBlog Logo"
+              class="w-8 h-8 rounded-full object-cover mr-2 shadow-sm"
+            />
+            <span class="text-lg font-bold text-blue-600">ApexBlog</span>
+          </div>
+
+          <div class="flex flex-col space-y-4 pt-4">
             <RouterLink
               v-for="item in navItems"
               :key="item.path"
@@ -126,41 +107,6 @@
                 />
               </div>
             </div>
-
-            <!-- 移动端主题切换 -->
-            <div class="px-4">
-              <button
-                @click="handleThemeToggle"
-                class="flex items-center w-full px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors"
-                type="button"
-              >
-                <!-- 太阳图标 (亮色模式) -->
-                <svg
-                  v-if="!isDark"
-                  class="w-5 h-5 mr-3"
-                  fill="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    d="M12 2.25a.75.75 0 01.75.75v2.25a.75.75 0 01-1.5 0V3a.75.75 0 01.75-.75zM7.5 12a4.5 4.5 0 119 0 4.5 4.5 0 01-9 0zM18.894 6.166a.75.75 0 00-1.06-1.06l-1.591 1.59a.75.75 0 101.06 1.061l1.591-1.59zM21.75 12a.75.75 0 01-.75.75h-2.25a.75.75 0 010-1.5H21a.75.75 0 01.75.75zM17.834 18.894a.75.75 0 001.06-1.06l-1.59-1.591a.75.75 0 10-1.061 1.06l1.59 1.591zM12 18a.75.75 0 01.75.75V21a.75.75 0 01-1.5 0v-2.25A.75.75 0 0112 18zM7.758 17.303a.75.75 0 00-1.061-1.06l-1.591 1.59a.75.75 0 001.06 1.061l1.591-1.59zM6 12a.75.75 0 01-.75.75H3a.75.75 0 010-1.5h2.25A.75.75 0 016 12zM6.697 7.757a.75.75 0 001.06-1.06l-1.59-1.591a.75.75 0 00-1.061 1.06l1.59 1.591z"
-                  />
-                </svg>
-                <!-- 月亮图标 (暗色模式) -->
-                <svg
-                  v-else
-                  class="w-5 h-5 mr-3"
-                  fill="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    fill-rule="evenodd"
-                    d="M9.528 1.718a.75.75 0 01.162.819A8.97 8.97 0 009 6a9 9 0 009 9 8.97 8.97 0 003.463-.69.75.75 0 01.981.98 10.503 10.503 0 01-9.694 6.46c-5.799 0-10.5-4.701-10.5-10.5 0-4.368 2.667-8.112 6.46-9.694a.75.75 0 01.818.162z"
-                    clip-rule="evenodd"
-                  />
-                </svg>
-                {{ isDark ? "亮色模式" : "暗色模式" }}
-              </button>
-            </div>
           </div>
         </div>
       </Transition>
@@ -171,7 +117,6 @@
 <script setup>
 import { ref } from "vue";
 import { useRouter } from "vue-router";
-import { useTheme } from "../composables/useTheme";
 
 // 图标组件 (使用简单的 SVG)
 const HomeIcon = {
@@ -218,23 +163,6 @@ const XIcon = {
 const router = useRouter();
 const searchKeyword = ref("");
 const mobileMenuOpen = ref(false);
-
-// 主题功能
-const { isDark, toggleTheme: originalToggleTheme } = useTheme();
-
-// 安全的主题切换函数
-const handleThemeToggle = async (event) => {
-  try {
-    // 防止事件冒泡
-    event.preventDefault();
-    event.stopPropagation();
-
-    // 调用原始切换函数
-    await originalToggleTheme();
-  } catch (error) {
-    console.error("主题切换失败:", error);
-  }
-};
 
 const navItems = [
   { name: "首页", path: "/" },

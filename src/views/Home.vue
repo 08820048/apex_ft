@@ -199,17 +199,13 @@
           <!-- 博客统计 -->
           <div class="glass-effect p-6 mb-6">
             <h3
-              class="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4 flex items-center"
+              class="text-lg font-semibold text-gray-900 mb-4 flex items-center"
             >
-              <svg
-                class="w-5 h-5 mr-2 text-gray-600 dark:text-gray-400"
-                fill="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"
-                />
-              </svg>
+              <img
+                src="/apex.jpg"
+                alt="ApexBlog Logo"
+                class="w-6 h-6 rounded-full object-cover mr-2 shadow-sm"
+              />
               博客统计
             </h3>
             <div class="grid grid-cols-2 gap-3">
@@ -404,15 +400,14 @@ const formatDate = (dateString) => {
 const getArticleStyle = (article) => {
   if (!article.tags || article.tags.length === 0) {
     // 如果没有标签，使用默认的灰色边框
-    const isDark = document.documentElement.classList.contains("dark");
-    const bgColor = isDark ? "rgb(31, 41, 55)" : "white";
+    const bgColor = "white";
     return {
       background: `
         linear-gradient(${bgColor}, ${bgColor}) padding-box,
         linear-gradient(135deg, #6b7280, #9ca3af) border-box
       `,
       border: "2px solid transparent",
-      boxShadow: `0 0 10px rgba(107, 114, 128, ${isDark ? "0.2" : "0.1"})`,
+      boxShadow: `0 0 10px rgba(107, 114, 128, 0.1)`,
     };
   }
 
@@ -421,9 +416,7 @@ const getArticleStyle = (article) => {
     .slice(0, 3)
     .map((tag) => tag.color || "#6b7280");
 
-  // 检测是否为暗色模式
-  const isDark = document.documentElement.classList.contains("dark");
-  const bgColor = isDark ? "rgb(31, 41, 55)" : "white";
+  const bgColor = "white";
 
   // 如果只有一个标签，创建该颜色的渐变
   if (tagColors.length === 1) {
@@ -434,7 +427,7 @@ const getArticleStyle = (article) => {
         linear-gradient(135deg, ${color}, ${color}88, ${color}44) border-box
       `,
       border: "2px solid transparent",
-      boxShadow: `0 0 15px ${color}${isDark ? "25" : "15"}`,
+      boxShadow: `0 0 15px ${color}15`,
     };
   }
 
@@ -448,7 +441,7 @@ const getArticleStyle = (article) => {
       linear-gradient(135deg, ${gradientColors}) border-box
     `,
     border: "2px solid transparent",
-    boxShadow: `0 0 15px ${shadowColor}${isDark ? "25" : "15"}`,
+    boxShadow: `0 0 15px ${shadowColor}15`,
   };
 };
 

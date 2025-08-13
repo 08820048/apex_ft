@@ -31,34 +31,9 @@ body {
     background-image 0.3s ease;
 }
 
-/* ��ɫģʽȫ����ʽ */
-.dark {
-  color-scheme: dark;
-}
-
-.dark body {
-  background: #0a0f1c;
-  background-image: linear-gradient(
-      rgba(96, 165, 250, 0.15) 1px,
-      transparent 1px
-    ),
-    linear-gradient(90deg, rgba(96, 165, 250, 0.15) 1px, transparent 1px);
-  background-size: 24px 24px;
-  color: #f1f5f9;
-}
-
-/* ȷ����Ԫ��Ҳ�б���ɫ */
-html.dark {
-  background: #0f172a;
-}
-
 #app {
   transition: background-color 0.3s ease;
   min-height: 100vh;
-}
-
-.dark #app {
-  background: transparent;
 }
 
 /* ���񱳾����� - ����ͨ���л��������ı���ʽ */
@@ -73,15 +48,6 @@ html.dark {
   background-size: 20px 20px;
 }
 
-.dark .grid-dots body {
-  background-image: radial-gradient(
-    circle,
-    rgba(255, 255, 255, 0.1) 1px,
-    transparent 1px
-  );
-  background-size: 20px 20px;
-}
-
 /* �����񱳾� */
 .grid-large body {
   background-image: linear-gradient(rgba(0, 0, 0, 0.02) 1px, transparent 1px),
@@ -89,28 +55,10 @@ html.dark {
   background-size: 40px 40px;
 }
 
-.dark .grid-large body {
-  background-image: linear-gradient(
-      rgba(255, 255, 255, 0.03) 1px,
-      transparent 1px
-    ),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
-  background-size: 40px 40px;
-}
-
 /* ϸ���񱳾� */
 .grid-fine body {
   background-image: linear-gradient(rgba(0, 0, 0, 0.05) 1px, transparent 1px),
     linear-gradient(90deg, rgba(0, 0, 0, 0.05) 1px, transparent 1px);
-  background-size: 10px 10px;
-}
-
-.dark .grid-fine body {
-  background-image: linear-gradient(
-      rgba(255, 255, 255, 0.08) 1px,
-      transparent 1px
-    ),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.08) 1px, transparent 1px);
   background-size: 10px 10px;
 }
 
@@ -270,34 +218,13 @@ img {
     0 4px 6px -2px rgba(0, 0, 0, 0.05);
 }
 
-.dark .glass-effect {
-  background: rgba(31, 41, 55, 0.8);
-  border: 1px solid rgba(75, 85, 99, 0.3);
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3),
-    0 2px 4px -1px rgba(0, 0, 0, 0.2);
-}
-
-.dark .glass-effect:hover {
-  background: rgba(31, 41, 55, 0.9);
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.4),
-    0 4px 6px -2px rgba(0, 0, 0, 0.3);
-}
-
 /* ����������ʽ */
 .nav-link {
   @apply text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition-colors;
 }
 
-.dark .nav-link {
-  @apply text-gray-300 hover:text-blue-400;
-}
-
 .nav-link-active {
   @apply text-blue-600 bg-blue-50;
-}
-
-.dark .nav-link-active {
-  @apply text-blue-400 bg-blue-900/20;
 }
 
 .card-hover {
@@ -377,11 +304,11 @@ textarea:focus {
 
 /* Enhanced Markdown Styles */
 .prose pre {
-  @apply bg-gray-900 dark:bg-gray-800 text-gray-100 p-0 rounded-lg overflow-x-auto my-6 shadow-lg;
+  @apply bg-gray-900 text-gray-100 p-0 rounded-lg overflow-x-auto my-6 shadow-lg;
 }
 
 .prose code {
-  @apply bg-gray-100 dark:bg-gray-800 text-red-600 dark:text-red-400 px-1.5 py-0.5 rounded text-sm font-mono;
+  @apply bg-gray-100 text-red-600 px-1.5 py-0.5 rounded text-sm font-mono;
 }
 
 .prose pre code {
@@ -394,15 +321,15 @@ textarea:focus {
 }
 
 .code-block-header {
-  @apply flex justify-between items-center px-4 py-2 bg-gray-100 dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700;
+  @apply flex justify-between items-center px-4 py-2 bg-gray-100 border-b border-gray-200;
 }
 
 .code-language {
-  @apply text-sm font-medium text-gray-600 dark:text-gray-300 uppercase;
+  @apply text-sm font-medium text-gray-600 uppercase;
 }
 
 .copy-button {
-  @apply flex items-center gap-1 px-2 py-1 text-xs text-gray-600 hover:text-gray-800 dark:text-gray-300 dark:hover:text-white bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 rounded transition-colors;
+  @apply flex items-center gap-1 px-2 py-1 text-xs text-gray-600 hover:text-gray-800 bg-gray-200 hover:bg-gray-300 rounded transition-colors;
 }
 
 /* 置顶文章基础样式 - 具体颜色由JavaScript动态生成 */
@@ -438,15 +365,15 @@ textarea:focus {
 }
 
 .prose table {
-  @apply w-full border-collapse bg-white dark:bg-gray-800 rounded-lg overflow-hidden shadow-sm my-6;
+  @apply w-full border-collapse bg-white rounded-lg overflow-hidden shadow-sm my-6;
 }
 
 .prose th {
-  @apply bg-gray-50 dark:bg-gray-700 px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-gray-100 border-b border-gray-200 dark:border-gray-600;
+  @apply bg-gray-50 px-4 py-3 text-left text-sm font-semibold text-gray-900 border-b border-gray-200;
 }
 
 .prose td {
-  @apply px-4 py-3 text-sm text-gray-700 dark:text-gray-300 border-b border-gray-200 dark:border-gray-600;
+  @apply px-4 py-3 text-sm text-gray-700 border-b border-gray-200;
 }
 
 .prose tr:last-child td {
@@ -454,11 +381,11 @@ textarea:focus {
 }
 
 .prose tr:hover {
-  @apply bg-gray-50 dark:bg-gray-700/50;
+  @apply bg-gray-50;
 }
 
 .prose a {
-  @apply text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 underline decoration-blue-600/30 hover:decoration-blue-600 underline-offset-2 transition-colors duration-200;
+  @apply text-blue-600 hover:text-blue-800 underline decoration-blue-600/30 hover:decoration-blue-600 underline-offset-2 transition-colors duration-200;
 }
 
 .prose img {
@@ -466,11 +393,11 @@ textarea:focus {
 }
 
 .prose blockquote {
-  @apply my-6 pl-4 border-l-4 border-blue-500 bg-blue-50 dark:bg-blue-900/20 py-4 pr-4 rounded-r-lg;
+  @apply my-6 pl-4 border-l-4 border-blue-500 bg-blue-50 py-4 pr-4 rounded-r-lg;
 }
 
 .prose blockquote p {
-  @apply text-gray-700 dark:text-gray-300 italic mb-0;
+  @apply text-gray-700 italic mb-0;
 }
 
 .prose .header-anchor {

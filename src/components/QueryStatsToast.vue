@@ -5,11 +5,7 @@
       v-for="toast in visibleToasts"
       :key="toast.id"
       class="text-sm transform transition-all duration-300 slide-in-right"
-      :class="
-        toast.isTitle
-          ? 'text-green-500 dark:text-green-400'
-          : 'text-gray-600 dark:text-gray-400'
-      "
+      :class="toast.isTitle ? 'text-green-500' : 'text-gray-600'"
     >
       {{ toast.text }}
     </div>

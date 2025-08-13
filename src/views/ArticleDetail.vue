@@ -166,20 +166,20 @@
           :class="[
             'overflow-hidden transition-all duration-500',
             zenMode
-              ? 'zen-article fixed inset-0 bg-gradient-to-br from-amber-50 via-white to-orange-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900'
+              ? 'zen-article fixed inset-0 bg-gradient-to-br from-amber-50 via-white to-orange-50'
               : 'glass-effect rounded-2xl card-hover',
           ]"
         >
           <!-- 文章头部 -->
           <header
             :class="[
-              'border-b border-gray-200 dark:border-gray-700 transition-all duration-500',
+              'border-b border-gray-200 transition-all duration-500',
               zenMode ? 'p-12 text-center' : 'p-8',
             ]"
           >
             <h1
               :class="[
-                'font-bold text-gray-900 dark:text-gray-100 mb-4 transition-all duration-500',
+                'font-bold text-gray-900 mb-4 transition-all duration-500',
                 zenMode
                   ? 'text-4xl md:text-6xl leading-tight'
                   : 'text-3xl md:text-4xl',
@@ -471,7 +471,7 @@ watch(
 <style scoped>
 /* 自定义 prose 样式覆盖 */
 .prose {
-  @apply text-gray-800 dark:text-gray-200;
+  @apply text-gray-800;
 }
 
 /* 标题锚点样式 */
@@ -479,22 +479,9 @@ watch(
   @apply text-gray-400 hover:text-blue-500 no-underline transition-all duration-200;
 }
 
-/* 确保代码块在暗色模式下正确显示 */
-.dark .prose :deep(pre) {
-  @apply bg-gray-800;
-}
-
-.dark .prose :deep(code) {
-  @apply bg-gray-700 text-gray-200;
-}
-
 /* 禅模式样式 */
 .zen-mode {
   @apply p-0 bg-gradient-to-br from-amber-50 via-white to-orange-50;
-}
-
-.dark .zen-mode {
-  @apply from-gray-900 via-gray-800 to-gray-900;
 }
 
 .zen-article {
