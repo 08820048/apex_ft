@@ -19,7 +19,7 @@
           </ul>
           <p class="mt-4">
             申请方式：请发送邮件至 
-            <a href="mailto:admin@example.com" class="text-blue-600 hover:text-blue-800">admin@example.com</a>
+            <a href="mailto:ilikexff@gmail.com" class="text-blue-600 hover:text-blue-800">ilikexff@gmail.com</a>
             ，包含网站名称、网站地址、网站描述和站长信息。
           </p>
         </div>

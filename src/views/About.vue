@@ -13,7 +13,7 @@
               class="w-full h-full object-cover"
             />
           </div>
-          <h1 class="text-3xl font-bold text-gray-900 mb-4">关于 ApexBlog</h1>
+          <h1 class="text-3xl font-bold text-gray-900 mb-4">关于 Apex博客</h1>
           <p class="text-xl text-gray-600">一个专注于技术分享的个人博客</p>
         </div>
 
@@ -25,7 +25,7 @@
           <h2 class="text-2xl font-bold text-gray-900 mb-4">博客简介</h2>
           <p class="mb-6">
             ApexBlog
-            是一个现代化的技术博客平台，专注于前端开发、后端技术、数据库设计等领域的知识分享。
+            是一个现代化的技术博客平台，专注于全栈开发、语言教程、技术分享、业内资讯、游戏开发等领域的知识分享。
             我希望通过这个平台，能够与更多的开发者交流学习，共同进步。
           </p>
 

@@ -303,27 +303,76 @@
                 </button>
 
                 <!-- 页码按钮 -->
-                <div class="grid grid-cols-4 gap-2">
-                  <template v-for="page in getPageNumbers()" :key="page">
-                    <span
-                      v-if="page === '...'"
-                      class="px-2 py-2 text-xs text-center text-gray-500 dark:text-gray-400 flex items-center justify-center"
-                    >
-                      ...
-                    </span>
+                <div v-if="totalPages <= 4" class="grid grid-cols-4 gap-2">
+                  <!-- 简单分页：页数少于等于4页时显示所有页码 -->
+                  <button
+                    v-for="page in totalPages"
+                    :key="page"
+                    @click="changePage(page)"
+                    :class="[
+                      'px-2 py-2 text-xs font-medium rounded-lg transition-all duration-200',
+                      page === currentPage
+                        ? 'bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-md'
+                        : 'text-gray-700 bg-white border border-gray-200 hover:bg-gradient-to-r hover:from-blue-50 hover:to-blue-100 hover:border-blue-300',
+                    ]"
+                  >
+                    {{ page }}
+                  </button>
+                </div>
+
+                <!-- 复杂分页：页数大于4页时使用跳转输入框 -->
+                <div v-else class="space-y-3">
+                  <div class="flex items-center gap-2">
+                    <!-- 第一页按钮 -->
                     <button
-                      v-else
-                      @click="changePage(page)"
+                      @click="changePage(1)"
                       :class="[
-                        'px-2 py-2 text-xs font-medium rounded-lg transition-all duration-200',
-                        page === currentPage
+                        'px-3 py-2 text-xs font-medium rounded-lg transition-all duration-200 flex-shrink-0',
+                        currentPage === 1
                           ? 'bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-md'
-                          : 'text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 hover:bg-gradient-to-r hover:from-blue-50 hover:to-blue-100 dark:hover:from-blue-900 dark:hover:to-blue-800 hover:border-blue-300 dark:hover:border-blue-500',
+                          : 'text-gray-700 bg-white border border-gray-200 hover:bg-gradient-to-r hover:from-blue-50 hover:to-blue-100 hover:border-blue-300',
                       ]"
                     >
-                      {{ page }}
+                      1
                     </button>
-                  </template>
+
+                    <!-- 跳转输入框和按钮 -->
+                    <div class="flex items-center gap-1 flex-1">
+                      <input
+                        v-model="jumpToPage"
+                        @keyup.enter="handleJumpToPage"
+                        type="number"
+                        :min="1"
+                        :max="totalPages"
+                        placeholder="页码"
+                        class="flex-1 px-2 py-1 text-xs border border-gray-200 rounded focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
+                      />
+                      <button
+                        @click="handleJumpToPage"
+                        class="px-2 py-1 text-xs font-medium text-white bg-gradient-to-r from-green-500 to-green-600 rounded hover:from-green-600 hover:to-green-700 transition-all duration-200 flex-shrink-0"
+                      >
+                        跳转
+                      </button>
+                    </div>
+
+                    <!-- 最后一页按钮 -->
+                    <button
+                      @click="changePage(totalPages)"
+                      :class="[
+                        'px-3 py-2 text-xs font-medium rounded-lg transition-all duration-200 flex-shrink-0',
+                        currentPage === totalPages
+                          ? 'bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-md'
+                          : 'text-gray-700 bg-white border border-gray-200 hover:bg-gradient-to-r hover:from-blue-50 hover:to-blue-100 hover:border-blue-300',
+                      ]"
+                    >
+                      {{ totalPages }}
+                    </button>
+                  </div>
+
+                  <!-- 当前页面提示 -->
+                  <div class="text-center text-xs text-gray-500">
+                    当前第 {{ currentPage }} 页
+                  </div>
                 </div>
 
                 <!-- 下一页 -->
@@ -383,7 +432,8 @@ const loading = ref(false);
 const currentPage = ref(1);
 const totalPages = ref(0);
 const totalElements = ref(0);
-const pageSize = 4;
+const pageSize = 5;
+const jumpToPage = ref(""); // 跳转页面输入框
 
 // 格式化日期
 const formatDate = (dateString) => {
@@ -485,46 +535,16 @@ const changePage = (page) => {
   }
 };
 
-// 生成页码数组
-const getPageNumbers = () => {
-  const pages = [];
-  const total = totalPages.value;
-  const current = currentPage.value;
-
-  if (total <= 7) {
-    // 总页数小于等于7，显示所有页码
-    for (let i = 1; i <= total; i++) {
-      pages.push(i);
-    }
+// 跳转到指定页面
+const handleJumpToPage = () => {
+  const page = parseInt(jumpToPage.value);
+  if (page && page >= 1 && page <= totalPages.value) {
+    changePage(page);
+    jumpToPage.value = ""; // 清空输入框
   } else {
-    // 总页数大于7，显示省略号
-    if (current <= 4) {
-      // 当前页在前面
-      for (let i = 1; i <= 5; i++) {
-        pages.push(i);
-      }
-      pages.push("...");
-      pages.push(total);
-    } else if (current >= total - 3) {
-      // 当前页在后面
-      pages.push(1);
-      pages.push("...");
-      for (let i = total - 4; i <= total; i++) {
-        pages.push(i);
-      }
-    } else {
-      // 当前页在中间
-      pages.push(1);
-      pages.push("...");
-      for (let i = current - 1; i <= current + 1; i++) {
-        pages.push(i);
-      }
-      pages.push("...");
-      pages.push(total);
-    }
+    // 输入无效时清空输入框
+    jumpToPage.value = "";
   }
-
-  return pages;
 };
 
 // 加载热门标签
