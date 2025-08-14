@@ -229,17 +229,17 @@
                 class="text-center p-4 bg-gradient-to-br from-purple-50 to-purple-100 rounded-lg border border-purple-200 hover:shadow-md transition-shadow"
               >
                 <div class="text-2xl font-bold text-purple-600 mb-1">
-                  {{ stats.tagCount }}
+                  {{ stats.subscriberCount }}
                 </div>
-                <div class="text-xs text-gray-600">标签数量</div>
+                <div class="text-xs text-gray-600">订阅用户</div>
               </div>
               <div
                 class="text-center p-4 bg-gradient-to-br from-red-50 to-red-100 rounded-lg border border-red-200 hover:shadow-md transition-shadow"
               >
                 <div class="text-2xl font-bold text-red-600 mb-1">
-                  {{ stats.categoryCount }}
+                  {{ stats.friendLinkCount }}
                 </div>
-                <div class="text-xs text-gray-600">分类数量</div>
+                <div class="text-xs text-gray-600">友链数量</div>
               </div>
             </div>
           </div>
@@ -547,8 +547,8 @@ const loadStats = async () => {
     stats.value = {
       articleCount: statsData.totalArticles || 0,
       viewCount: statsData.totalVisits || 0,
-      tagCount: statsData.totalTags || 0,
-      categoryCount: statsData.totalCategories || 0,
+      subscriberCount: statsData.totalSubscribers || 0,
+      friendLinkCount: statsData.totalFriendLinks || 0,
     };
   } catch (error) {
     console.error("加载统计数据失败:", error);
@@ -556,8 +556,8 @@ const loadStats = async () => {
     stats.value = {
       articleCount: 5,
       viewCount: 1250,
-      tagCount: 8,
-      categoryCount: 4,
+      subscriberCount: 12,
+      friendLinkCount: 6,
     };
   }
 };
