@@ -91,10 +91,10 @@
                         class="text-gray-600 dark:text-gray-300 text-sm leading-relaxed mt-4 overflow-hidden"
                         :class="{
                           'flex-1': articles.length < 5,
-                          'max-h-32': articles.length === 4,
-                          'max-h-40': articles.length === 3,
-                          'max-h-48': articles.length === 2,
-                          'max-h-56': articles.length === 1,
+                          'max-h-20': articles.length === 4,
+                          'max-h-24': articles.length === 3,
+                          'max-h-32': articles.length === 2,
+                          'max-h-40': articles.length === 1,
                         }"
                       >
                         <div
@@ -607,12 +607,12 @@ const loadArticleContents = async () => {
             // 根据文章数量动态调整内容长度，确保总高度不超过右侧功能栏
             const maxContentLength =
               articles.value.length === 1
-                ? 400
-                : articles.value.length === 2
-                ? 300
-                : articles.value.length === 3
                 ? 200
-                : 150;
+                : articles.value.length === 2
+                ? 150
+                : articles.value.length === 3
+                ? 100
+                : 80;
 
             // 截取适当长度的内容
             if (cleanContent.length > maxContentLength) {
@@ -628,9 +628,9 @@ const loadArticleContents = async () => {
             // 将纯文本转换为简单的段落格式，限制段落数量
             const maxSentences =
               articles.value.length === 1
-                ? 3
-                : articles.value.length === 2
                 ? 2
+                : articles.value.length === 2
+                ? 1
                 : 1;
 
             const sentences = cleanContent
