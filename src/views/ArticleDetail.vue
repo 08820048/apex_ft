@@ -322,7 +322,7 @@
               </div>
               <div class="w-full bg-gray-200 rounded-full h-2">
                 <div
-                  class="bg-gradient-to-r from-blue-500 to-purple-500 h-2 rounded-full transition-all duration-300 shadow-sm"
+                  class="bg-green-500 h-2 rounded-full transition-all duration-300 shadow-sm"
                   :style="{ width: readingProgress + '%' }"
                 ></div>
               </div>
