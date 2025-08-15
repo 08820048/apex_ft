@@ -167,7 +167,7 @@
             'overflow-hidden transition-all duration-500',
             zenMode
               ? 'zen-article fixed inset-0 bg-gradient-to-br from-amber-50 via-white to-orange-50'
-              : 'glass-effect rounded-2xl',
+              : 'glass-effect rounded-2xl relative',
             // 当有目录时，将文章容器向左移动，为右侧目录组件腾出空间
             !zenMode && tableOfContents.length > 0 ? 'xl:-translate-x-48' : '',
           ]"
@@ -264,10 +264,13 @@
           </footer>
         </article>
 
-        <!-- 文章目录导航 - 固定在右侧 -->
+        <!-- 文章目录导航 - 贴着内容容器右侧 -->
         <aside
           v-if="!zenMode && article && tableOfContents.length > 0"
-          class="fixed right-4 top-1/2 transform -translate-y-1/2 w-80 z-30 hidden xl:block"
+          class="fixed top-1/2 transform -translate-y-1/2 w-80 z-30 hidden xl:block"
+          :style="{
+            right: tableOfContents.length > 0 ? '116px' : '132px',
+          }"
         >
           <div
             class="glass-effect rounded-2xl p-6 max-h-[80vh] overflow-hidden"
