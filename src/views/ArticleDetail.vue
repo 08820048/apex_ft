@@ -167,7 +167,9 @@
             'overflow-hidden transition-all duration-500',
             zenMode
               ? 'zen-article fixed inset-0 bg-gradient-to-br from-amber-50 via-white to-orange-50'
-              : 'glass-effect rounded-2xl card-hover',
+              : 'glass-effect rounded-2xl',
+            // 当有目录时，将文章容器向左移动，为右侧目录组件腾出空间
+            !zenMode && tableOfContents.length > 0 ? 'xl:-translate-x-48' : '',
           ]"
         >
           <!-- 文章头部 -->
@@ -216,7 +218,10 @@
                 v-for="tag in article.tags"
                 :key="tag.id"
                 class="px-3 py-1 text-sm rounded-full"
-                :style="{ backgroundColor: tag.color + '20', color: tag.color }"
+                :style="{
+                  backgroundColor: tag.color + '20',
+                  color: tag.color,
+                }"
               >
                 # {{ tag.name }}
               </span>
@@ -259,6 +264,72 @@
           </footer>
         </article>
 
+        <!-- 文章目录导航 - 固定在右侧 -->
+        <aside
+          v-if="!zenMode && article && tableOfContents.length > 0"
+          class="fixed right-4 top-1/2 transform -translate-y-1/2 w-80 z-30 hidden xl:block"
+        >
+          <div
+            class="glass-effect rounded-2xl p-6 max-h-[80vh] overflow-hidden"
+          >
+            <h3
+              class="text-lg font-semibold text-gray-900 mb-4 flex items-center"
+            >
+              <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 24 24">
+                <path
+                  d="M3 9h14V7H3v2zm0 4h14v-2H3v2zm0 4h14v-2H3v2zm16 0h2v-2h-2v2zm0-10v2h2V7h-2zm0 6h2v-2h-2v2z"
+                />
+              </svg>
+              文章目录
+            </h3>
+
+            <!-- 目录列表 -->
+            <nav class="space-y-1 max-h-96 overflow-y-auto mb-6">
+              <a
+                v-for="(item, index) in tableOfContents"
+                :key="index"
+                :href="`#${item.id}`"
+                @click.prevent="scrollToHeading(item.id)"
+                :class="[
+                  'block text-sm py-2 px-3 rounded-lg transition-all duration-200 hover:bg-blue-50 hover:text-blue-600 border-l-2 border-transparent hover:border-blue-300',
+                  item.level === 1
+                    ? 'font-medium text-gray-900'
+                    : 'text-gray-600',
+                  item.level === 2 ? 'ml-4' : '',
+                  item.level === 3 ? 'ml-8' : '',
+                  item.level >= 4 ? 'ml-12' : '',
+                  activeHeading === item.id
+                    ? 'bg-blue-100 text-blue-700 font-medium border-blue-500'
+                    : '',
+                ]"
+              >
+                {{ item.text }}
+              </a>
+            </nav>
+
+            <!-- 阅读进度 -->
+            <div class="pt-4 border-t border-gray-200">
+              <div
+                class="flex items-center justify-between text-sm text-gray-600 mb-3"
+              >
+                <span class="font-medium">阅读进度</span>
+                <span class="text-blue-600 font-semibold"
+                  >{{ Math.round(readingProgress) }}%</span
+                >
+              </div>
+              <div class="w-full bg-gray-200 rounded-full h-2">
+                <div
+                  class="bg-gradient-to-r from-blue-500 to-purple-500 h-2 rounded-full transition-all duration-300 shadow-sm"
+                  :style="{ width: readingProgress + '%' }"
+                ></div>
+              </div>
+              <div class="mt-2 text-xs text-gray-500 text-center">
+                继续阅读，探索更多精彩内容
+              </div>
+            </div>
+          </div>
+        </aside>
+
         <!-- 文章不存在 -->
         <div
           v-if="!loading && !article"
@@ -297,6 +368,7 @@ import {
   onMounted,
   onUnmounted,
   onBeforeUnmount,
+  nextTick,
 } from "vue";
 import { useRoute } from "vue-router";
 import { articleApi } from "../api";
@@ -327,6 +399,11 @@ const zenInput = ref("");
 const inputStatus = ref(""); // 'success' | 'error' | ''
 const inputMessage = ref("");
 
+// 目录导航相关
+const tableOfContents = ref([]);
+const activeHeading = ref("");
+const readingProgress = ref(0);
+
 // 渲染内容
 const renderedContent = computed(() => {
   if (!article.value?.content) return "";
@@ -334,6 +411,38 @@ const renderedContent = computed(() => {
   console.log("Markdown rendered:", rendered.substring(0, 200) + "...");
   return rendered;
 });
+
+// 生成目录
+const generateTableOfContents = () => {
+  if (!article.value?.content) {
+    tableOfContents.value = [];
+    return;
+  }
+
+  const headings = [];
+  const lines = article.value.content.split("\n");
+
+  lines.forEach((line, index) => {
+    const match = line.match(/^(#{1,6})\s+(.+)$/);
+    if (match) {
+      const level = match[1].length;
+      const text = match[2].trim();
+      const id = text
+        .toLowerCase()
+        .replace(/[^\w\u4e00-\u9fa5]+/g, "-")
+        .replace(/^-+|-+$/g, "");
+
+      headings.push({
+        level,
+        text,
+        id,
+        line: index,
+      });
+    }
+  });
+
+  tableOfContents.value = headings;
+};
 
 // 格式化日期
 const formatDate = (dateString) => {
@@ -406,6 +515,46 @@ const exitZenMode = () => {
   document.body.classList.remove("zen-mode-active");
 };
 
+// 滚动到指定标题
+const scrollToHeading = (headingId) => {
+  const element = document.getElementById(headingId);
+  if (element) {
+    element.scrollIntoView({
+      behavior: "smooth",
+      block: "start",
+    });
+  }
+};
+
+// 更新阅读进度和当前标题
+const updateReadingProgress = () => {
+  const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+  const scrollHeight =
+    document.documentElement.scrollHeight - window.innerHeight;
+  const progress = (scrollTop / scrollHeight) * 100;
+  readingProgress.value = Math.min(100, Math.max(0, progress));
+
+  // 更新当前活跃的标题
+  if (tableOfContents.value.length > 0) {
+    let currentHeading = "";
+
+    for (let i = tableOfContents.value.length - 1; i >= 0; i--) {
+      const heading = tableOfContents.value[i];
+      const element = document.getElementById(heading.id);
+
+      if (element) {
+        const rect = element.getBoundingClientRect();
+        if (rect.top <= 100) {
+          currentHeading = heading.id;
+          break;
+        }
+      }
+    }
+
+    activeHeading.value = currentHeading;
+  }
+};
+
 // 键盘快捷键支持
 const handleKeydown = (event) => {
   if (event.key === "Escape" && zenMode.value) {
@@ -420,6 +569,9 @@ const handleKeydown = (event) => {
 
 onMounted(() => {
   document.addEventListener("keydown", handleKeydown);
+  window.addEventListener("scroll", updateReadingProgress);
+  // 初始化阅读进度
+  updateReadingProgress();
 });
 
 // 在组件卸载前清理状态
@@ -432,6 +584,7 @@ onBeforeUnmount(() => {
 
 onUnmounted(() => {
   document.removeEventListener("keydown", handleKeydown);
+  window.removeEventListener("scroll", updateReadingProgress);
   // 强制清理全局状态，防止影响其他页面
   document.body.classList.remove("zen-mode-active");
   document.body.style.overflow = "";
@@ -444,6 +597,17 @@ const loadArticle = async () => {
     article.value = null;
     const data = await articleApi.getDetail(route.params.id);
     article.value = data;
+
+    // 文章加载完成后生成目录
+    if (data) {
+      // 使用nextTick确保DOM已更新
+      await nextTick();
+      generateTableOfContents();
+      // 重新计算阅读进度
+      setTimeout(() => {
+        updateReadingProgress();
+      }, 100);
+    }
   } catch (error) {
     console.error("加载文章失败:", error);
     article.value = null;
