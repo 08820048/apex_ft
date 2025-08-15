@@ -1,8 +1,10 @@
 import { marked } from "marked";
 import hljs from "highlight.js";
+import katex from "katex";
 
-// 导入 highlight.js 主题
+// 导入样式
 import "highlight.js/styles/github-dark.css";
+import "katex/dist/katex.min.css";
 
 // HTML 转义函数
 function escapeHtml(text) {
@@ -14,6 +16,43 @@ function escapeHtml(text) {
     "'": "&#039;",
   };
   return text.replace(/[&<>"']/g, (m) => map[m]);
+}
+
+// 数学公式处理函数
+function processMathExpressions(content) {
+  // 处理块级数学公式 $$...$$
+  content = content.replace(/\$\$([\s\S]*?)\$\$/g, (match, formula) => {
+    try {
+      const html = katex.renderToString(formula.trim(), {
+        displayMode: true,
+        throwOnError: false,
+        errorColor: "#cc0000",
+        strict: false,
+      });
+      return `<div class="math-block">${html}</div>`;
+    } catch (error) {
+      console.error("KaTeX block error:", error);
+      return `<div class="math-error">数学公式渲染错误: ${formula}</div>`;
+    }
+  });
+
+  // 处理行内数学公式 $...$
+  content = content.replace(/\$([^$\n]+?)\$/g, (match, formula) => {
+    try {
+      const html = katex.renderToString(formula.trim(), {
+        displayMode: false,
+        throwOnError: false,
+        errorColor: "#cc0000",
+        strict: false,
+      });
+      return `<span class="math-inline">${html}</span>`;
+    } catch (error) {
+      console.error("KaTeX inline error:", error);
+      return `<span class="math-error">公式错误: ${formula}</span>`;
+    }
+  });
+
+  return content;
 }
 
 // 初始化 highlight.js
@@ -161,7 +200,10 @@ marked.use({
 // 导出渲染函数
 export function renderMarkdown(content) {
   if (!content) return "";
-  return marked(content);
+
+  // 先处理数学公式，再进行Markdown渲染
+  const processedContent = processMathExpressions(content);
+  return marked(processedContent);
 }
 
 export default {

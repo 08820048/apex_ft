@@ -584,4 +584,26 @@ body.zen-mode-active a,
 body.zen-mode-active button:not(.zen-mode button) {
   pointer-events: auto;
 }
+
+/* 数学公式样式 */
+.math-block {
+  @apply my-4 text-center overflow-x-auto;
+}
+
+.math-inline {
+  @apply inline-block;
+}
+
+.math-error {
+  @apply text-red-500 bg-red-50 px-2 py-1 rounded text-sm border border-red-200;
+}
+
+/* KaTeX 样式优化 */
+.katex-display {
+  @apply my-4;
+}
+
+.katex {
+  font-size: 1.1em;
+}
 </style>
