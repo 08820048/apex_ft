@@ -6,7 +6,12 @@
         <!-- 主内容区 -->
         <div class="flex-1 lg:max-w-3xl">
           <!-- 文章列表 -->
-          <div class="lg:min-h-[750px] flex flex-col">
+          <div
+            class="flex flex-col"
+            :class="
+              articles.length >= 5 ? 'lg:min-h-[750px]' : 'lg:max-h-[850px]'
+            "
+          >
             <!-- 加载状态 -->
             <Transition name="loading">
               <div v-if="loading" class="space-y-6">
@@ -83,7 +88,14 @@
                       <!-- 当文章数量少于5条时，显示正文内容填充空白 -->
                       <div
                         v-if="articles.length < 5 && article.renderedContent"
-                        class="text-gray-600 dark:text-gray-300 text-sm leading-relaxed mt-4 flex-1 overflow-hidden"
+                        class="text-gray-600 dark:text-gray-300 text-sm leading-relaxed mt-4 overflow-hidden"
+                        :class="{
+                          'flex-1': articles.length < 5,
+                          'max-h-32': articles.length === 4,
+                          'max-h-40': articles.length === 3,
+                          'max-h-48': articles.length === 2,
+                          'max-h-56': articles.length === 1,
+                        }"
                       >
                         <div
                           class="border-t border-gray-200 dark:border-gray-600 pt-3 mt-3"
@@ -94,7 +106,7 @@
                             正文预览
                           </div>
                           <div
-                            class="markdown-content"
+                            class="markdown-content overflow-hidden"
                             v-html="article.renderedContent"
                           ></div>
                         </div>
@@ -592,22 +604,40 @@ const loadArticleContents = async () => {
               .replace(/\s{2,}/g, " ") // 规范化空格
               .trim();
 
+            // 根据文章数量动态调整内容长度，确保总高度不超过右侧功能栏
+            const maxContentLength =
+              articles.value.length === 1
+                ? 400
+                : articles.value.length === 2
+                ? 300
+                : articles.value.length === 3
+                ? 200
+                : 150;
+
             // 截取适当长度的内容
-            if (cleanContent.length > 600) {
-              cleanContent = cleanContent.substring(0, 600) + "...";
+            if (cleanContent.length > maxContentLength) {
+              cleanContent =
+                cleanContent.substring(0, maxContentLength) + "...";
             }
 
             // 如果清理后内容太短或为空，使用摘要内容
-            if (cleanContent.length < 50) {
+            if (cleanContent.length < 30) {
               cleanContent = article.summary || "暂无预览内容";
             }
 
-            // 将纯文本转换为简单的段落格式，避免使用复杂的HTML
+            // 将纯文本转换为简单的段落格式，限制段落数量
+            const maxSentences =
+              articles.value.length === 1
+                ? 3
+                : articles.value.length === 2
+                ? 2
+                : 1;
+
             const sentences = cleanContent
               .split(/[.。!！?？]/)
-              .filter((s) => s.trim().length > 10);
+              .filter((s) => s.trim().length > 5);
             const formattedContent = sentences
-              .slice(0, 3)
+              .slice(0, maxSentences)
               .map((s) => `<p>${s.trim()}。</p>`)
               .join("");
 
