@@ -561,31 +561,65 @@ const loadArticleContents = async () => {
       try {
         const detail = await articleApi.getDetail(article.id);
         if (detail && detail.content) {
-          // 先移除markdown中的图片、链接等复杂元素，只保留文本内容
-          let cleanContent = detail.content
-            .replace(/!\[.*?\]\(.*?\)/g, "") // 移除图片
-            .replace(/\[.*?\]\(.*?\)/g, "") // 移除链接
-            .replace(/```[\s\S]*?```/g, "") // 移除代码块
-            .replace(/`.*?`/g, "") // 移除行内代码
-            .replace(/#{1,6}\s/g, "") // 移除标题标记
-            .replace(/[*_]{1,2}(.*?)[*_]{1,2}/g, "$1") // 移除加粗斜体标记
-            .replace(/^\s*[-*+]\s/gm, "") // 移除列表标记
-            .replace(/^\s*\d+\.\s/gm, "") // 移除有序列表标记
-            .replace(/\n{2,}/g, "\n\n") // 规范化换行
-            .trim();
+          try {
+            // 更彻底地清理markdown内容，避免解析错误
+            let cleanContent = detail.content
+              // 移除所有markdown语法元素
+              .replace(/!\[.*?\]\(.*?\)/g, "") // 移除图片
+              .replace(/\[.*?\]\(.*?\)/g, "") // 移除链接
+              .replace(/```[\s\S]*?```/g, "") // 移除代码块
+              .replace(/`[^`]*`/g, "") // 移除行内代码
+              .replace(/#{1,6}\s+/g, "") // 移除标题标记
+              .replace(/[*_]{1,3}([^*_]*)[*_]{1,3}/g, "$1") // 移除加粗斜体标记
+              .replace(/^\s*[-*+]\s+/gm, "") // 移除无序列表标记
+              .replace(/^\s*\d+\.\s+/gm, "") // 移除有序列表标记
+              .replace(/^\s*>\s*/gm, "") // 移除引用标记
+              .replace(/\|.*?\|/g, "") // 移除表格
+              .replace(/---+/g, "") // 移除分隔线
+              .replace(/\$\$[\s\S]*?\$\$/g, "") // 移除数学公式块
+              .replace(/\$[^$]*\$/g, "") // 移除行内数学公式
+              .replace(/\[.*?\]:\s*\S+/g, "") // 移除引用链接定义
+              .replace(/<!--[\s\S]*?-->/g, "") // 移除HTML注释
+              .replace(/<[^>]*>/g, "") // 移除HTML标签
+              .replace(/&[a-zA-Z0-9#]+;/g, "") // 移除HTML实体
+              .replace(/\n{3,}/g, "\n\n") // 规范化多个换行
+              .replace(/^\s+|\s+$/gm, "") // 移除行首行尾空白
+              .trim();
 
-          // 截取适当长度的内容
-          if (cleanContent.length > 800) {
-            cleanContent = cleanContent.substring(0, 800) + "...";
+            // 进一步清理特殊字符和符号
+            cleanContent = cleanContent
+              .replace(/[^\w\s\u4e00-\u9fff.,!?;:()""''—–\-]/g, "") // 只保留基本字符
+              .replace(/\s{2,}/g, " ") // 规范化空格
+              .trim();
+
+            // 截取适当长度的内容
+            if (cleanContent.length > 600) {
+              cleanContent = cleanContent.substring(0, 600) + "...";
+            }
+
+            // 如果清理后内容太短或为空，使用摘要内容
+            if (cleanContent.length < 50) {
+              cleanContent = article.summary || "暂无预览内容";
+            }
+
+            // 将纯文本转换为简单的段落格式，避免使用复杂的HTML
+            const sentences = cleanContent
+              .split(/[.。!！?？]/)
+              .filter((s) => s.trim().length > 10);
+            const formattedContent = sentences
+              .slice(0, 3)
+              .map((s) => `<p>${s.trim()}。</p>`)
+              .join("");
+
+            article.renderedContent =
+              formattedContent || `<p>${cleanContent}</p>`;
+          } catch (error) {
+            console.error(`处理文章 ${article.id} 内容时出错:`, error);
+            // 出错时使用摘要作为后备内容
+            article.renderedContent = `<p>${
+              article.summary || "内容加载失败"
+            }</p>`;
           }
-
-          // 将纯文本转换为简单的段落格式
-          const paragraphs = cleanContent.split("\n\n").filter((p) => p.trim());
-          const formattedContent = paragraphs
-            .map((p) => `<p>${p.trim()}</p>`)
-            .join("");
-
-          article.renderedContent = formattedContent;
         }
       } catch (error) {
         console.error(`加载文章 ${article.id} 内容失败:`, error);
