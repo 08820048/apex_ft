@@ -74,10 +74,31 @@
                         {{ article.title }}
                       </h3>
                       <p
-                        class="text-gray-600 dark:text-gray-300 line-clamp-3 mb-3 flex-1"
+                        class="text-gray-600 dark:text-gray-300 line-clamp-3 mb-3"
+                        :class="{ 'flex-1': articles.length >= 5 }"
                       >
                         {{ article.summary }}
                       </p>
+
+                      <!-- 当文章数量少于5条时，显示正文内容填充空白 -->
+                      <div
+                        v-if="articles.length < 5 && article.renderedContent"
+                        class="text-gray-600 dark:text-gray-300 text-sm leading-relaxed mt-4 flex-1 overflow-hidden"
+                      >
+                        <div
+                          class="border-t border-gray-200 dark:border-gray-600 pt-3 mt-3"
+                        >
+                          <div
+                            class="text-xs text-gray-500 dark:text-gray-400 mb-2 font-medium"
+                          >
+                            正文预览
+                          </div>
+                          <div
+                            class="markdown-content"
+                            v-html="article.renderedContent"
+                          ></div>
+                        </div>
+                      </div>
                     </div>
                     <div class="flex items-center justify-between mt-auto">
                       <div
@@ -409,6 +430,7 @@
 import { ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
 import { articleApi, tagApi, statsApi } from "../api";
+import { renderMarkdown } from "../utils/markdown";
 
 // 图标组件
 const TagIcon = {
@@ -518,11 +540,62 @@ const loadArticles = async (page = 1) => {
     currentPage.value = page;
     totalPages.value = data.totalPages || 0;
     totalElements.value = data.totalElements || 0;
+
+    // 如果文章数量少于5条，获取每篇文章的正文内容用于填充空白
+    if (articles.value.length < 5 && articles.value.length > 0) {
+      await loadArticleContents();
+    }
   } catch (error) {
     console.error("加载文章失败:", error);
     articles.value = [];
   } finally {
     loading.value = false;
+  }
+};
+
+// 加载文章正文内容（当文章数量少于5条时）
+const loadArticleContents = async () => {
+  try {
+    // 并行获取所有文章的详细内容
+    const contentPromises = articles.value.map(async (article) => {
+      try {
+        const detail = await articleApi.getDetail(article.id);
+        if (detail && detail.content) {
+          // 先移除markdown中的图片、链接等复杂元素，只保留文本内容
+          let cleanContent = detail.content
+            .replace(/!\[.*?\]\(.*?\)/g, "") // 移除图片
+            .replace(/\[.*?\]\(.*?\)/g, "") // 移除链接
+            .replace(/```[\s\S]*?```/g, "") // 移除代码块
+            .replace(/`.*?`/g, "") // 移除行内代码
+            .replace(/#{1,6}\s/g, "") // 移除标题标记
+            .replace(/[*_]{1,2}(.*?)[*_]{1,2}/g, "$1") // 移除加粗斜体标记
+            .replace(/^\s*[-*+]\s/gm, "") // 移除列表标记
+            .replace(/^\s*\d+\.\s/gm, "") // 移除有序列表标记
+            .replace(/\n{2,}/g, "\n\n") // 规范化换行
+            .trim();
+
+          // 截取适当长度的内容
+          if (cleanContent.length > 800) {
+            cleanContent = cleanContent.substring(0, 800) + "...";
+          }
+
+          // 将纯文本转换为简单的段落格式
+          const paragraphs = cleanContent.split("\n\n").filter((p) => p.trim());
+          const formattedContent = paragraphs
+            .map((p) => `<p>${p.trim()}</p>`)
+            .join("");
+
+          article.renderedContent = formattedContent;
+        }
+      } catch (error) {
+        console.error(`加载文章 ${article.id} 内容失败:`, error);
+        // 如果获取失败，不设置renderedContent，这样就不会显示正文填充
+      }
+    });
+
+    await Promise.all(contentPromises);
+  } catch (error) {
+    console.error("批量加载文章内容失败:", error);
   }
 };
 
@@ -599,5 +672,69 @@ onMounted(async () => {
   line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
+}
+
+.line-clamp-3 {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.line-clamp-6 {
+  display: -webkit-box;
+  -webkit-line-clamp: 6;
+  line-clamp: 6;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* 文章卡片中的markdown内容样式 */
+.markdown-content {
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
+
+.markdown-content :deep(h1),
+.markdown-content :deep(h2),
+.markdown-content :deep(h3),
+.markdown-content :deep(h4),
+.markdown-content :deep(h5),
+.markdown-content :deep(h6) {
+  font-size: 0.875rem;
+  font-weight: 600;
+  margin: 0.5rem 0;
+  color: inherit;
+}
+
+.markdown-content :deep(p) {
+  margin: 0.25rem 0;
+  color: inherit;
+}
+
+.markdown-content :deep(ul),
+.markdown-content :deep(ol) {
+  margin: 0.25rem 0;
+  padding-left: 1rem;
+}
+
+.markdown-content :deep(li) {
+  margin: 0.125rem 0;
+}
+
+.markdown-content :deep(code) {
+  background-color: rgba(0, 0, 0, 0.05);
+  padding: 0.125rem 0.25rem;
+  border-radius: 0.25rem;
+  font-size: 0.75rem;
+}
+
+.markdown-content :deep(blockquote) {
+  border-left: 2px solid #e5e7eb;
+  padding-left: 0.5rem;
+  margin: 0.25rem 0;
+  font-style: italic;
+  color: #6b7280;
 }
 </style>
