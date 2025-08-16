@@ -29,39 +29,8 @@
           </RouterLink>
         </nav>
 
-        <!-- 主题切换和搜索框 -->
-        <div class="hidden lg:flex items-center space-x-4">
-          <!-- 主题切换按钮 -->
-          <button
-            @click="toggleTheme"
-            class="p-2 hover:bg-white/10 transition-colors theme-toggle-btn"
-            :title="isDark ? '切换到亮色模式' : '切换到暗色模式'"
-          >
-            <!-- 太阳图标 (亮色模式) -->
-            <svg
-              v-if="isDark"
-              class="w-5 h-5 text-white"
-              fill="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                d="M12 2.25a.75.75 0 01.75.75v2.25a.75.75 0 01-1.5 0V3a.75.75 0 01.75-.75zM7.5 12a4.5 4.5 0 119 0 4.5 4.5 0 01-9 0zM18.894 6.166a.75.75 0 00-1.06-1.06l-1.591 1.59a.75.75 0 101.06 1.061l1.591-1.59zM21.75 12a.75.75 0 01-.75.75h-2.25a.75.75 0 010-1.5H21a.75.75 0 01.75.75zM17.834 18.894a.75.75 0 001.06-1.06l-1.59-1.591a.75.75 0 10-1.061 1.06l1.59 1.591zM12 18a.75.75 0 01.75.75V21a.75.75 0 01-1.5 0v-2.25A.75.75 0 0112 18zM7.758 17.303a.75.75 0 00-1.061-1.06l-1.591 1.59a.75.75 0 001.06 1.061l1.591-1.59zM6 12a.75.75 0 01-.75.75H3a.75.75 0 010-1.5h2.25A.75.75 0 016 12zM6.697 7.757a.75.75 0 001.06-1.06l-1.59-1.591a.75.75 0 00-1.061 1.06l1.59 1.591z"
-              />
-            </svg>
-            <!-- 月亮图标 (暗色模式) -->
-            <svg
-              v-else
-              class="w-5 h-5 text-gray-700"
-              fill="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                fill-rule="evenodd"
-                d="M9.528 1.718a.75.75 0 01.162.819A8.97 8.97 0 009 6a9 9 0 009 9 8.97 8.97 0 003.463-.69.75.75 0 01.981.98 10.503 10.503 0 01-9.694 6.46c-5.799 0-10.5-4.701-10.5-10.5 0-4.368 2.667-8.112 6.46-9.694a.75.75 0 01.818.162z"
-                clip-rule="evenodd"
-              />
-            </svg>
-          </button>
+        <!-- 搜索框和拉线开关 -->
+        <div class="hidden lg:flex items-center space-x-4 relative">
           <div class="relative">
             <input
               v-model="searchKeyword"
@@ -81,6 +50,9 @@
           >
             搜索
           </button>
+
+          <!-- 拉线开关 -->
+          <PullChainSwitch />
         </div>
 
         <!-- 移动端菜单按钮 -->
@@ -128,38 +100,9 @@
               {{ item.name }}
             </RouterLink>
 
-            <!-- 移动端主题切换 -->
-            <div class="px-4 py-2 border-t border-gray-200">
-              <button
-                @click="toggleTheme"
-                class="flex items-center w-full px-4 py-2 text-white hover:bg-white/10 transition-colors mobile-theme-btn"
-              >
-                <!-- 太阳图标 (亮色模式) -->
-                <svg
-                  v-if="isDark"
-                  class="w-5 h-5 mr-3"
-                  fill="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    d="M12 2.25a.75.75 0 01.75.75v2.25a.75.75 0 01-1.5 0V3a.75.75 0 01.75-.75zM7.5 12a4.5 4.5 0 119 0 4.5 4.5 0 01-9 0zM18.894 6.166a.75.75 0 00-1.06-1.06l-1.591 1.59a.75.75 0 101.06 1.061l1.591-1.59zM21.75 12a.75.75 0 01-.75.75h-2.25a.75.75 0 010-1.5H21a.75.75 0 01.75.75zM17.834 18.894a.75.75 0 001.06-1.06l-1.59-1.591a.75.75 0 10-1.061 1.06l1.59 1.591zM12 18a.75.75 0 01.75.75V21a.75.75 0 01-1.5 0v-2.25A.75.75 0 0112 18zM7.758 17.303a.75.75 0 00-1.061-1.06l-1.591 1.59a.75.75 0 001.06 1.061l1.591-1.59zM6 12a.75.75 0 01-.75.75H3a.75.75 0 010-1.5h2.25A.75.75 0 016 12zM6.697 7.757a.75.75 0 001.06-1.06l-1.59-1.591a.75.75 0 00-1.061 1.06l1.59 1.591z"
-                  />
-                </svg>
-                <!-- 月亮图标 (暗色模式) -->
-                <svg
-                  v-else
-                  class="w-5 h-5 mr-3"
-                  fill="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    fill-rule="evenodd"
-                    d="M9.528 1.718a.75.75 0 01.162.819A8.97 8.97 0 009 6a9 9 0 009 9 8.97 8.97 0 003.463-.69.75.75 0 01.981.98 10.503 10.503 0 01-9.694 6.46c-5.799 0-10.5-4.701-10.5-10.5 0-4.368 2.667-8.112 6.46-9.694a.75.75 0 01.818.162z"
-                    clip-rule="evenodd"
-                  />
-                </svg>
-                {{ isDark ? "切换到亮色模式" : "切换到暗色模式" }}
-              </button>
+            <!-- 移动端拉线开关 -->
+            <div class="px-4 py-2 border-t border-gray-200 flex justify-center">
+              <PullChainSwitch />
             </div>
 
             <!-- 移动端搜索 -->
@@ -188,6 +131,7 @@
 import { ref } from "vue";
 import { useRouter } from "vue-router";
 import { useTheme } from "../composables/useTheme.js";
+import PullChainSwitch from "./PullChainSwitch.vue";
 
 // 图标组件 (使用简单的 SVG)
 const HomeIcon = {
@@ -236,7 +180,7 @@ const searchKeyword = ref("");
 const mobileMenuOpen = ref(false);
 
 // 主题功能
-const { isDark, toggleTheme } = useTheme();
+const { isDark } = useTheme();
 
 const navItems = [
   { name: "首页", path: "/" },
@@ -269,6 +213,9 @@ const closeMobileMenu = () => {
 .app-header {
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   background: rgba(0, 0, 0, 0.2);
+  overflow: visible; /* 允许拉线超出header */
+  position: relative;
+  z-index: 50;
 }
 
 html.light .app-header {
