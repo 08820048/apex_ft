@@ -12,6 +12,31 @@
     <meta property="og:description" content="专注于技术分享的个人博客" />
     <meta property="og:image" content="/apex.jpg" />
     <meta property="og:type" content="website" />
+
+    <!-- 汉仪行楷字体 -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <!-- 如果有汉仪行楷的CDN链接，可以在这里添加 -->
+    <style>
+      @font-face {
+        font-family: "汉仪行楷";
+        src: url("https://cdn.jsdelivr.net/gh/lxgw/LxgwWenKai@v1.330/fonts/LXGWWenKai-Regular.woff2")
+            format("woff2"),
+          url("https://fonts.cdnfonts.com/s/15455/HanYiXingKai.woff")
+            format("woff"),
+          local("汉仪行楷"), local("HanYi XingKai"), local("STXingkai"),
+          local("华文行楷"), local("STKaiti");
+        font-weight: normal;
+        font-style: normal;
+        font-display: swap;
+      }
+
+      /* 字体预加载优化 */
+      .special-font {
+        font-feature-settings: "kern" 1;
+        text-rendering: optimizeLegibility;
+      }
+    </style>
   </head>
   <body>
     <div id="app"></div>

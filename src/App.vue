@@ -17,8 +17,16 @@
 </template>
 
 <script setup>
+import { onMounted } from "vue";
 import AppHeader from "./components/AppHeader.vue";
 import AppFooter from "./components/AppFooter.vue";
 import QueryStatsToast from "./components/QueryStatsToast.vue";
 import ServerTip from "./components/ServerTip.vue";
+import { useTheme } from "./composables/useTheme.js";
+
+const { initTheme } = useTheme();
+
+onMounted(() => {
+  initTheme();
+});
 </script>

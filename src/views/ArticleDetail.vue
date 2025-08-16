@@ -1,5 +1,5 @@
 <template>
-  <div class="article-detail-container">
+  <div class="min-h-screen">
     <!-- 禅模式提示弹窗 -->
     <Transition name="modal">
       <div
@@ -8,7 +8,7 @@
         @click="closeZenTip"
       >
         <div
-          class="bg-white dark:bg-gray-800 rounded-2xl p-8 max-w-md mx-4 text-center shadow-2xl border border-gray-100 dark:border-gray-700"
+          class="glass-effect p-8 max-w-md mx-4 text-center shadow-2xl border border-white/10"
           @click.stop
         >
           <div class="relative mb-6">
@@ -17,10 +17,8 @@
               class="absolute inset-0 bg-purple-100 dark:bg-purple-900 rounded-full opacity-20 blur-xl"
             ></div>
           </div>
-          <h3 class="text-xl font-bold text-gray-900 dark:text-gray-100 mb-4">
-            进入禅模式
-          </h3>
-          <p class="text-gray-600 dark:text-gray-300 mb-4">
+          <h3 class="text-xl font-bold text-white mb-4">进入禅模式</h3>
+          <p class="text-gray-200 mb-4">
             请输入"阿弥陀佛"，让心灵沉静下来，专注于文字的力量
           </p>
 
@@ -31,7 +29,7 @@
               @keyup.enter="checkZenInput"
               type="text"
               placeholder="请输入：阿弥陀佛"
-              class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200"
+              class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200"
               :class="
                 inputStatus === 'success'
                   ? 'border-green-500 bg-green-50 dark:bg-green-900/20'
@@ -90,6 +88,7 @@
 
     <!-- 主内容区域 -->
     <div
+      ref="mainContainer"
       :class="[
         'min-h-screen transition-all duration-500',
         zenMode ? 'zen-mode' : 'py-8 px-4 sm:px-6 lg:px-8',
@@ -103,10 +102,10 @@
       >
         <!-- 加载状态 -->
         <div v-if="loading" class="glass-effect rounded-2xl p-8 animate-pulse">
-          <div class="h-8 bg-gray-300 rounded mb-4"></div>
-          <div class="h-4 bg-gray-300 rounded mb-2"></div>
-          <div class="h-4 bg-gray-300 rounded w-3/4 mb-8"></div>
-          <div class="h-64 bg-gray-300 rounded"></div>
+          <div class="h-8 bg-gray-600 rounded mb-4"></div>
+          <div class="h-4 bg-gray-600 rounded mb-2"></div>
+          <div class="h-4 bg-gray-600 rounded w-3/4 mb-8"></div>
+          <div class="h-64 bg-gray-600 rounded"></div>
         </div>
 
         <!-- 禅模式退出按钮 -->
@@ -139,7 +138,7 @@
         >
           <button
             @click="showZenTip = true"
-            class="group relative w-14 h-14 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-full shadow-lg hover:shadow-xl border border-gray-200 dark:border-gray-600 hover:border-purple-300 dark:hover:border-purple-500 transform hover:scale-105 transition-all duration-300 flex items-center justify-center"
+            class="group relative w-14 h-14 glass-effect text-white shadow-lg hover:shadow-xl border border-white/20 hover:border-purple-400 transform hover:scale-105 transition-all duration-300 flex items-center justify-center"
             title="进入禅模式"
           >
             <span
@@ -181,7 +180,7 @@
           >
             <h1
               :class="[
-                'font-bold text-gray-900 mb-4 transition-all duration-500',
+                'font-bold text-white mb-4 transition-all duration-500',
                 zenMode
                   ? 'text-4xl md:text-6xl leading-tight'
                   : 'text-3xl md:text-4xl',
@@ -193,7 +192,7 @@
             <!-- 文章元信息 -->
             <div
               v-if="!zenMode"
-              class="flex flex-wrap items-center gap-4 text-sm text-gray-600 mb-6"
+              class="flex flex-wrap items-center gap-4 text-sm text-gray-300 mb-6"
             >
               <div class="flex items-center">
                 <UserIcon class="w-4 h-4 mr-1" />
@@ -217,11 +216,8 @@
               <span
                 v-for="tag in article.tags"
                 :key="tag.id"
-                class="px-3 py-1 text-sm rounded-full"
-                :style="{
-                  backgroundColor: tag.color + '20',
-                  color: tag.color,
-                }"
+                class="px-3 py-1 text-sm"
+                :style="`background-color: ${tag.color}20; color: ${tag.color} !important;`"
               >
                 # {{ tag.name }}
               </span>
@@ -256,9 +252,9 @@
           <!-- 文章底部 -->
           <footer
             v-if="!zenMode"
-            class="p-8 border-t border-gray-200 bg-gray-50"
+            class="p-8 border-t border-white/10 bg-white/5"
           >
-            <div class="text-sm text-gray-500 text-center">
+            <div class="text-sm text-gray-400 text-center">
               最后更新于 {{ formatDate(article.updatedAt) }}
             </div>
           </footer>
@@ -349,8 +345,8 @@
               />
             </svg>
           </div>
-          <h3 class="text-lg font-semibold text-gray-900 mb-2">文章不存在</h3>
-          <p class="text-gray-600 mb-6">抱歉，您访问的文章不存在或已被删除</p>
+          <h3 class="text-lg font-semibold text-white mb-2">文章不存在</h3>
+          <p class="text-gray-200 mb-6">抱歉，您访问的文章不存在或已被删除</p>
           <RouterLink
             to="/"
             class="inline-flex items-center px-6 py-3 bg-blue-500 hover:bg-blue-600 text-white rounded-full transition-colors"
@@ -638,12 +634,41 @@ watch(
 <style scoped>
 /* 自定义 prose 样式覆盖 */
 .prose {
-  @apply text-gray-800;
+  @apply text-gray-200;
+}
+
+.prose :deep(h1),
+.prose :deep(h2),
+.prose :deep(h3),
+.prose :deep(h4),
+.prose :deep(h5),
+.prose :deep(h6) {
+  @apply text-white;
+}
+
+.prose :deep(strong) {
+  @apply text-white;
+}
+
+.prose :deep(blockquote) {
+  @apply border-blue-400 text-gray-300;
+}
+
+.prose :deep(code) {
+  @apply text-blue-300 bg-gray-800/50;
+}
+
+.prose :deep(pre) {
+  @apply bg-gray-800/50 border border-gray-600;
+}
+
+.prose :deep(a) {
+  @apply text-blue-400 hover:text-blue-300;
 }
 
 /* 标题锚点样式 */
 .prose :deep(.header-anchor) {
-  @apply text-gray-400 hover:text-blue-500 no-underline transition-all duration-200;
+  @apply text-gray-400 hover:text-blue-400 no-underline transition-all duration-200;
 }
 
 /* 禅模式样式 */
@@ -772,5 +797,210 @@ body.zen-mode-active button:not(.zen-mode button) {
 
 .katex {
   font-size: 1.1em;
+}
+
+/* 亮色模式优化 */
+html.light .glass-effect h1 {
+  color: #111827 !important;
+}
+
+html.light .glass-effect .text-white {
+  color: #111827 !important;
+}
+
+html.light .glass-effect .text-gray-300 {
+  color: #6b7280 !important;
+}
+
+html.light .glass-effect .text-gray-400 {
+  color: #9ca3af !important;
+}
+
+html.light .glass-effect .border-gray-200 {
+  border-color: rgba(0, 0, 0, 0.1) !important;
+}
+
+html.light .glass-effect .border-white\/10 {
+  border-color: rgba(0, 0, 0, 0.1) !important;
+}
+
+html.light .glass-effect .bg-white\/5 {
+  background-color: rgba(0, 0, 0, 0.05) !important;
+}
+
+/* 亮色模式下的prose样式优化 */
+html.light .prose {
+  color: #111827 !important;
+}
+
+html.light .prose h1,
+html.light .prose h2,
+html.light .prose h3,
+html.light .prose h4,
+html.light .prose h5,
+html.light .prose h6 {
+  color: #111827 !important;
+}
+
+html.light .prose p {
+  color: #374151 !important;
+}
+
+html.light .prose strong {
+  color: #111827 !important;
+}
+
+/* 代码块完全不受亮色模式影响，保持暗色样式 */
+html.light .prose pre {
+  background: #1e293b !important; /* 强制暗色背景 */
+  color: #e2e8f0 !important; /* 强制亮色文字 */
+  border: 1px solid #334155 !important;
+}
+
+html.light .prose pre code {
+  background: transparent !important;
+  color: inherit !important;
+}
+
+/* 内联代码在亮色模式下的样式 */
+html.light .prose code:not(pre code) {
+  color: #dc2626 !important;
+  background-color: rgba(0, 0, 0, 0.05) !important;
+}
+
+/* 确保代码块不受glass-effect的白色背景影响 */
+html.light .glass-effect pre {
+  background: #1e293b !important;
+  color: #e2e8f0 !important;
+}
+
+html.light .glass-effect pre code {
+  background: transparent !important;
+  color: inherit !important;
+}
+
+/* 移除可能影响代码块的其他白色覆盖 */
+html.light .prose pre * {
+  background: inherit !important;
+}
+
+/* 确保语法高亮的颜色不被覆盖 */
+html.light .prose pre .token.comment,
+html.light .prose pre .token.prolog,
+html.light .prose pre .token.doctype,
+html.light .prose pre .token.cdata {
+  color: #64748b !important;
+}
+
+html.light .prose pre .token.punctuation {
+  color: #94a3b8 !important;
+}
+
+html.light .prose pre .token.property,
+html.light .prose pre .token.tag,
+html.light .prose pre .token.boolean,
+html.light .prose pre .token.number,
+html.light .prose pre .token.constant,
+html.light .prose pre .token.symbol,
+html.light .prose pre .token.deleted {
+  color: #f87171 !important;
+}
+
+html.light .prose pre .token.selector,
+html.light .prose pre .token.attr-name,
+html.light .prose pre .token.string,
+html.light .prose pre .token.char,
+html.light .prose pre .token.builtin,
+html.light .prose pre .token.inserted {
+  color: #34d399 !important;
+}
+
+html.light .prose pre .token.operator,
+html.light .prose pre .token.entity,
+html.light .prose pre .token.url,
+html.light .prose pre .language-css .token.string,
+html.light .prose pre .style .token.string {
+  color: #60a5fa !important;
+}
+
+html.light .prose pre .token.atrule,
+html.light .prose pre .token.attr-value,
+html.light .prose pre .token.keyword {
+  color: #a78bfa !important;
+}
+
+html.light .prose pre .token.function,
+html.light .prose pre .token.class-name {
+  color: #fbbf24 !important;
+}
+
+html.light .prose pre .token.regex,
+html.light .prose pre .token.important,
+html.light .prose pre .token.variable {
+  color: #fb7185 !important;
+}
+
+html.light .prose blockquote {
+  color: #6b7280 !important;
+  border-left-color: #d1d5db !important;
+}
+
+html.light .prose a {
+  color: #2563eb !important;
+}
+
+html.light .prose a:hover {
+  color: #1d4ed8 !important;
+}
+
+/* 亮色模式下的目录导航样式 */
+html.light .glass-effect .text-gray-900 {
+  color: #111827 !important;
+}
+
+html.light .glass-effect .text-gray-600 {
+  color: #4b5563 !important;
+}
+
+html.light .glass-effect .hover\\:text-blue-600:hover {
+  color: #2563eb !important;
+}
+
+html.light .glass-effect .text-blue-600 {
+  color: #2563eb !important;
+}
+
+html.light .glass-effect .border-l-blue-600 {
+  border-left-color: #2563eb !important;
+}
+
+html.light .glass-effect .bg-blue-50 {
+  background-color: rgba(59, 130, 246, 0.1) !important;
+}
+
+/* 亮色模式下的禅模式弹窗样式 */
+html.light .glass-effect .text-gray-200 {
+  color: #4b5563 !important;
+}
+
+html.light .glass-effect .border-white\/10 {
+  border-color: rgba(0, 0, 0, 0.1) !important;
+}
+
+/* 亮色模式下的输入框样式 */
+html.light .glass-effect input {
+  background-color: rgba(0, 0, 0, 0.05) !important;
+  border-color: rgba(0, 0, 0, 0.2) !important;
+  color: #111827 !important;
+}
+
+html.light .glass-effect input::placeholder {
+  color: #6b7280 !important;
+}
+
+html.light .glass-effect input:focus {
+  background-color: rgba(0, 0, 0, 0.08) !important;
+  border-color: #7c3aed !important;
+  box-shadow: 0 0 0 2px rgba(124, 58, 237, 0.2) !important;
 }
 </style>

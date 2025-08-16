@@ -3,28 +3,20 @@
     <div class="max-w-7xl mx-auto">
       <!-- 页面标题 -->
       <div class="text-center mb-12">
-        <h1 class="text-4xl font-bold text-gray-900 dark:text-white mb-4">
-          友情链接
-        </h1>
-        <p class="text-xl text-gray-600 dark:text-white/80">
-          与优秀的朋友们一起成长
-        </p>
+        <h1 class="text-4xl font-bold text-white mb-4">友情链接</h1>
+        <p class="text-xl text-gray-200">与优秀的朋友们一起成长</p>
       </div>
 
       <!-- 本站友链信息 -->
-      <div
-        class="glass-effect rounded-2xl p-6 mb-8 border border-blue-200 dark:border-blue-800"
-      >
-        <h2
-          class="text-xl font-bold text-gray-900 dark:text-white mb-4 flex items-center"
-        >
+      <div class="glass-effect p-6 mb-8 border border-blue-500/30">
+        <h2 class="text-xl font-bold text-white mb-4 flex items-center">
           <span class="w-2 h-2 bg-blue-500 rounded-full mr-3"></span>
           本站友链信息
         </h2>
-        <p class="text-gray-600 dark:text-gray-300 text-sm mb-4">
+        <p class="text-gray-200 text-sm mb-4">
           如果您想添加本站到您的友链中，请使用以下信息：
         </p>
-        <div class="bg-gray-50 dark:bg-gray-800 rounded-xl p-4 space-y-3">
+        <div class="bg-gray-50 dark:bg-gray-800 p-4 space-y-3">
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label
@@ -32,7 +24,7 @@
                 >博客名称</label
               >
               <div
-                class="px-3 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white text-sm"
+                class="px-3 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white text-sm"
               >
                 Apex-八尺妖剑
               </div>
@@ -43,7 +35,7 @@
                 >博客地址</label
               >
               <div
-                class="px-3 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white text-sm"
+                class="px-3 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white text-sm"
               >
                 https://www.ilikexff.cn/
               </div>
@@ -54,7 +46,7 @@
                 >博客Logo</label
               >
               <div
-                class="px-3 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white text-sm break-all"
+                class="px-3 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white text-sm break-all"
               >
                 https://images.waer.ltd/notes/202508151240669.jpg
               </div>
@@ -65,7 +57,7 @@
                 >博客描述</label
               >
               <div
-                class="px-3 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white text-sm"
+                class="px-3 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white text-sm"
               >
                 一个爱玩马超的游戏程序员。
               </div>
@@ -87,7 +79,7 @@
       </div>
 
       <!-- 友链申请说明 -->
-      <div class="glass-effect rounded-2xl p-6 mb-8">
+      <div class="glass-effect p-6 mb-8">
         <h2 class="text-xl font-bold text-gray-900 dark:text-white mb-4">
           友链申请
         </h2>
@@ -121,11 +113,7 @@
           v-if="loading"
           class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
         >
-          <div
-            v-for="i in 8"
-            :key="i"
-            class="glass-effect rounded-2xl p-6 animate-pulse"
-          >
+          <div v-for="i in 8" :key="i" class="glass-effect p-6 animate-pulse">
             <div class="flex items-center mb-4">
               <div class="w-12 h-12 bg-gray-300 rounded-full mr-4"></div>
               <div class="flex-1">
@@ -149,7 +137,7 @@
             :href="link.url"
             target="_blank"
             rel="noopener noreferrer"
-            class="glass-effect rounded-2xl p-6 card-hover group block"
+            class="glass-effect p-6 card-hover group block"
           >
             <div class="flex items-center mb-4">
               <div class="w-12 h-12 flex-shrink-0 mr-4">
@@ -198,7 +186,7 @@
         </div>
 
         <!-- 空状态 -->
-        <div v-else class="glass-effect rounded-2xl p-12 text-center">
+        <div v-else class="glass-effect p-12 text-center">
           <div class="text-gray-400 dark:text-gray-500 mb-4">
             <LinkIcon class="w-16 h-16 mx-auto" />
           </div>
@@ -304,5 +292,63 @@ onMounted(loadFriendLinks);
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
+}
+
+/* 亮色模式优化 */
+html.light .text-white {
+  color: #111827 !important;
+}
+
+html.light .text-gray-200 {
+  color: #4b5563 !important;
+}
+
+html.light .text-gray-300 {
+  color: #6b7280 !important;
+}
+
+html.light .text-gray-400 {
+  color: #9ca3af !important;
+}
+
+html.light .text-gray-600 {
+  color: #4b5563 !important;
+}
+
+html.light .text-gray-700 {
+  color: #374151 !important;
+}
+
+html.light .text-gray-900 {
+  color: #111827 !important;
+}
+
+html.light .text-blue-400 {
+  color: #2563eb !important;
+}
+
+html.light .text-green-400 {
+  color: #059669 !important;
+}
+
+html.light .text-red-400 {
+  color: #dc2626 !important;
+}
+
+/* 亮色模式下的表单样式 */
+html.light .bg-gray-50 {
+  background-color: #f8fafc !important;
+}
+
+html.light .bg-white {
+  background-color: #ffffff !important;
+}
+
+html.light .border-gray-300 {
+  border-color: #d1d5db !important;
+}
+
+html.light .bg-gray-600 {
+  background-color: #d1d5db !important;
 }
 </style>

@@ -1,7 +1,5 @@
 <template>
-  <header
-    class="glass-effect sticky top-0 z-50 border-b border-white/20 bg-white/80"
-  >
+  <header class="app-header glass-effect sticky top-0 z-50 backdrop-blur-lg">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex items-center justify-between h-16">
         <!-- Logo -->
@@ -12,7 +10,7 @@
             class="w-10 h-10 rounded-full object-cover group-hover:scale-105 transition-transform shadow-md"
           />
           <span
-            class="text-xl font-bold text-gray-900 group-hover:scale-105 transition-transform"
+            class="text-3xl font-bold text-white group-hover:scale-105 transition-transform logo-text special-font"
           >
             八尺妖剑
           </span>
@@ -31,23 +29,55 @@
           </RouterLink>
         </nav>
 
-        <!-- 搜索框 -->
+        <!-- 主题切换和搜索框 -->
         <div class="hidden lg:flex items-center space-x-4">
+          <!-- 主题切换按钮 -->
+          <button
+            @click="toggleTheme"
+            class="p-2 hover:bg-white/10 transition-colors theme-toggle-btn"
+            :title="isDark ? '切换到亮色模式' : '切换到暗色模式'"
+          >
+            <!-- 太阳图标 (亮色模式) -->
+            <svg
+              v-if="isDark"
+              class="w-5 h-5 text-white"
+              fill="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M12 2.25a.75.75 0 01.75.75v2.25a.75.75 0 01-1.5 0V3a.75.75 0 01.75-.75zM7.5 12a4.5 4.5 0 119 0 4.5 4.5 0 01-9 0zM18.894 6.166a.75.75 0 00-1.06-1.06l-1.591 1.59a.75.75 0 101.06 1.061l1.591-1.59zM21.75 12a.75.75 0 01-.75.75h-2.25a.75.75 0 010-1.5H21a.75.75 0 01.75.75zM17.834 18.894a.75.75 0 001.06-1.06l-1.59-1.591a.75.75 0 10-1.061 1.06l1.59 1.591zM12 18a.75.75 0 01.75.75V21a.75.75 0 01-1.5 0v-2.25A.75.75 0 0112 18zM7.758 17.303a.75.75 0 00-1.061-1.06l-1.591 1.59a.75.75 0 001.06 1.061l1.591-1.59zM6 12a.75.75 0 01-.75.75H3a.75.75 0 010-1.5h2.25A.75.75 0 016 12zM6.697 7.757a.75.75 0 001.06-1.06l-1.59-1.591a.75.75 0 00-1.061 1.06l1.59 1.591z"
+              />
+            </svg>
+            <!-- 月亮图标 (暗色模式) -->
+            <svg
+              v-else
+              class="w-5 h-5 text-gray-700"
+              fill="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M9.528 1.718a.75.75 0 01.162.819A8.97 8.97 0 009 6a9 9 0 009 9 8.97 8.97 0 003.463-.69.75.75 0 01.981.98 10.503 10.503 0 01-9.694 6.46c-5.799 0-10.5-4.701-10.5-10.5 0-4.368 2.667-8.112 6.46-9.694a.75.75 0 01.818.162z"
+                clip-rule="evenodd"
+              />
+            </svg>
+          </button>
           <div class="relative">
             <input
               v-model="searchKeyword"
               @keyup.enter="handleSearch"
               type="text"
               placeholder="搜索文章..."
-              class="w-64 px-4 py-2 pl-10 bg-white/70 backdrop-blur-sm border-2 border-[#a6afbd] rounded-full text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent focus:bg-white/90 transition-all shadow-sm"
+              class="w-64 px-4 py-2 pl-10 bg-white/20 backdrop-blur-sm border-2 border-white/30 text-white placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-white/50 focus:border-white/50 focus:bg-white/30 transition-all shadow-sm search-input"
             />
             <SearchIcon
-              class="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-500"
+              class="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-300"
             />
           </div>
           <button
             @click="handleSearch"
-            class="px-4 py-2 bg-gray-900 hover:bg-black text-white rounded-full transition-colors"
+            class="px-4 py-2 bg-gray-900 hover:bg-black transition-colors search-btn"
+            style="color: white !important"
           >
             搜索
           </button>
@@ -56,10 +86,13 @@
         <!-- 移动端菜单按钮 -->
         <button
           @click="toggleMobileMenu"
-          class="md:hidden p-2 rounded-lg hover:bg-gray-100 transition-colors"
+          class="md:hidden p-2 hover:bg-white/10 transition-colors mobile-menu-btn"
         >
-          <MenuIcon v-if="!mobileMenuOpen" class="w-6 h-6 text-gray-700" />
-          <XIcon v-else class="w-6 h-6 text-gray-700" />
+          <MenuIcon
+            v-if="!mobileMenuOpen"
+            class="w-6 h-6 text-white menu-icon"
+          />
+          <XIcon v-else class="w-6 h-6 text-white menu-icon" />
         </button>
       </div>
 
@@ -67,7 +100,7 @@
       <Transition name="slide-up">
         <div
           v-if="mobileMenuOpen"
-          class="md:hidden py-4 border-t border-gray-200"
+          class="md:hidden py-4 border-t border-gray-200 mobile-menu"
         >
           <!-- 移动端Logo -->
           <div
@@ -78,7 +111,10 @@
               alt="ApexBlog Logo"
               class="w-8 h-8 rounded-full object-cover mr-2 shadow-sm"
             />
-            <span class="text-lg font-bold text-gray-900">ApexBlog</span>
+            <span
+              class="text-2xl font-bold text-white mobile-logo-text special-font"
+              >八尺妖剑</span
+            >
           </div>
 
           <div class="flex flex-col space-y-4 pt-4">
@@ -87,10 +123,44 @@
               :key="item.path"
               :to="item.path"
               @click="closeMobileMenu"
-              class="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-lg transition-colors"
+              class="flex items-center px-4 py-2 text-white hover:bg-white/10 transition-colors mobile-nav-link"
             >
               {{ item.name }}
             </RouterLink>
+
+            <!-- 移动端主题切换 -->
+            <div class="px-4 py-2 border-t border-gray-200">
+              <button
+                @click="toggleTheme"
+                class="flex items-center w-full px-4 py-2 text-white hover:bg-white/10 transition-colors mobile-theme-btn"
+              >
+                <!-- 太阳图标 (亮色模式) -->
+                <svg
+                  v-if="isDark"
+                  class="w-5 h-5 mr-3"
+                  fill="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    d="M12 2.25a.75.75 0 01.75.75v2.25a.75.75 0 01-1.5 0V3a.75.75 0 01.75-.75zM7.5 12a4.5 4.5 0 119 0 4.5 4.5 0 01-9 0zM18.894 6.166a.75.75 0 00-1.06-1.06l-1.591 1.59a.75.75 0 101.06 1.061l1.591-1.59zM21.75 12a.75.75 0 01-.75.75h-2.25a.75.75 0 010-1.5H21a.75.75 0 01.75.75zM17.834 18.894a.75.75 0 001.06-1.06l-1.59-1.591a.75.75 0 10-1.061 1.06l1.59 1.591zM12 18a.75.75 0 01.75.75V21a.75.75 0 01-1.5 0v-2.25A.75.75 0 0112 18zM7.758 17.303a.75.75 0 00-1.061-1.06l-1.591 1.59a.75.75 0 001.06 1.061l1.591-1.59zM6 12a.75.75 0 01-.75.75H3a.75.75 0 010-1.5h2.25A.75.75 0 016 12zM6.697 7.757a.75.75 0 001.06-1.06l-1.59-1.591a.75.75 0 00-1.061 1.06l1.59 1.591z"
+                  />
+                </svg>
+                <!-- 月亮图标 (暗色模式) -->
+                <svg
+                  v-else
+                  class="w-5 h-5 mr-3"
+                  fill="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M9.528 1.718a.75.75 0 01.162.819A8.97 8.97 0 009 6a9 9 0 009 9 8.97 8.97 0 003.463-.69.75.75 0 01.981.98 10.503 10.503 0 01-9.694 6.46c-5.799 0-10.5-4.701-10.5-10.5 0-4.368 2.667-8.112 6.46-9.694a.75.75 0 01.818.162z"
+                    clip-rule="evenodd"
+                  />
+                </svg>
+                {{ isDark ? "切换到亮色模式" : "切换到暗色模式" }}
+              </button>
+            </div>
 
             <!-- 移动端搜索 -->
             <div class="px-4">
@@ -100,10 +170,10 @@
                   @keyup.enter="handleSearch"
                   type="text"
                   placeholder="搜索文章..."
-                  class="w-full px-4 py-2 pl-10 bg-white/70 backdrop-blur-sm border-2 border-[#a6afbd] rounded-lg text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent focus:bg-white/90 transition-all shadow-sm"
+                  class="w-full px-4 py-2 pl-10 bg-white/20 backdrop-blur-sm border-2 border-white/30 text-white placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-white/50 focus:border-white/50 focus:bg-white/30 transition-all shadow-sm mobile-search-input"
                 />
                 <SearchIcon
-                  class="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-500"
+                  class="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-300"
                 />
               </div>
             </div>
@@ -117,6 +187,7 @@
 <script setup>
 import { ref } from "vue";
 import { useRouter } from "vue-router";
+import { useTheme } from "../composables/useTheme.js";
 
 // 图标组件 (使用简单的 SVG)
 const HomeIcon = {
@@ -164,6 +235,9 @@ const router = useRouter();
 const searchKeyword = ref("");
 const mobileMenuOpen = ref(false);
 
+// 主题功能
+const { isDark, toggleTheme } = useTheme();
+
 const navItems = [
   { name: "首页", path: "/" },
   { name: "分类", path: "/categories" },
@@ -191,11 +265,199 @@ const closeMobileMenu = () => {
 </script>
 
 <style scoped>
+/* Header样式 */
+.app-header {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(0, 0, 0, 0.2);
+}
+
+html.light .app-header {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.15);
+  background: rgba(255, 255, 255, 0.95);
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+}
+
+/* 导航链接样式 */
 .nav-link {
-  @apply flex items-center px-3 py-2 text-gray-700 hover:text-gray-900 rounded-lg transition-all duration-200 hover:bg-gray-100;
+  @apply flex items-center px-3 py-2 text-white hover:text-gray-200 transition-all duration-200 hover:bg-white/10;
 }
 
 .nav-link-active {
-  @apply text-gray-900 bg-gray-100;
+  @apply text-white bg-white/20;
+}
+
+/* 亮色模式下的导航链接 */
+html.light .nav-link {
+  @apply text-gray-700 hover:text-gray-900;
+}
+
+html.light .nav-link:hover {
+  background: rgba(0, 0, 0, 0.1);
+}
+
+html.light .nav-link-active {
+  @apply text-gray-900;
+  background: rgba(0, 0, 0, 0.15);
+}
+
+/* Logo特殊字体样式 - 简洁风格 */
+.special-font {
+  font-family: "汉仪行楷", "HanYi XingKai", "STXingkai", "华文行楷", "STKaiti",
+    "KaiTi", "楷体", "STFangsong", "FangSong", "仿宋", "Microsoft YaHei",
+    "微软雅黑", "SimSun", "宋体", "cursive", "serif";
+  font-weight: 700;
+  font-size: 1.3em; /* 适度增大 */
+  letter-spacing: 0.1em;
+  color: white;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  position: relative;
+}
+
+.special-font::after {
+  content: "";
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.6),
+    transparent
+  );
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.special-font:hover::after {
+  opacity: 1;
+}
+
+.special-font:hover {
+  transform: scale(1.15); /* 悬停时进一步放大 */
+  text-shadow: 0 3px 6px rgba(0, 0, 0, 0.5);
+}
+
+/* Logo文字亮色模式 */
+html.light .logo-text {
+  @apply text-gray-900;
+}
+
+html.light .special-font {
+  color: #111827;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  transform: scale(1.1);
+}
+
+html.light .special-font:hover {
+  transform: scale(1.15);
+  text-shadow: 0 3px 6px rgba(0, 0, 0, 0.3);
+}
+
+html.light .special-font::after {
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(0, 0, 0, 0.4),
+    transparent
+  );
+}
+
+/* 移动端亮色模式样式 */
+html.light .mobile-menu {
+  background: rgba(255, 255, 255, 0.95);
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+html.light .mobile-logo-text {
+  @apply text-gray-900;
+}
+
+html.light .mobile-nav-link {
+  @apply text-gray-700 hover:text-gray-900;
+}
+
+html.light .mobile-nav-link:hover {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+html.light .mobile-theme-btn {
+  @apply text-gray-700 hover:text-gray-900;
+}
+
+html.light .mobile-theme-btn:hover {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+html.light .mobile-menu-btn {
+  /* 移动端菜单按钮亮色模式样式 */
+}
+
+html.light .mobile-menu-btn:hover {
+  background: rgba(0, 0, 0, 0.1);
+}
+
+html.light .menu-icon {
+  @apply text-gray-700;
+}
+
+/* 搜索框亮色模式样式 */
+html.light .search-input {
+  background: rgba(255, 255, 255, 0.9) !important;
+  border-color: rgba(0, 0, 0, 0.15) !important;
+  color: #111827 !important;
+}
+
+html.light .search-input::placeholder {
+  color: #6b7280 !important;
+}
+
+html.light .search-input:focus {
+  background: rgba(255, 255, 255, 0.95) !important;
+  border-color: rgba(0, 0, 0, 0.25) !important;
+  box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* 亮色模式下的搜索图标 */
+html.light .search-input + svg {
+  color: #6b7280 !important;
+}
+
+/* 移动端搜索框亮色模式样式 */
+html.light .mobile-search-input {
+  background: rgba(255, 255, 255, 0.9) !important;
+  border-color: rgba(0, 0, 0, 0.15) !important;
+  color: #111827 !important;
+}
+
+html.light .mobile-search-input::placeholder {
+  color: #6b7280 !important;
+}
+
+html.light .mobile-search-input:focus {
+  background: rgba(255, 255, 255, 0.95) !important;
+  border-color: rgba(0, 0, 0, 0.25) !important;
+  box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* 搜索按钮样式 - 确保文字始终为白色 */
+.search-btn {
+  color: white !important;
+}
+
+html.light .search-btn {
+  background: #111827 !important;
+  color: white !important;
+}
+
+html.light .search-btn:hover {
+  background: #000000 !important;
+  color: white !important;
+}
+
+/* 主题切换按钮亮色模式样式 */
+html.light .theme-toggle-btn:hover {
+  background: rgba(0, 0, 0, 0.1);
 }
 </style>

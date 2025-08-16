@@ -21,11 +21,11 @@
                   class="glass-effect p-6 animate-pulse"
                 >
                   <div class="flex gap-4">
-                    <div class="w-32 h-24 bg-gray-300 rounded"></div>
+                    <div class="w-32 h-24 bg-gray-600 rounded"></div>
                     <div class="flex-1">
-                      <div class="h-6 bg-gray-300 rounded mb-3"></div>
-                      <div class="h-4 bg-gray-300 rounded mb-2"></div>
-                      <div class="h-4 bg-gray-300 rounded w-3/4"></div>
+                      <div class="h-6 bg-gray-600 rounded mb-3"></div>
+                      <div class="h-4 bg-gray-600 rounded mb-2"></div>
+                      <div class="h-4 bg-gray-600 rounded w-3/4"></div>
                     </div>
                   </div>
                 </div>
@@ -55,7 +55,7 @@
                   class="absolute top-2 right-2 z-10 top-tooltip opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-x-2 group-hover:translate-x-0"
                 >
                   <div
-                    class="bg-red-500 text-white px-2 py-1 text-xs font-medium rounded shadow-lg"
+                    class="bg-red-500 text-white px-2 py-1 text-xs font-medium shadow-lg top-badge"
                   >
                     置顶
                   </div>
@@ -74,12 +74,12 @@
                   <div class="flex-1 flex flex-col justify-between">
                     <div>
                       <h3
-                        class="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-2 hover:text-blue-600 dark:hover:text-blue-400 transition-colors line-clamp-2"
+                        class="text-xl font-semibold text-white mb-2 hover:text-blue-400 transition-colors line-clamp-2"
                       >
                         {{ article.title }}
                       </h3>
                       <p
-                        class="text-gray-600 dark:text-gray-300 line-clamp-3 mb-3"
+                        class="text-gray-200 line-clamp-3 mb-3"
                         :class="{ 'flex-1': articles.length >= 5 }"
                       >
                         {{ article.summary }}
@@ -88,7 +88,7 @@
                       <!-- 当文章数量少于5条时，显示正文内容填充空白 -->
                       <div
                         v-if="articles.length < 5 && article.renderedContent"
-                        class="text-gray-600 dark:text-gray-300 text-sm leading-relaxed mt-4 overflow-hidden"
+                        class="text-gray-200 text-sm leading-relaxed mt-4 overflow-hidden"
                         :class="{
                           'flex-1': articles.length < 5,
                           'max-h-20': articles.length === 4,
@@ -97,12 +97,8 @@
                           'max-h-40': articles.length === 1,
                         }"
                       >
-                        <div
-                          class="border-t border-gray-200 dark:border-gray-600 pt-3 mt-3"
-                        >
-                          <div
-                            class="text-xs text-gray-500 dark:text-gray-400 mb-2 font-medium"
-                          >
+                        <div class="border-t border-gray-600 pt-3 mt-3">
+                          <div class="text-xs text-gray-400 mb-2 font-medium">
                             正文预览
                           </div>
                           <div
@@ -114,7 +110,7 @@
                     </div>
                     <div class="flex items-center justify-between mt-auto">
                       <div
-                        class="flex items-center space-x-4 text-sm text-gray-500 dark:text-gray-400"
+                        class="flex items-center space-x-4 text-sm text-gray-400"
                       >
                         <span>{{ formatDate(article.publishedAt) }}</span>
                         <span>{{ article.viewCount }} 阅读</span>
@@ -138,7 +134,7 @@
                         <!-- 文章分类 -->
                         <span
                           v-if="article.category"
-                          class="px-2 py-1 text-xs bg-gradient-to-r from-purple-100 to-purple-200 text-purple-700 dark:from-purple-900 dark:to-purple-800 dark:text-purple-300 rounded-full font-medium border border-purple-200 dark:border-purple-700"
+                          class="px-2 py-1 text-xs bg-gradient-to-r from-purple-900/40 to-purple-800/40 text-purple-300 font-medium border border-purple-500/30"
                         >
                           <svg
                             class="w-3 h-3 inline mr-1"
@@ -154,11 +150,8 @@
                           <span
                             v-for="tag in article.tags?.slice(0, 6)"
                             :key="tag.id"
-                            class="px-2 py-1 text-xs rounded"
-                            :style="{
-                              backgroundColor: tag.color + '20',
-                              color: tag.color,
-                            }"
+                            class="px-2 py-1 text-xs"
+                            :style="`background-color: ${tag.color}20; color: ${tag.color} !important;`"
                           >
                             #{{ tag.name }}
                           </span>
@@ -175,7 +168,7 @@
               v-else-if="!loading && articles.length === 0"
               class="glass-effect p-12 text-center"
             >
-              <div class="text-gray-400 dark:text-gray-500 mb-4">
+              <div class="text-gray-400 mb-4">
                 <svg
                   class="w-16 h-16 mx-auto"
                   fill="currentColor"
@@ -186,14 +179,8 @@
                   />
                 </svg>
               </div>
-              <h3
-                class="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2"
-              >
-                暂无文章
-              </h3>
-              <p class="text-gray-600 dark:text-gray-300">
-                还没有发布任何文章，请稍后再来查看。
-              </p>
+              <h3 class="text-lg font-semibold text-white mb-2">暂无文章</h3>
+              <p class="text-gray-200">还没有发布任何文章，请稍后再来查看。</p>
             </div>
           </div>
         </div>
@@ -205,7 +192,7 @@
           <!-- 热门标签 -->
           <div class="glass-effect p-6 mb-6">
             <h3
-              class="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4 flex items-center"
+              class="text-lg font-semibold text-white mb-4 flex items-center sidebar-title"
             >
               <TagIcon class="w-5 h-5 mr-2 text-blue-600 dark:text-blue-400" />
               热门标签
@@ -220,19 +207,19 @@
                 v-for="tag in popularTags"
                 :key="tag.id"
                 @click="goToTag(tag.id)"
-                class="px-3 py-1 text-sm rounded-full cursor-pointer tag-hover"
-                :style="{ backgroundColor: tag.color + '20', color: tag.color }"
+                class="px-3 py-1 text-sm cursor-pointer tag-hover"
+                :style="`background-color: ${tag.color}20; color: ${tag.color} !important;`"
               >
                 {{ tag.name }}
               </span>
             </TransitionGroup>
-            <div v-else class="text-gray-500 dark:text-gray-400">暂无标签</div>
+            <div v-else class="text-gray-400">暂无标签</div>
           </div>
 
           <!-- 博客统计 -->
           <div class="glass-effect p-6 mb-6">
             <h3
-              class="text-lg font-semibold text-gray-900 mb-4 flex items-center"
+              class="text-lg font-semibold text-white mb-4 flex items-center sidebar-title"
             >
               <img
                 src="/apex.jpg"
@@ -243,36 +230,36 @@
             </h3>
             <div class="grid grid-cols-2 gap-3">
               <div
-                class="text-center p-4 bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg border border-blue-200 hover:shadow-md transition-shadow"
+                class="text-center p-4 bg-gradient-to-br from-blue-900/30 to-blue-800/30 border border-blue-500/30 hover:shadow-md transition-shadow"
               >
-                <div class="text-2xl font-bold text-blue-600 mb-1">
+                <div class="text-2xl font-bold text-blue-400 mb-1">
                   {{ stats.articleCount }}
                 </div>
-                <div class="text-xs text-gray-600">文章总数</div>
+                <div class="text-xs text-gray-300">文章总数</div>
               </div>
               <div
-                class="text-center p-4 bg-gradient-to-br from-green-50 to-green-100 rounded-lg border border-green-200 hover:shadow-md transition-shadow"
+                class="text-center p-4 bg-gradient-to-br from-green-900/30 to-green-800/30 border border-green-500/30 hover:shadow-md transition-shadow"
               >
-                <div class="text-2xl font-bold text-green-600 mb-1">
+                <div class="text-2xl font-bold text-green-400 mb-1">
                   {{ stats.viewCount }}
                 </div>
-                <div class="text-xs text-gray-600">总访问量</div>
+                <div class="text-xs text-gray-300">总访问量</div>
               </div>
               <div
-                class="text-center p-4 bg-gradient-to-br from-purple-50 to-purple-100 rounded-lg border border-purple-200 hover:shadow-md transition-shadow"
+                class="text-center p-4 bg-gradient-to-br from-purple-900/30 to-purple-800/30 border border-purple-500/30 hover:shadow-md transition-shadow"
               >
-                <div class="text-2xl font-bold text-purple-600 mb-1">
+                <div class="text-2xl font-bold text-purple-400 mb-1">
                   {{ stats.subscriberCount }}
                 </div>
-                <div class="text-xs text-gray-600">订阅用户</div>
+                <div class="text-xs text-gray-300">订阅用户</div>
               </div>
               <div
-                class="text-center p-4 bg-gradient-to-br from-red-50 to-red-100 rounded-lg border border-red-200 hover:shadow-md transition-shadow"
+                class="text-center p-4 bg-gradient-to-br from-red-900/30 to-red-800/30 border border-red-500/30 hover:shadow-md transition-shadow"
               >
-                <div class="text-2xl font-bold text-red-600 mb-1">
+                <div class="text-2xl font-bold text-red-400 mb-1">
                   {{ stats.friendLinkCount }}
                 </div>
-                <div class="text-xs text-gray-600">友链数量</div>
+                <div class="text-xs text-gray-300">友链数量</div>
               </div>
             </div>
           </div>
@@ -281,7 +268,7 @@
           <Transition name="fade">
             <div v-if="totalPages > 1" class="glass-effect p-6">
               <h3
-                class="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4 flex items-center"
+                class="text-lg font-semibold text-white mb-4 flex items-center sidebar-title"
               >
                 <svg
                   class="w-5 h-5 mr-2 text-blue-600 dark:text-blue-400"
@@ -301,12 +288,12 @@
 
               <!-- 分页信息 -->
               <div
-                class="text-center p-4 bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg border border-blue-200 mb-4"
+                class="text-center p-4 bg-gradient-to-br from-blue-900/30 to-blue-800/30 border border-blue-500/30 mb-4"
               >
-                <div class="text-sm font-medium text-blue-800 mb-1">
+                <div class="text-sm font-medium text-blue-300 mb-1">
                   第 {{ currentPage }} / {{ totalPages }} 页
                 </div>
-                <div class="text-xs text-blue-600">
+                <div class="text-xs text-blue-400">
                   共 {{ totalElements }} 篇文章
                 </div>
               </div>
@@ -317,7 +304,7 @@
                 <button
                   @click="changePage(currentPage - 1)"
                   :disabled="currentPage <= 1"
-                  class="w-full px-4 py-2 text-sm font-medium text-white bg-gradient-to-r from-blue-500 to-blue-600 rounded-lg hover:from-blue-600 hover:to-blue-700 disabled:from-gray-300 disabled:to-gray-400 disabled:cursor-not-allowed transition-all duration-200 shadow-md hover:shadow-lg disabled:shadow-none"
+                  class="w-full px-4 py-2 text-sm font-medium text-white glass-effect hover:bg-white/10 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 border border-blue-500/30 hover:border-blue-400/50 disabled:border-gray-600/30"
                 >
                   <svg
                     class="w-4 h-4 inline mr-2"
@@ -343,10 +330,10 @@
                     :key="page"
                     @click="changePage(page)"
                     :class="[
-                      'px-2 py-2 text-xs font-medium rounded-lg transition-all duration-200',
+                      'px-2 py-2 text-xs font-medium transition-all duration-200 glass-effect',
                       page === currentPage
-                        ? 'bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-md'
-                        : 'text-gray-700 bg-white border border-gray-200 hover:bg-gradient-to-r hover:from-blue-50 hover:to-blue-100 hover:border-blue-300',
+                        ? 'border-2 border-blue-400 bg-blue-500/20 text-blue-300 shadow-lg shadow-blue-500/20'
+                        : 'text-gray-200 border border-white/20 hover:bg-white/10 hover:border-blue-400/50',
                     ]"
                   >
                     {{ page }}
@@ -360,10 +347,10 @@
                     <button
                       @click="changePage(1)"
                       :class="[
-                        'px-3 py-2 text-xs font-medium rounded-lg transition-all duration-200 flex-shrink-0',
+                        'px-3 py-2 text-xs font-medium transition-all duration-200 flex-shrink-0 glass-effect',
                         currentPage === 1
-                          ? 'bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-md'
-                          : 'text-gray-700 bg-white border border-gray-200 hover:bg-gradient-to-r hover:from-blue-50 hover:to-blue-100 hover:border-blue-300',
+                          ? 'border-2 border-blue-400 bg-blue-500/20 text-blue-300 shadow-lg shadow-blue-500/20'
+                          : 'text-gray-200 border border-white/20 hover:bg-white/10 hover:border-blue-400/50',
                       ]"
                     >
                       1
@@ -378,11 +365,11 @@
                         :min="1"
                         :max="totalPages"
                         placeholder="页码"
-                        class="flex-1 px-2 py-1 text-xs border border-gray-200 rounded focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
+                        class="flex-1 px-2 py-1 text-xs glass-effect border border-white/20 text-white focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400"
                       />
                       <button
                         @click="handleJumpToPage"
-                        class="px-2 py-1 text-xs font-medium text-white bg-gradient-to-r from-green-500 to-green-600 rounded hover:from-green-600 hover:to-green-700 transition-all duration-200 flex-shrink-0"
+                        class="px-2 py-1 text-xs font-medium text-white glass-effect border border-green-400/50 hover:bg-green-500/20 hover:border-green-400 transition-all duration-200 flex-shrink-0"
                       >
                         跳转
                       </button>
@@ -392,10 +379,10 @@
                     <button
                       @click="changePage(totalPages)"
                       :class="[
-                        'px-3 py-2 text-xs font-medium rounded-lg transition-all duration-200 flex-shrink-0',
+                        'px-3 py-2 text-xs font-medium transition-all duration-200 flex-shrink-0 glass-effect',
                         currentPage === totalPages
-                          ? 'bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-md'
-                          : 'text-gray-700 bg-white border border-gray-200 hover:bg-gradient-to-r hover:from-blue-50 hover:to-blue-100 hover:border-blue-300',
+                          ? 'border-2 border-blue-400 bg-blue-500/20 text-blue-300 shadow-lg shadow-blue-500/20'
+                          : 'text-gray-200 border border-white/20 hover:bg-white/10 hover:border-blue-400/50',
                       ]"
                     >
                       {{ totalPages }}
@@ -403,7 +390,7 @@
                   </div>
 
                   <!-- 当前页面提示 -->
-                  <div class="text-center text-xs text-gray-500">
+                  <div class="text-center text-xs text-gray-400">
                     当前第 {{ currentPage }} 页
                   </div>
                 </div>
@@ -412,7 +399,7 @@
                 <button
                   @click="changePage(currentPage + 1)"
                   :disabled="currentPage >= totalPages"
-                  class="w-full px-4 py-2 text-sm font-medium text-white bg-gradient-to-r from-blue-500 to-blue-600 rounded-lg hover:from-blue-600 hover:to-blue-700 disabled:from-gray-300 disabled:to-gray-400 disabled:cursor-not-allowed transition-all duration-200 shadow-md hover:shadow-lg disabled:shadow-none"
+                  class="w-full px-4 py-2 text-sm font-medium text-white glass-effect hover:bg-white/10 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 border border-blue-500/30 hover:border-blue-400/50 disabled:border-gray-600/30"
                 >
                   下一页
                   <svg
@@ -443,6 +430,7 @@ import { ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
 import { articleApi, tagApi, statsApi } from "../api";
 import { renderMarkdown } from "../utils/markdown";
+import { useTheme } from "../composables/useTheme.js";
 
 // 图标组件
 const TagIcon = {
@@ -452,6 +440,7 @@ const TagIcon = {
 };
 
 const router = useRouter();
+const { isDark } = useTheme();
 
 // 响应式数据
 const articles = ref([]);
@@ -484,14 +473,11 @@ const formatDate = (dateString) => {
 const getArticleStyle = (article) => {
   if (!article.tags || article.tags.length === 0) {
     // 如果没有标签，使用默认的灰色边框
-    const bgColor = "white";
     return {
-      background: `
-        linear-gradient(${bgColor}, ${bgColor}) padding-box,
-        linear-gradient(135deg, #6b7280, #9ca3af) border-box
-      `,
-      border: "2px solid transparent",
-      boxShadow: `0 0 10px rgba(107, 114, 128, 0.1)`,
+      borderImage: `linear-gradient(135deg, #6b7280, #9ca3af) 1`,
+      borderWidth: "2px",
+      borderStyle: "solid",
+      boxShadow: `0 0 8px rgba(107, 114, 128, 0.15)`,
     };
   }
 
@@ -500,18 +486,14 @@ const getArticleStyle = (article) => {
     .slice(0, 3)
     .map((tag) => tag.color || "#6b7280");
 
-  const bgColor = "white";
-
   // 如果只有一个标签，创建该颜色的渐变
   if (tagColors.length === 1) {
     const color = tagColors[0];
     return {
-      background: `
-        linear-gradient(${bgColor}, ${bgColor}) padding-box,
-        linear-gradient(135deg, ${color}, ${color}88, ${color}44) border-box
-      `,
-      border: "2px solid transparent",
-      boxShadow: `0 0 15px ${color}15`,
+      borderImage: `linear-gradient(135deg, ${color}, ${color}88, ${color}44) 1`,
+      borderWidth: "2px",
+      borderStyle: "solid",
+      boxShadow: `0 0 12px ${color}20`,
     };
   }
 
@@ -520,12 +502,10 @@ const getArticleStyle = (article) => {
   const shadowColor = tagColors[0]; // 使用第一个标签颜色作为阴影
 
   return {
-    background: `
-      linear-gradient(${bgColor}, ${bgColor}) padding-box,
-      linear-gradient(135deg, ${gradientColors}) border-box
-    `,
-    border: "2px solid transparent",
-    boxShadow: `0 0 15px ${shadowColor}15`,
+    borderImage: `linear-gradient(135deg, ${gradientColors}) 1`,
+    borderWidth: "2px",
+    borderStyle: "solid",
+    boxShadow: `0 0 12px ${shadowColor}20`,
   };
 };
 
@@ -800,5 +780,120 @@ onMounted(async () => {
   margin: 0.25rem 0;
   font-style: italic;
   color: #6b7280;
+}
+
+/* 亮色模式样式 */
+html.light .sidebar-title {
+  color: #111827 !important;
+}
+
+html.light .text-2xl {
+  color: #111827 !important;
+}
+
+html.light .text-xs {
+  color: #6b7280 !important;
+}
+
+html.light .text-sm {
+  color: #374151 !important;
+}
+
+/* 亮色模式下的统计卡片 */
+html.light .bg-gradient-to-br.from-blue-900\/30 {
+  background: linear-gradient(
+    to bottom right,
+    rgba(59, 130, 246, 0.1),
+    rgba(147, 197, 253, 0.05)
+  ) !important;
+  border-color: rgba(59, 130, 246, 0.3) !important;
+}
+
+html.light .bg-gradient-to-br.from-green-900\/30 {
+  background: linear-gradient(
+    to bottom right,
+    rgba(34, 197, 94, 0.1),
+    rgba(134, 239, 172, 0.05)
+  ) !important;
+  border-color: rgba(34, 197, 94, 0.3) !important;
+}
+
+html.light .bg-gradient-to-br.from-purple-900\/30 {
+  background: linear-gradient(
+    to bottom right,
+    rgba(168, 85, 247, 0.1),
+    rgba(196, 181, 253, 0.05)
+  ) !important;
+  border-color: rgba(168, 85, 247, 0.3) !important;
+}
+
+html.light .bg-gradient-to-br.from-red-900\/30 {
+  background: linear-gradient(
+    to bottom right,
+    rgba(239, 68, 68, 0.1),
+    rgba(252, 165, 165, 0.05)
+  ) !important;
+  border-color: rgba(239, 68, 68, 0.3) !important;
+}
+
+/* 亮色模式下的文章卡片 */
+html.light .glass-effect h2 {
+  color: #111827 !important;
+}
+
+html.light .glass-effect .text-gray-300 {
+  color: #6b7280 !important;
+}
+
+html.light .glass-effect .text-gray-400 {
+  color: #9ca3af !important;
+}
+
+/* 亮色模式下的分页按钮 */
+html.light .glass-effect button {
+  color: #374151 !important;
+  border-color: rgba(0, 0, 0, 0.2) !important;
+}
+
+html.light .glass-effect button:hover {
+  background: rgba(0, 0, 0, 0.05) !important;
+}
+
+html.light .glass-effect input {
+  color: #111827 !important;
+  background: rgba(0, 0, 0, 0.05) !important;
+  border-color: rgba(0, 0, 0, 0.2) !important;
+}
+
+/* 亮色模式下的分类标签优化 */
+html.light .bg-gradient-to-r.from-purple-900\/40 {
+  background: linear-gradient(
+    to right,
+    rgba(147, 51, 234, 0.15),
+    rgba(126, 34, 206, 0.1)
+  ) !important;
+  border-color: rgba(147, 51, 234, 0.4) !important;
+}
+
+html.light .text-purple-300 {
+  color: #7c3aed !important; /* 保持紫色但在亮色模式下更深 */
+}
+
+/* 保持标签悬停效果，不覆盖颜色 */
+html.light .sidebar-tag:hover {
+  opacity: 0.8;
+  transform: scale(1.05);
+}
+
+/* 确保标签文字颜色不被全局样式覆盖 */
+html.light .article-tag,
+html.light .sidebar-tag {
+  /* 完全依赖JavaScript设置的内联样式 */
+}
+
+/* 亮色模式下的置顶文本颜色 */
+html.light .top-badge {
+  color: #000000 !important;
+  background-color: #ef4444 !important;
 }
 </style>

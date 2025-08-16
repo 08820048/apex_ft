@@ -13,26 +13,26 @@
               class="w-full h-full object-cover"
             />
           </div>
-          <h1 class="text-3xl font-bold text-gray-900 mb-4">关于 Apex博客</h1>
-          <p class="text-xl text-gray-600">一个专注于技术分享的个人博客</p>
+          <h1 class="text-3xl font-bold text-white mb-4">关于 Apex博客</h1>
+          <p class="text-xl text-gray-200">一个专注于技术分享的个人博客</p>
         </div>
 
-        <div class="prose prose-lg max-w-none text-gray-700">
+        <div class="prose prose-lg max-w-none text-gray-200">
           <p class="text-center mb-8">
             欢迎来到 ApexBlog！这里是我分享技术心得、记录学习历程的地方。
           </p>
 
-          <h2 class="text-2xl font-bold text-gray-900 mb-4">博客简介</h2>
+          <h2 class="text-2xl font-bold text-white mb-4">博客简介</h2>
           <p class="mb-6">
             ApexBlog
             是一个现代化的技术博客平台，专注于全栈开发、语言教程、技术分享、业内资讯、游戏开发等领域的知识分享。
             我希望通过这个平台，能够与更多的开发者交流学习，共同进步。
           </p>
 
-          <h2 class="text-2xl font-bold text-gray-900 mb-4">技术栈</h2>
+          <h2 class="text-2xl font-bold text-white mb-4">技术栈</h2>
           <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
             <div>
-              <h3 class="text-lg font-semibold text-gray-900 mb-3">前端技术</h3>
+              <h3 class="text-lg font-semibold text-white mb-3">前端技术</h3>
               <ul class="space-y-2">
                 <li class="flex items-center">
                   <span class="w-2 h-2 bg-blue-500 rounded-full mr-3"></span>
@@ -53,7 +53,7 @@
               </ul>
             </div>
             <div>
-              <h3 class="text-lg font-semibold text-gray-900 mb-3">后端技术</h3>
+              <h3 class="text-lg font-semibold text-white mb-3">后端技术</h3>
               <ul class="space-y-2">
                 <li class="flex items-center">
                   <span class="w-2 h-2 bg-green-500 rounded-full mr-3"></span>
@@ -75,12 +75,12 @@
             </div>
           </div>
 
-          <h2 class="text-2xl font-bold text-gray-900 mb-4">联系方式</h2>
+          <h2 class="text-2xl font-bold text-white mb-4">联系方式</h2>
           <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
             <a href="mailto:contact@apexblog.com" class="contact-card">
               <EmailIcon class="w-8 h-8 text-blue-500 mb-3" />
-              <h3 class="font-semibold text-gray-900 mb-1">邮箱</h3>
-              <p class="text-gray-600 text-sm">ilikexff@gmail.com</p>
+              <h3 class="font-semibold text-white mb-1">邮箱</h3>
+              <p class="text-gray-200 text-sm">ilikexff@gmail.com</p>
             </a>
             <a
               href="https://github.com/08820048"
@@ -88,9 +88,9 @@
               rel="noopener noreferrer"
               class="contact-card"
             >
-              <GithubIcon class="w-8 h-8 text-gray-700 mb-3" />
-              <h3 class="font-semibold text-gray-900 mb-1">GitHub</h3>
-              <p class="text-gray-600 text-sm">@08820048</p>
+              <GithubIcon class="w-8 h-8 text-gray-300 mb-3" />
+              <h3 class="font-semibold text-white mb-1">GitHub</h3>
+              <p class="text-gray-200 text-sm">@08820048</p>
             </a>
             <a
               href="https://x.com/_Peter_You"
@@ -99,8 +99,8 @@
               class="contact-card"
             >
               <TwitterIcon class="w-8 h-8 text-blue-400 mb-3" />
-              <h3 class="font-semibold text-gray-900 mb-1">Twitter</h3>
-              <p class="text-gray-600 text-sm">@_Peter_You</p>
+              <h3 class="font-semibold text-white mb-1">Twitter</h3>
+              <p class="text-gray-200 text-sm">@_Peter_You</p>
             </a>
           </div>
         </div>
@@ -127,15 +127,18 @@ const TwitterIcon = {
 
 <style scoped>
 .contact-card {
-  @apply flex flex-col items-center p-6 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors text-center;
+  @apply flex flex-col items-center p-6 rounded-xl hover:bg-white/10 transition-colors text-center border border-white/10;
+  background: rgba(255, 255, 255, 0.02);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
 }
 
 .prose h2 {
-  @apply text-2xl font-bold text-gray-900 mb-4;
+  @apply text-2xl font-bold text-white mb-4;
 }
 
 .prose h3 {
-  @apply text-lg font-semibold text-gray-900 mb-2;
+  @apply text-lg font-semibold text-white mb-2;
 }
 
 .prose p {
@@ -148,5 +151,51 @@ const TwitterIcon = {
 
 .prose li {
   @apply flex items-center;
+}
+
+/* 亮色模式优化 */
+html.light .text-white {
+  color: #111827 !important;
+}
+
+html.light .text-gray-200 {
+  color: #4b5563 !important;
+}
+
+html.light .text-gray-400 {
+  color: #6b7280 !important;
+}
+
+html.light .text-gray-600 {
+  color: #4b5563 !important;
+}
+
+html.light .prose {
+  color: #374151 !important;
+}
+
+html.light .prose h2 {
+  color: #111827 !important;
+}
+
+html.light .prose h3 {
+  color: #111827 !important;
+}
+
+html.light .prose p {
+  color: #374151 !important;
+}
+
+html.light .prose li {
+  color: #374151 !important;
+}
+
+/* 亮色模式下的联系方式链接 */
+html.light .text-blue-400 {
+  color: #2563eb !important;
+}
+
+html.light .hover\\:text-blue-300:hover {
+  color: #3b82f6 !important;
 }
 </style>
