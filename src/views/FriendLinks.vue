@@ -11,10 +11,139 @@
         </p>
       </div>
 
+      <!-- 本站友链信息 -->
+      <div
+        class="glass-effect rounded-2xl p-6 mb-8 border border-blue-200 dark:border-blue-800"
+      >
+        <h2
+          class="text-xl font-bold text-gray-900 dark:text-white mb-4 flex items-center"
+        >
+          <span class="w-2 h-2 bg-blue-500 rounded-full mr-3"></span>
+          本站友链信息
+        </h2>
+        <p class="text-gray-600 dark:text-gray-300 text-sm mb-4">
+          如果您想添加本站到您的友链中，请复制以下信息：
+        </p>
+        <div class="bg-gray-50 dark:bg-gray-800 rounded-xl p-4 space-y-3">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label
+                class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+                >博客名称</label
+              >
+              <div class="flex items-center">
+                <input
+                  type="text"
+                  value="Apex-八尺妖剑"
+                  readonly
+                  class="flex-1 px-3 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white text-sm"
+                />
+                <button
+                  @click="copyToClipboard('Apex-八尺妖剑')"
+                  class="ml-2 px-3 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg text-sm transition-colors"
+                  title="复制"
+                >
+                  📋
+                </button>
+              </div>
+            </div>
+            <div>
+              <label
+                class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+                >博客地址</label
+              >
+              <div class="flex items-center">
+                <input
+                  type="text"
+                  value="https://www.ilikexff.cn/"
+                  readonly
+                  class="flex-1 px-3 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white text-sm"
+                />
+                <button
+                  @click="copyToClipboard('https://www.ilikexff.cn/')"
+                  class="ml-2 px-3 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg text-sm transition-colors"
+                  title="复制"
+                >
+                  📋
+                </button>
+              </div>
+            </div>
+            <div>
+              <label
+                class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+                >博客Logo</label
+              >
+              <div class="flex items-center">
+                <input
+                  type="text"
+                  value="https://images.waer.ltd/notes/202508151240669.jpg"
+                  readonly
+                  class="flex-1 px-3 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white text-sm"
+                />
+                <button
+                  @click="
+                    copyToClipboard(
+                      'https://images.waer.ltd/notes/202508151240669.jpg'
+                    )
+                  "
+                  class="ml-2 px-3 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg text-sm transition-colors"
+                  title="复制"
+                >
+                  📋
+                </button>
+              </div>
+            </div>
+            <div>
+              <label
+                class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+                >博客描述</label
+              >
+              <div class="flex items-center">
+                <input
+                  type="text"
+                  value="一个爱玩马超的游戏程序员。"
+                  readonly
+                  class="flex-1 px-3 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white text-sm"
+                />
+                <button
+                  @click="copyToClipboard('一个爱玩马超的游戏程序员。')"
+                  class="ml-2 px-3 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg text-sm transition-colors"
+                  title="复制"
+                >
+                  📋
+                </button>
+              </div>
+            </div>
+          </div>
+          <div
+            class="flex items-center justify-between pt-3 border-t border-gray-200 dark:border-gray-600"
+          >
+            <div class="flex items-center">
+              <img
+                src="https://images.waer.ltd/notes/202508151240669.jpg"
+                alt="Apex-八尺妖剑"
+                class="w-8 h-8 rounded-full mr-2"
+              />
+              <span class="text-sm text-gray-600 dark:text-gray-400"
+                >预览效果</span
+              >
+            </div>
+            <button
+              @click="copyAllInfo"
+              class="px-4 py-2 bg-green-500 hover:bg-green-600 text-white rounded-lg text-sm transition-colors"
+            >
+              📋 复制全部信息
+            </button>
+          </div>
+        </div>
+      </div>
+
       <!-- 友链申请说明 -->
       <div class="glass-effect rounded-2xl p-6 mb-8">
-        <h2 class="text-xl font-bold text-gray-900 mb-4">友链申请</h2>
-        <div class="text-gray-600 space-y-2">
+        <h2 class="text-xl font-bold text-gray-900 dark:text-white mb-4">
+          友链申请
+        </h2>
+        <div class="text-gray-600 dark:text-gray-300 space-y-2">
           <p>欢迎与我交换友情链接！申请前请确保：</p>
           <ul class="list-disc list-inside space-y-1 ml-4">
             <li>网站内容积极向上，无违法违规内容</li>
@@ -63,57 +192,9 @@
 
         <!-- 友链网格 -->
         <div
-          v-if="!loading"
+          v-else-if="friendLinks.length > 0"
           class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
         >
-          <!-- 本站信息卡片 -->
-          <div
-            class="glass-effect rounded-2xl p-6 border-2 border-blue-500/30 bg-gradient-to-br from-blue-50/50 to-purple-50/50 dark:from-blue-900/20 dark:to-purple-900/20"
-          >
-            <div class="flex items-center mb-4">
-              <div class="w-12 h-12 flex-shrink-0 mr-4">
-                <img
-                  src="https://images.waer.ltd/notes/202508151240669.jpg"
-                  alt="Apex-八尺妖剑"
-                  class="w-full h-full object-cover rounded-full ring-2 ring-blue-500/30"
-                  @error="handleImageError"
-                />
-              </div>
-              <div class="flex-1 min-w-0">
-                <h3
-                  class="text-lg font-bold text-blue-600 dark:text-blue-400 truncate flex items-center"
-                >
-                  Apex-八尺妖剑
-                  <span
-                    class="ml-2 px-2 py-1 text-xs bg-blue-100 dark:bg-blue-900/50 text-blue-600 dark:text-blue-400 rounded-full"
-                    >本站</span
-                  >
-                </h3>
-                <p class="text-sm text-gray-500 truncate">ilikexff.cn</p>
-              </div>
-            </div>
-
-            <p
-              class="text-gray-600 dark:text-gray-300 text-sm line-clamp-3 mb-4"
-            >
-              一个爱玩马超的游戏程序员。
-            </p>
-
-            <div
-              class="flex items-center justify-between text-xs text-gray-500"
-            >
-              <span>本站信息</span>
-              <a
-                href="https://www.ilikexff.cn/"
-                target="_blank"
-                rel="noopener noreferrer"
-                class="flex items-center text-blue-600 hover:text-blue-800 transition-colors"
-              >
-                <ExternalLinkIcon class="w-3 h-3 mr-1" />
-                <span>访问</span>
-              </a>
-            </div>
-          </div>
           <a
             v-for="link in friendLinks"
             :key="link.id"
@@ -167,17 +248,29 @@
             </div>
           </a>
         </div>
+
+        <!-- 空状态 -->
+        <div v-else class="glass-effect rounded-2xl p-12 text-center">
+          <div class="text-gray-400 dark:text-gray-500 mb-4">
+            <LinkIcon class="w-16 h-16 mx-auto" />
+          </div>
+          <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">
+            暂无友链
+          </h3>
+          <p class="text-gray-600 dark:text-gray-300">
+            还没有添加任何友情链接，欢迎申请交换友链。
+          </p>
+        </div>
       </div>
 
       <!-- 友链统计 -->
-      <div v-if="!loading" class="mt-8 text-center">
+      <div v-if="friendLinks.length > 0" class="mt-8 text-center">
         <p class="text-gray-600 dark:text-white/80">
           共有
           <span class="font-bold text-gray-900 dark:text-white">{{
-            friendLinks.length + 1
+            friendLinks.length
           }}</span>
           个友站
-          <span class="text-sm text-gray-500">（含本站）</span>
         </p>
       </div>
     </div>
@@ -221,6 +314,34 @@ const getDomain = (url) => {
   } catch {
     return url;
   }
+};
+
+// 复制到剪贴板
+const copyToClipboard = async (text) => {
+  try {
+    await navigator.clipboard.writeText(text);
+    // 这里可以添加成功提示
+    console.log("复制成功:", text);
+  } catch (error) {
+    console.error("复制失败:", error);
+    // 降级方案
+    const textArea = document.createElement("textarea");
+    textArea.value = text;
+    document.body.appendChild(textArea);
+    textArea.select();
+    document.execCommand("copy");
+    document.body.removeChild(textArea);
+  }
+};
+
+// 复制全部信息
+const copyAllInfo = async () => {
+  const allInfo = `博客名称：Apex-八尺妖剑
+博客地址：https://www.ilikexff.cn/
+博客Logo：https://images.waer.ltd/notes/202508151240669.jpg
+博客描述：一个爱玩马超的游戏程序员。`;
+
+  await copyToClipboard(allInfo);
 };
 
 // 处理图片加载错误
