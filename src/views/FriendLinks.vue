@@ -3,8 +3,12 @@
     <div class="max-w-7xl mx-auto">
       <!-- 页面标题 -->
       <div class="text-center mb-12">
-        <h1 class="text-4xl font-bold text-gray-900 dark:text-white mb-4">友情链接</h1>
-        <p class="text-xl text-gray-600 dark:text-white/80">与优秀的朋友们一起成长</p>
+        <h1 class="text-4xl font-bold text-gray-900 dark:text-white mb-4">
+          友情链接
+        </h1>
+        <p class="text-xl text-gray-600 dark:text-white/80">
+          与优秀的朋友们一起成长
+        </p>
       </div>
 
       <!-- 友链申请说明 -->
@@ -18,8 +22,12 @@
             <li>优先考虑技术类、学习类博客</li>
           </ul>
           <p class="mt-4">
-            申请方式：请发送邮件至 
-            <a href="mailto:ilikexff@gmail.com" class="text-blue-600 hover:text-blue-800">ilikexff@gmail.com</a>
+            申请方式：请发送邮件至
+            <a
+              href="mailto:ilikexff@gmail.com"
+              class="text-blue-600 hover:text-blue-800"
+              >ilikexff@gmail.com</a
+            >
             ，包含网站名称、网站地址、网站描述和站长信息。
           </p>
         </div>
@@ -27,11 +35,20 @@
 
       <!-- 友链列表 -->
       <div>
-        <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-6">友站推荐</h2>
-        
+        <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-6">
+          友站推荐
+        </h2>
+
         <!-- 加载状态 -->
-        <div v-if="loading" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          <div v-for="i in 8" :key="i" class="glass-effect rounded-2xl p-6 animate-pulse">
+        <div
+          v-if="loading"
+          class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
+        >
+          <div
+            v-for="i in 8"
+            :key="i"
+            class="glass-effect rounded-2xl p-6 animate-pulse"
+          >
             <div class="flex items-center mb-4">
               <div class="w-12 h-12 bg-gray-300 rounded-full mr-4"></div>
               <div class="flex-1">
@@ -45,7 +62,58 @@
         </div>
 
         <!-- 友链网格 -->
-        <div v-else-if="friendLinks.length > 0" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        <div
+          v-if="!loading"
+          class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
+        >
+          <!-- 本站信息卡片 -->
+          <div
+            class="glass-effect rounded-2xl p-6 border-2 border-blue-500/30 bg-gradient-to-br from-blue-50/50 to-purple-50/50 dark:from-blue-900/20 dark:to-purple-900/20"
+          >
+            <div class="flex items-center mb-4">
+              <div class="w-12 h-12 flex-shrink-0 mr-4">
+                <img
+                  src="https://images.waer.ltd/notes/202508151240669.jpg"
+                  alt="Apex-八尺妖剑"
+                  class="w-full h-full object-cover rounded-full ring-2 ring-blue-500/30"
+                  @error="handleImageError"
+                />
+              </div>
+              <div class="flex-1 min-w-0">
+                <h3
+                  class="text-lg font-bold text-blue-600 dark:text-blue-400 truncate flex items-center"
+                >
+                  Apex-八尺妖剑
+                  <span
+                    class="ml-2 px-2 py-1 text-xs bg-blue-100 dark:bg-blue-900/50 text-blue-600 dark:text-blue-400 rounded-full"
+                    >本站</span
+                  >
+                </h3>
+                <p class="text-sm text-gray-500 truncate">ilikexff.cn</p>
+              </div>
+            </div>
+
+            <p
+              class="text-gray-600 dark:text-gray-300 text-sm line-clamp-3 mb-4"
+            >
+              一个爱玩马超的游戏程序员。
+            </p>
+
+            <div
+              class="flex items-center justify-between text-xs text-gray-500"
+            >
+              <span>本站信息</span>
+              <a
+                href="https://www.ilikexff.cn/"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="flex items-center text-blue-600 hover:text-blue-800 transition-colors"
+              >
+                <ExternalLinkIcon class="w-3 h-3 mr-1" />
+                <span>访问</span>
+              </a>
+            </div>
+          </div>
           <a
             v-for="link in friendLinks"
             :key="link.id"
@@ -62,7 +130,7 @@
                   :alt="link.name"
                   class="w-full h-full object-cover rounded-full"
                   @error="handleImageError"
-                >
+                />
                 <div
                   v-else
                   class="w-full h-full bg-blue-600 rounded-full flex items-center justify-center"
@@ -73,7 +141,9 @@
                 </div>
               </div>
               <div class="flex-1 min-w-0">
-                <h3 class="text-lg font-bold text-gray-900 group-hover:text-blue-600 transition-colors truncate">
+                <h3
+                  class="text-lg font-bold text-gray-900 group-hover:text-blue-600 transition-colors truncate"
+                >
                   {{ link.name }}
                 </h3>
                 <p class="text-sm text-gray-500 truncate">
@@ -81,12 +151,14 @@
                 </p>
               </div>
             </div>
-            
+
             <p class="text-gray-600 text-sm line-clamp-3 mb-4">
-              {{ link.description || '暂无描述' }}
+              {{ link.description || "暂无描述" }}
             </p>
-            
-            <div class="flex items-center justify-between text-xs text-gray-500">
+
+            <div
+              class="flex items-center justify-between text-xs text-gray-500"
+            >
               <span>{{ formatDate(link.createdAt) }}</span>
               <div class="flex items-center">
                 <ExternalLinkIcon class="w-3 h-3 mr-1" />
@@ -95,21 +167,17 @@
             </div>
           </a>
         </div>
-
-        <!-- 空状态 -->
-        <div v-else class="glass-effect rounded-2xl p-12 text-center">
-          <div class="text-gray-400 mb-4">
-            <LinkIcon class="w-16 h-16 mx-auto" />
-          </div>
-          <h3 class="text-lg font-semibold text-gray-900 mb-2">暂无友链</h3>
-          <p class="text-gray-600">还没有添加任何友情链接，欢迎申请交换友链。</p>
-        </div>
       </div>
 
       <!-- 友链统计 -->
-      <div v-if="friendLinks.length > 0" class="mt-8 text-center">
+      <div v-if="!loading" class="mt-8 text-center">
         <p class="text-gray-600 dark:text-white/80">
-          共有 <span class="font-bold text-gray-900 dark:text-white">{{ friendLinks.length }}</span> 个友站
+          共有
+          <span class="font-bold text-gray-900 dark:text-white">{{
+            friendLinks.length + 1
+          }}</span>
+          个友站
+          <span class="text-sm text-gray-500">（含本站）</span>
         </p>
       </div>
     </div>
@@ -117,67 +185,76 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
-import { friendLinkApi } from '../api'
+import { ref, onMounted } from "vue";
+import { friendLinkApi } from "../api";
 
 // 图标组件
-const ExternalLinkIcon = { template: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 19H5V5h7V3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.11 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"/></svg>' }
-const LinkIcon = { template: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg>' }
+const ExternalLinkIcon = {
+  template:
+    '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 19H5V5h7V3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.11 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"/></svg>',
+};
+const LinkIcon = {
+  template:
+    '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg>',
+};
 
 // 响应式数据
-const friendLinks = ref([])
-const loading = ref(false)
+const friendLinks = ref([]);
+const loading = ref(false);
 
 // 格式化日期
 const formatDate = (dateString) => {
-  if (!dateString) return ''
-  const date = new Date(dateString)
-  return date.toLocaleDateString('zh-CN', {
-    year: 'numeric',
-    month: 'short',
-    day: 'numeric'
-  })
-}
+  if (!dateString) return "";
+  const date = new Date(dateString);
+  return date.toLocaleDateString("zh-CN", {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+  });
+};
 
 // 获取域名
 const getDomain = (url) => {
   try {
-    const domain = new URL(url).hostname
-    return domain.replace('www.', '')
+    const domain = new URL(url).hostname;
+    return domain.replace("www.", "");
   } catch {
-    return url
+    return url;
   }
-}
+};
 
 // 处理图片加载错误
 const handleImageError = (event) => {
-  event.target.style.display = 'none'
-  const parent = event.target.parentElement
+  event.target.style.display = "none";
+  const parent = event.target.parentElement;
   if (parent) {
-    const fallback = document.createElement('div')
-    fallback.className = 'w-full h-full bg-blue-600 rounded-full flex items-center justify-center'
-    fallback.innerHTML = `<span class="text-white font-bold text-lg">${event.target.alt.charAt(0).toUpperCase()}</span>`
-    parent.appendChild(fallback)
+    const fallback = document.createElement("div");
+    fallback.className =
+      "w-full h-full bg-blue-600 rounded-full flex items-center justify-center";
+    fallback.innerHTML = `<span class="text-white font-bold text-lg">${event.target.alt
+      .charAt(0)
+      .toUpperCase()}</span>`;
+    parent.appendChild(fallback);
   }
-}
+};
 
 // 加载友链列表
 const loadFriendLinks = async () => {
   try {
-    loading.value = true
-    const data = await friendLinkApi.getList()
+    loading.value = true;
+    const data = await friendLinkApi.getList();
     // 只显示激活的友链
-    friendLinks.value = (data || []).filter(link => link.isActive)
+    friendLinks.value = (data || []).filter((link) => link.isActive);
   } catch (error) {
-    console.error('加载友链失败:', error)
-    friendLinks.value = []
+    console.error("加载友链失败:", error);
+    friendLinks.value = [];
   } finally {
-    loading.value = false
+    loading.value = false;
   }
-}
+};
 
 // 组件挂载时加载数据
-onMounted(loadFriendLinks)
+onMounted(loadFriendLinks);
 </script>
 
 <style scoped>
