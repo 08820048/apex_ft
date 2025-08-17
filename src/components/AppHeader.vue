@@ -249,9 +249,8 @@ html.light .nav-link-active {
 
 /* Logo特殊字体样式 - 简洁风格 */
 .special-font {
-  font-family: "汉仪行楷", "HanYi XingKai", "STXingkai", "华文行楷", "STKaiti",
-    "KaiTi", "楷体", "STFangsong", "FangSong", "仿宋", "Microsoft YaHei",
-    "微软雅黑", "SimSun", "宋体", "cursive", "serif";
+  font-family: "Microsoft YaHei", "微软雅黑", "SimSun", "宋体", "Arial",
+    "sans-serif";
   font-weight: 700;
   font-size: 1.3em; /* 适度增大 */
   letter-spacing: 0.1em;
