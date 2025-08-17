@@ -1,7 +1,12 @@
 <template>
   <div class="target-cursor-container">
-    <!-- 扫描框外框 -->
-    <div ref="scannerFrame" class="scanner-frame" :style="frameStyle">
+    <!-- 扫描框外框 - 自动瞄准时隐藏 -->
+    <div
+      ref="scannerFrame"
+      class="scanner-frame"
+      :style="frameStyle"
+      :class="{ hidden: isAutoTargeting }"
+    >
       <!-- 四个角的边框 -->
       <div class="scanner-corner scanner-tl"></div>
       <div class="scanner-corner scanner-tr"></div>
@@ -12,21 +17,21 @@
       <div class="scanner-center"></div>
     </div>
 
-    <!-- 瞄准选中框 -->
+    <!-- 瞄准选中框 - 使用扫描框样式 -->
     <div
       ref="targetBox"
       class="target-selection-box"
       :style="targetBoxStyle"
-      :class="{ active: isHovering }"
+      :class="{ active: isAutoTargeting }"
     >
-      <div class="selection-corner selection-tl"></div>
-      <div class="selection-corner selection-tr"></div>
-      <div class="selection-corner selection-bl"></div>
-      <div class="selection-corner selection-br"></div>
-      <div class="selection-border selection-top"></div>
-      <div class="selection-border selection-right"></div>
-      <div class="selection-border selection-bottom"></div>
-      <div class="selection-border selection-left"></div>
+      <!-- 四个角的边框 - 和扫描框相同 -->
+      <div class="target-corner target-tl"></div>
+      <div class="target-corner target-tr"></div>
+      <div class="target-corner target-bl"></div>
+      <div class="target-corner target-br"></div>
+
+      <!-- 中心黑点 -->
+      <div class="target-center"></div>
     </div>
   </div>
 </template>
@@ -38,6 +43,7 @@ import { ref, onMounted, onUnmounted } from "vue";
 const mouseX = ref(0);
 const mouseY = ref(0);
 const isHovering = ref(false);
+const isAutoTargeting = ref(false); // 是否正在自动瞄准
 
 // DOM 引用
 const scannerFrame = ref(null);
@@ -67,6 +73,29 @@ const handleMouseMove = (e) => {
   mouseX.value = e.clientX;
   mouseY.value = e.clientY;
 
+  // 检查当前鼠标下的元素
+  const elementUnderMouse = document.elementFromPoint(e.clientX, e.clientY);
+
+  // 如果当前悬停的元素不再是鼠标下的元素，清除悬停状态
+  if (
+    isHovering.value &&
+    hoveredElement.value &&
+    elementUnderMouse &&
+    !hoveredElement.value.contains(elementUnderMouse) &&
+    !isInteractiveElement(elementUnderMouse)
+  ) {
+    handleMouseLeave(e);
+  }
+
+  // 如果鼠标下是新的可交互元素，触发悬停
+  if (
+    !isHovering.value &&
+    elementUnderMouse &&
+    isInteractiveElement(elementUnderMouse)
+  ) {
+    handleMouseEnter({ target: elementUnderMouse });
+  }
+
   // 更新位置
   updateCursorPosition();
 };
@@ -75,6 +104,9 @@ const handleMouseMove = (e) => {
 const handleMouseEnter = (e) => {
   isHovering.value = true;
   hoveredElement.value = e.target;
+
+  // 启动自动瞄准
+  startAutoTargeting(e.target);
   updateCursorState();
 };
 
@@ -82,7 +114,42 @@ const handleMouseEnter = (e) => {
 const handleMouseLeave = () => {
   isHovering.value = false;
   hoveredElement.value = null;
+
+  // 停止自动瞄准
+  stopAutoTargeting();
   updateCursorState();
+};
+
+// 启动自动瞄准
+const startAutoTargeting = (element) => {
+  isAutoTargeting.value = true;
+
+  // 获取元素的位置和尺寸
+  const rect = element.getBoundingClientRect();
+  const padding = 5; // 添加一些内边距
+
+  // 更新选中框到元素位置
+  targetBoxStyle.value = {
+    left: `${rect.left + rect.width / 2}px`,
+    top: `${rect.top + rect.height / 2}px`,
+    width: `${rect.width + padding * 2}px`,
+    height: `${rect.height + padding * 2}px`,
+    transform: "translate(-50%, -50%)",
+    opacity: 1,
+  };
+};
+
+// 停止自动瞄准
+const stopAutoTargeting = () => {
+  isAutoTargeting.value = false;
+
+  // 重置选中框
+  targetBoxStyle.value = {
+    transform: "translate(-50%, -50%)",
+    opacity: 0,
+    width: "0px",
+    height: "0px",
+  };
 };
 
 // 更新扫描框位置和缩放
@@ -124,6 +191,11 @@ const updateCursorPosition = () => {
 
 // 更新选中框
 const updateTargetBox = () => {
+  // 如果正在自动瞄准，不需要手动更新
+  if (isAutoTargeting.value) {
+    return;
+  }
+
   if (isHovering.value && hoveredElement.value) {
     const rect = hoveredElement.value.getBoundingClientRect();
     const padding = 10;
@@ -152,31 +224,85 @@ const updateCursorState = () => {
   updateFramePosition();
 };
 
+// 可交互元素选择器
+const interactiveSelectors = [
+  "a",
+  "button",
+  '[role="button"]',
+  "input",
+  "textarea",
+  "select",
+  ".pull-ring",
+  ".article-card",
+  ".category-card",
+  ".tag-item",
+  ".friend-link",
+  ".portfolio-item",
+  ".glass-effect",
+  ".card-hover",
+  ".article-meta",
+  ".breadcrumb-item",
+  ".pagination-item",
+  ".back-to-top",
+  ".social-link",
+  ".subscribe-form",
+  ".comment-item",
+  ".nav-link",
+  ".logo-text",
+  ".theme-toggle",
+  ".mobile-menu-button",
+  ".search-button",
+  ".article-content img",
+  ".article-content pre",
+  ".article-content blockquote",
+  ".article-content table",
+];
+
+// 检查元素是否匹配可交互选择器
+const isInteractiveElement = (element) => {
+  return interactiveSelectors.some((selector) => {
+    try {
+      return element.matches && element.matches(selector);
+    } catch (e) {
+      return false;
+    }
+  });
+};
+
+// 使用事件委托处理鼠标进入
+const handleDocumentMouseOver = (e) => {
+  if (isInteractiveElement(e.target)) {
+    if (!isHovering.value) {
+      handleMouseEnter(e);
+    }
+  }
+};
+
+// 使用事件委托处理鼠标离开
+const handleDocumentMouseOut = (e) => {
+  if (isHovering.value && hoveredElement.value) {
+    // 检查鼠标是否真的离开了当前悬停的元素
+    const relatedTarget = e.relatedTarget;
+    if (!relatedTarget || !hoveredElement.value.contains(relatedTarget)) {
+      handleMouseLeave(e);
+    }
+  }
+};
+
 // 添加事件监听器
 const addEventListeners = () => {
   document.addEventListener("mousemove", handleMouseMove);
 
-  // 为可交互元素添加悬停效果
-  const interactiveElements = document.querySelectorAll(
-    'a, button, [role="button"], input, textarea, select, .pull-ring'
-  );
-  interactiveElements.forEach((el) => {
-    el.addEventListener("mouseenter", handleMouseEnter);
-    el.addEventListener("mouseleave", handleMouseLeave);
-  });
+  // 使用事件委托，监听整个文档的鼠标事件
+  document.addEventListener("mouseover", handleDocumentMouseOver);
+  document.addEventListener("mouseout", handleDocumentMouseOut);
 };
 
 // 移除事件监听器
 const removeEventListeners = () => {
   document.removeEventListener("mousemove", handleMouseMove);
-
-  const interactiveElements = document.querySelectorAll(
-    'a, button, [role="button"], input, textarea, select'
-  );
-  interactiveElements.forEach((el) => {
-    el.removeEventListener("mouseenter", handleMouseEnter);
-    el.removeEventListener("mouseleave", handleMouseLeave);
-  });
+  document.removeEventListener("mouseover", handleDocumentMouseOver);
+  document.removeEventListener("mouseout", handleDocumentMouseOut);
 };
 
 onMounted(() => {
@@ -220,40 +346,118 @@ onUnmounted(() => {
   animation: continuousRotate 6s linear infinite;
 }
 
+/* 隐藏扫描框 */
+.scanner-frame.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
 /* 扫描框四个角 */
 .scanner-corner {
   position: absolute;
   width: 12px;
   height: 12px;
-  border: 2px solid rgba(0, 0, 0, 0.9);
+  background: transparent;
 }
 
 .scanner-tl {
   top: -2px;
   left: -2px;
-  border-right: none;
-  border-bottom: none;
+}
+
+.scanner-tl::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 12px;
+  height: 2px;
+  background: rgba(0, 0, 0, 0.9);
+}
+
+.scanner-tl::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 2px;
+  height: 12px;
+  background: rgba(0, 0, 0, 0.9);
 }
 
 .scanner-tr {
   top: -2px;
   right: -2px;
-  border-left: none;
-  border-bottom: none;
+}
+
+.scanner-tr::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 12px;
+  height: 2px;
+  background: rgba(0, 0, 0, 0.9);
+}
+
+.scanner-tr::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 2px;
+  height: 12px;
+  background: rgba(0, 0, 0, 0.9);
 }
 
 .scanner-bl {
   bottom: -2px;
   left: -2px;
-  border-right: none;
-  border-top: none;
+}
+
+.scanner-bl::before {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 12px;
+  height: 2px;
+  background: rgba(0, 0, 0, 0.9);
+}
+
+.scanner-bl::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 2px;
+  height: 12px;
+  background: rgba(0, 0, 0, 0.9);
 }
 
 .scanner-br {
   bottom: -2px;
   right: -2px;
-  border-left: none;
-  border-top: none;
+}
+
+.scanner-br::before {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 12px;
+  height: 2px;
+  background: rgba(0, 0, 0, 0.9);
+}
+
+.scanner-br::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 2px;
+  height: 12px;
+  background: rgba(0, 0, 0, 0.9);
 }
 
 /* 中心黑点 */
@@ -269,81 +473,132 @@ onUnmounted(() => {
   box-shadow: 0 0 4px rgba(0, 0, 0, 0.6);
 }
 
-/* 瞄准选中框 */
+/* 瞄准选中框 - 使用扫描框样式 */
 .target-selection-box {
   position: fixed;
   transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   pointer-events: none;
 }
 
-/* 选中框角落 */
-.selection-corner {
+/* 目标框四个角 - 复制扫描框样式 */
+.target-corner {
   position: absolute;
   width: 12px;
   height: 12px;
-  border: 2px solid rgba(0, 255, 150, 0.8);
+  background: transparent;
 }
 
-.selection-tl {
+.target-tl {
   top: -6px;
   left: -6px;
-  border-right: none;
-  border-bottom: none;
 }
 
-.selection-tr {
-  top: -6px;
-  right: -6px;
-  border-left: none;
-  border-bottom: none;
-}
-
-.selection-bl {
-  bottom: -6px;
-  left: -6px;
-  border-right: none;
-  border-top: none;
-}
-
-.selection-br {
-  bottom: -6px;
-  right: -6px;
-  border-left: none;
-  border-top: none;
-}
-
-/* 选中框边框 */
-.selection-border {
+.target-tl::before {
+  content: "";
   position: absolute;
-  background: rgba(0, 255, 150, 0.3);
-}
-
-.selection-top {
-  top: -1px;
-  left: 12px;
-  right: 12px;
+  top: 0;
+  left: 0;
+  width: 12px;
   height: 2px;
+  background: rgba(0, 0, 0, 0.9);
 }
 
-.selection-bottom {
-  bottom: -1px;
-  left: 12px;
-  right: 12px;
+.target-tl::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 2px;
+  height: 12px;
+  background: rgba(0, 0, 0, 0.9);
+}
+
+.target-tr {
+  top: -6px;
+  right: -6px;
+}
+
+.target-tr::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 12px;
   height: 2px;
+  background: rgba(0, 0, 0, 0.9);
 }
 
-.selection-left {
-  left: -1px;
-  top: 12px;
-  bottom: 12px;
+.target-tr::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
   width: 2px;
+  height: 12px;
+  background: rgba(0, 0, 0, 0.9);
 }
 
-.selection-right {
-  right: -1px;
-  top: 12px;
-  bottom: 12px;
+.target-bl {
+  bottom: -6px;
+  left: -6px;
+}
+
+.target-bl::before {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 12px;
+  height: 2px;
+  background: rgba(0, 0, 0, 0.9);
+}
+
+.target-bl::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
   width: 2px;
+  height: 12px;
+  background: rgba(0, 0, 0, 0.9);
+}
+
+.target-br {
+  bottom: -6px;
+  right: -6px;
+}
+
+.target-br::before {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 12px;
+  height: 2px;
+  background: rgba(0, 0, 0, 0.9);
+}
+
+.target-br::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 2px;
+  height: 12px;
+  background: rgba(0, 0, 0, 0.9);
+}
+
+/* 目标框中心黑点 - 复制扫描框样式 */
+.target-center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 4px;
+  height: 4px;
+  background: rgba(0, 0, 0, 0.9);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.6);
 }
 
 /* 激活状态 */
@@ -351,21 +606,36 @@ onUnmounted(() => {
   animation: selectionPulse 1.5s ease-in-out infinite;
 }
 
-.target-selection-box.active .selection-corner {
-  border-color: rgba(0, 255, 150, 1);
-  box-shadow: 0 0 8px rgba(0, 255, 150, 0.5);
+/* 目标框激活状态 */
+.target-selection-box.active .target-corner::before,
+.target-selection-box.active .target-corner::after {
+  background: rgba(0, 0, 0, 1);
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.7);
 }
 
-.target-selection-box.active .selection-border {
-  background: rgba(0, 255, 150, 0.5);
+.target-selection-box.active .target-center {
+  background: rgba(0, 0, 0, 1);
+  box-shadow: 0 0 6px rgba(0, 0, 0, 0.8);
 }
 
 /* 亮色模式适配 */
-html.light .scanner-corner {
-  border-color: rgba(0, 0, 0, 0.9);
+html.light .scanner-corner::before,
+html.light .scanner-corner::after {
+  background: rgba(0, 0, 0, 0.9);
 }
 
 html.light .scanner-center {
+  background: rgba(0, 0, 0, 0.9);
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.6);
+}
+
+/* 亮色模式下的目标框样式 */
+html.light .target-corner::before,
+html.light .target-corner::after {
+  background: rgba(0, 0, 0, 0.9);
+}
+
+html.light .target-center {
   background: rgba(0, 0, 0, 0.9);
   box-shadow: 0 0 4px rgba(0, 0, 0, 0.6);
 }
