@@ -73,27 +73,25 @@ const handleMouseMove = (e) => {
   mouseX.value = e.clientX;
   mouseY.value = e.clientY;
 
-  // 检查当前鼠标下的元素
+  // 检查当前鼠标下的最具体可交互元素
   const elementUnderMouse = document.elementFromPoint(e.clientX, e.clientY);
+  const targetElement = findMostSpecificInteractiveElement(elementUnderMouse);
 
-  // 如果当前悬停的元素不再是鼠标下的元素，清除悬停状态
-  if (
-    isHovering.value &&
-    hoveredElement.value &&
-    elementUnderMouse &&
-    !hoveredElement.value.contains(elementUnderMouse) &&
-    !isInteractiveElement(elementUnderMouse)
-  ) {
+  // 如果找到了新的目标元素，且与当前悬停元素不同
+  if (targetElement && targetElement !== hoveredElement.value) {
+    if (isHovering.value) {
+      // 切换到新元素
+      handleMouseLeave(e);
+      setTimeout(() => {
+        handleMouseEnter({ target: targetElement });
+      }, 30);
+    } else {
+      // 开始悬停新元素
+      handleMouseEnter({ target: targetElement });
+    }
+  } else if (!targetElement && isHovering.value) {
+    // 如果没有找到可交互元素，清除悬停状态
     handleMouseLeave(e);
-  }
-
-  // 如果鼠标下是新的可交互元素，触发悬停
-  if (
-    !isHovering.value &&
-    elementUnderMouse &&
-    isInteractiveElement(elementUnderMouse)
-  ) {
-    handleMouseEnter({ target: elementUnderMouse });
   }
 
   // 更新位置
@@ -224,7 +222,7 @@ const updateCursorState = () => {
   updateFramePosition();
 };
 
-// 可交互元素选择器
+// 可交互元素选择器 - 恢复对所有页面的支持
 const interactiveSelectors = [
   "a",
   "button",
@@ -260,6 +258,24 @@ const interactiveSelectors = [
 
 // 检查元素是否匹配可交互选择器
 const isInteractiveElement = (element) => {
+  // 特殊处理：排除 header 容器本身
+  if (
+    element.tagName?.toLowerCase() === "header" &&
+    element.classList?.contains("app-header")
+  ) {
+    return false;
+  }
+
+  // 排除其他明显的容器元素
+  if (
+    element.tagName?.toLowerCase() === "main" ||
+    element.tagName?.toLowerCase() === "section" ||
+    (element.tagName?.toLowerCase() === "div" &&
+      element.classList?.contains("max-w-7xl"))
+  ) {
+    return false;
+  }
+
   return interactiveSelectors.some((selector) => {
     try {
       return element.matches && element.matches(selector);
@@ -269,11 +285,98 @@ const isInteractiveElement = (element) => {
   });
 };
 
+// 计算元素的优先级分数（分数越高越具体）
+const getElementSpecificityScore = (element) => {
+  let score = 0;
+
+  // 基础标签优先级
+  const tagName = element.tagName?.toLowerCase();
+  if (["button", "a", "input"].includes(tagName)) {
+    score += 100; // 原生交互元素优先级最高
+  } else if (["span", "div"].includes(tagName)) {
+    score += 10; // 通用容器元素优先级较低
+  } else {
+    score += 50; // 其他元素中等优先级
+  }
+
+  // 类名优先级
+  const classList = Array.from(element.classList || []);
+  if (classList.includes("nav-link") || classList.includes("logo-text")) {
+    score += 80; // 导航元素高优先级
+  }
+  if (classList.includes("tag-item") || classList.includes("breadcrumb-item")) {
+    score += 70; // 小型交互元素高优先级
+  }
+  if (
+    classList.includes("article-card") ||
+    classList.includes("category-card")
+  ) {
+    score += 60; // 卡片元素中等优先级
+  }
+  if (classList.includes("glass-effect") || classList.includes("card-hover")) {
+    score += 20; // 通用样式类优先级较低
+  }
+
+  // 尺寸因子（越小越具体）
+  const rect = element.getBoundingClientRect();
+  const area = rect.width * rect.height;
+  if (area < 10000) {
+    // 小于100x100的元素
+    score += 30;
+  } else if (area > 100000) {
+    // 大于300x300的元素
+    score -= 20;
+  }
+
+  return score;
+};
+
+// 找到最具体的可交互元素
+const findMostSpecificInteractiveElement = (element) => {
+  const candidates = [];
+  let current = element;
+
+  // 向上遍历DOM树，收集所有可交互的祖先元素
+  while (current && current !== document.body) {
+    if (isInteractiveElement(current)) {
+      candidates.push(current);
+    }
+    current = current.parentElement;
+  }
+
+  // 如果没有找到候选元素，返回null
+  if (candidates.length === 0) {
+    return null;
+  }
+
+  // 根据优先级分数选择最合适的元素
+  let bestElement = candidates[0];
+  let bestScore = getElementSpecificityScore(bestElement);
+
+  for (let i = 1; i < candidates.length; i++) {
+    const score = getElementSpecificityScore(candidates[i]);
+    if (score > bestScore) {
+      bestElement = candidates[i];
+      bestScore = score;
+    }
+  }
+
+  return bestElement;
+};
+
 // 使用事件委托处理鼠标进入
 const handleDocumentMouseOver = (e) => {
-  if (isInteractiveElement(e.target)) {
+  const targetElement = findMostSpecificInteractiveElement(e.target);
+
+  if (targetElement && targetElement !== hoveredElement.value) {
     if (!isHovering.value) {
-      handleMouseEnter(e);
+      handleMouseEnter({ target: targetElement });
+    } else {
+      // 如果已经在悬停状态，但目标元素不同，切换到新元素
+      handleMouseLeave(e);
+      setTimeout(() => {
+        handleMouseEnter({ target: targetElement });
+      }, 50);
     }
   }
 };
