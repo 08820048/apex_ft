@@ -55,7 +55,7 @@
                   class="absolute top-2 right-2 z-10 top-tooltip opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-x-2 group-hover:translate-x-0"
                 >
                   <div
-                    class="bg-red-500 text-white px-2 py-1 text-xs font-medium shadow-lg top-badge"
+                    class="bg-black text-white px-2 py-1 text-xs font-medium shadow-lg top-badge"
                   >
                     置顶
                   </div>
@@ -893,7 +893,7 @@ html.light .sidebar-tag {
 
 /* 亮色模式下的置顶文本颜色 */
 html.light .top-badge {
-  color: #000000 !important;
-  background-color: #ef4444 !important;
+  color: #ffffff !important;
+  background-color: #000000 !important;
 }
 </style>
