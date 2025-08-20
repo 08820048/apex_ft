@@ -2,30 +2,18 @@
   <header class="app-header fixed top-0 left-0 right-0 z-50 backdrop-blur-lg">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex items-center justify-between h-16">
-        <!-- Logo和导航菜单 -->
-        <div class="flex items-center space-x-6">
-          <!-- Logo -->
-          <RouterLink to="/" class="group flex items-center">
-            <img
-              src="/Apex.png"
-              alt="ApexBlog Logo"
-              class="w-12 h-12 object-cover group-hover:scale-105 transition-transform"
-            />
+        <!-- 导航菜单 -->
+        <nav class="hidden md:flex items-center space-x-8">
+          <RouterLink
+            v-for="item in navItems"
+            :key="item.path"
+            :to="item.path"
+            class="nav-link"
+            :class="{ 'nav-link-active': $route.path === item.path }"
+          >
+            {{ item.name }}
           </RouterLink>
-
-          <!-- 导航菜单 -->
-          <nav class="hidden md:flex items-center space-x-8">
-            <RouterLink
-              v-for="item in navItems"
-              :key="item.path"
-              :to="item.path"
-              class="nav-link"
-              :class="{ 'nav-link-active': $route.path === item.path }"
-            >
-              {{ item.name }}
-            </RouterLink>
-          </nav>
-        </div>
+        </nav>
 
         <!-- 搜索框和拉线开关 -->
         <div class="hidden lg:flex items-center space-x-4 relative">
@@ -69,16 +57,8 @@
           v-if="mobileMenuOpen"
           class="md:hidden py-4 border-t border-gray-200 mobile-menu"
         >
-          <!-- 移动端Logo -->
-          <div
-            class="flex items-center justify-center px-4 pb-4 border-b border-gray-100"
-          >
-            <img
-              src="/Apex.png"
-              alt="ApexBlog Logo"
-              class="w-10 h-10 object-cover"
-            />
-          </div>
+          <!-- 移动端分割线 -->
+          <div class="px-4 pb-4 border-b border-gray-100"></div>
 
           <div class="flex flex-col space-y-4 pt-4">
             <RouterLink

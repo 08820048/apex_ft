@@ -32,19 +32,15 @@
       ></div>
       <div class="relative max-w-4xl mx-auto px-4 z-10">
         <h1
-          class="text-4xl md:text-5xl font-bold text-gray-900 mb-4 tracking-tight"
+          class="text-4xl md:text-5xl font-bold mb-4 tracking-tight"
+          style="color: #0751cf"
         >
-          From The Blog
+          Simplicity is the soul of efficiency
         </h1>
         <p class="text-lg text-gray-600 max-w-2xl mx-auto leading-relaxed">
-          分享技术见解，记录开发历程，探索编程世界的无限可能
+          简单是效率的灵魂。
         </p>
-        <!-- 装饰性分割线 -->
-        <div class="mt-6 flex justify-center">
-          <div
-            class="w-24 h-1 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full"
-          ></div>
-        </div>
+
       </div>
     </div>
 

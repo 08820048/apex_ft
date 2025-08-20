@@ -991,6 +991,29 @@ html.light .prose a:hover {
   color: #1d4ed8 !important;
 }
 
+/* 视频播放器样式 */
+.prose :deep(video) {
+  width: 100% !important;
+  max-width: 100% !important;
+  height: auto !important;
+  border-radius: 8px !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1) !important;
+  margin: 1.5rem 0 !important;
+  background: #000 !important;
+}
+
+.prose :deep(video:focus) {
+  outline: 2px solid #0751cf !important;
+  outline-offset: 2px !important;
+}
+
+/* 视频容器样式 */
+.prose :deep(video) {
+  display: block !important;
+}
+
+/* B站视频播放器样式 - 使用全局样式，移除重复定义 */
+
 /* 亮色模式下的目录导航样式 */
 html.light .glass-effect .text-gray-900 {
   color: #111827 !important;

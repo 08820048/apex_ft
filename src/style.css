@@ -292,6 +292,133 @@ textarea {
   border-radius: 0;
 }
 
+/* 视频播放器全局样式 */
+video {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 1rem auto;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  background: #000;
+}
+
+video:focus {
+  outline: 2px solid #0751cf;
+  outline-offset: 2px;
+}
+
+/* B站增强播放器样式 */
+.bilibili-player-enhanced {
+  margin: 2rem auto;
+  max-width: 1000px;
+  width: 95%;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12), 0 2px 8px rgba(0, 0, 0, 0.08);
+  background: white;
+  transition: all 0.3s ease;
+}
+
+.bilibili-player-enhanced:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 48px rgba(0, 0, 0, 0.15), 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.player-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 20px;
+  background: linear-gradient(135deg, #00a1d6 0%, #00b5e5 100%);
+  color: white;
+}
+
+.bilibili-brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.bilibili-icon {
+  width: 20px;
+  height: 20px;
+  opacity: 0.9;
+}
+
+.bilibili-brand span {
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.external-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  color: white;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.external-link:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: scale(1.05);
+  color: white;
+}
+
+.external-link svg {
+  width: 16px;
+  height: 16px;
+}
+
+.player-content {
+  position: relative;
+  width: 100%;
+  height: 0;
+  padding-bottom: 56.25%; /* 16:9 宽高比 */
+  background: #000;
+}
+
+.bilibili-enhanced-iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: none;
+  background: #000;
+}
+
+/* 响应式调整 */
+@media (max-width: 768px) {
+  .bilibili-player-enhanced {
+    margin: 1rem 0;
+    border-radius: 12px;
+  }
+
+  .player-header {
+    padding: 10px 16px;
+  }
+
+  .bilibili-brand span {
+    font-size: 13px;
+  }
+
+  .external-link {
+    width: 28px;
+    height: 28px;
+  }
+
+  .external-link svg {
+    width: 14px;
+    height: 14px;
+  }
+}
+
 /* 浅蓝色斜线条背景效果 */
 .diagonal-stripes-bg {
   background: linear-gradient(
