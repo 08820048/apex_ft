@@ -277,13 +277,14 @@
             class="space-y-6"
           >
             <article
-              v-for="article in moreArticles"
+              v-for="(article, index) in moreArticles"
               :key="'more-' + article.id"
               class="glass-effect cursor-pointer card-hover h-48 overflow-hidden relative group"
               :style="getArticleStyle(article)"
               @click="goToArticle(article.id)"
             >
-              <div class="flex h-full">
+              <!-- 奇数项：左侧封面，右侧内容 -->
+              <div v-if="index % 2 === 0" class="flex h-full">
                 <!-- 封面图片区域 (2/3 宽度) -->
                 <div class="relative w-2/3 overflow-hidden">
                   <img
@@ -319,21 +320,26 @@
                     </p>
                   </div>
 
-                  <!-- 底部信息 - 时间、阅读量、分类、标签都在一行 -->
-                  <div class="flex items-center justify-between text-xs">
-                    <div class="flex items-center text-gray-500">
-                      <CalendarIcon class="w-3 h-3 mr-1" />
-                      {{ formatDate(article.publishedAt || article.createdAt) }}
-                      <span class="mx-2">•</span>
-                      <EyeIcon class="w-3 h-3 mr-1" />
-                      {{ article.viewCount || 0 }} 阅读
+                  <!-- 底部信息 - 分两行，标签右对齐 -->
+                  <div class="space-y-2">
+                    <!-- 第一行：日期和阅读量 -->
+                    <div class="flex items-center text-xs text-gray-500">
+                      <CalendarIcon class="w-3 h-3 mr-1 flex-shrink-0" />
+                      <span class="truncate mr-3">{{
+                        formatDate(article.publishedAt || article.createdAt)
+                      }}</span>
+                      <EyeIcon class="w-3 h-3 mr-1 flex-shrink-0" />
+                      <span class="flex-shrink-0">{{
+                        formatViewCount(article.viewCount || 0)
+                      }}</span>
                     </div>
 
-                    <div class="flex flex-wrap gap-1">
+                    <!-- 第二行：分类和标签（右对齐） -->
+                    <div class="flex flex-wrap gap-1 justify-end">
                       <!-- 文章分类 -->
                       <span
                         v-if="article.category"
-                        class="px-2 py-1 text-white font-medium"
+                        class="px-2 py-1 text-white font-medium text-xs"
                         style="background-color: #0751cf"
                       >
                         {{ article.category.name }}
@@ -342,7 +348,7 @@
                       <span
                         v-for="tag in article.tags?.slice(0, 2)"
                         :key="tag.id"
-                        class="px-2 py-1"
+                        class="px-2 py-1 text-xs"
                         :style="`background-color: ${
                           tag.color || '#3b82f6'
                         }20; color: ${tag.color || '#3b82f6'};`"
@@ -351,6 +357,83 @@
                       </span>
                     </div>
                   </div>
+                </div>
+              </div>
+
+              <!-- 偶数项：左侧内容，右侧封面 -->
+              <div v-else class="flex h-full">
+                <!-- 内容信息区域 (1/3 宽度) -->
+                <div
+                  class="w-1/3 p-6 flex flex-col justify-between paper-texture-bg"
+                >
+                  <div>
+                    <h3
+                      class="text-lg font-semibold text-gray-900 mb-3 line-clamp-2 hover:text-blue-600 transition-colors"
+                    >
+                      {{ article.title }}
+                    </h3>
+                    <p class="text-gray-600 text-sm line-clamp-3 mb-4">
+                      {{ article.summary }}
+                    </p>
+                  </div>
+
+                  <!-- 底部信息 - 分两行，标签右对齐 -->
+                  <div class="space-y-2">
+                    <!-- 第一行：日期和阅读量 -->
+                    <div class="flex items-center text-xs text-gray-500">
+                      <CalendarIcon class="w-3 h-3 mr-1 flex-shrink-0" />
+                      <span class="truncate mr-3">{{
+                        formatDate(article.publishedAt || article.createdAt)
+                      }}</span>
+                      <EyeIcon class="w-3 h-3 mr-1 flex-shrink-0" />
+                      <span class="flex-shrink-0">{{
+                        formatViewCount(article.viewCount || 0)
+                      }}</span>
+                    </div>
+
+                    <!-- 第二行：分类和标签（右对齐） -->
+                    <div class="flex flex-wrap gap-1 justify-end">
+                      <!-- 文章分类 -->
+                      <span
+                        v-if="article.category"
+                        class="px-2 py-1 text-white font-medium text-xs"
+                        style="background-color: #0751cf"
+                      >
+                        {{ article.category.name }}
+                      </span>
+                      <!-- 标签 -->
+                      <span
+                        v-for="tag in article.tags?.slice(0, 2)"
+                        :key="tag.id"
+                        class="px-2 py-1 text-xs"
+                        :style="`background-color: ${
+                          tag.color || '#3b82f6'
+                        }20; color: ${tag.color || '#3b82f6'};`"
+                      >
+                        {{ tag.name }}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- 封面图片区域 (2/3 宽度) -->
+                <div class="relative w-2/3 overflow-hidden">
+                  <img
+                    v-if="article.coverImage"
+                    :src="article.coverImage"
+                    :alt="article.title"
+                    class="w-full h-full object-cover"
+                  />
+                  <div
+                    v-else
+                    class="w-full h-full bg-gradient-to-br from-blue-600 to-purple-600 flex items-center justify-center"
+                  >
+                    <DocumentTextIcon class="w-16 h-16 text-white opacity-50" />
+                  </div>
+                  <!-- 渐变遮罩 (反向) -->
+                  <div
+                    class="absolute inset-0 bg-gradient-to-l from-transparent via-transparent to-black/60"
+                  ></div>
                 </div>
               </div>
             </article>
@@ -370,18 +453,23 @@
             <p class="text-gray-600">所有文章都已展示完毕。</p>
           </div>
 
-          <!-- 加载更多按钮 -->
-          <div v-if="hasMore && !loading" class="text-center mt-8">
-            <button
-              @click="loadMoreArticles"
-              class="bg-black text-white px-8 py-3 font-medium hover:bg-gray-800 transition-all duration-200 border-2 border-black"
-            >
-              <span v-if="!loadingMore">加载更多</span>
-              <span v-else class="flex items-center justify-center">
-                <div class="loading-spinner mr-2"></div>
-                加载中...
-              </span>
-            </button>
+          <!-- 无限滚动加载指示器 -->
+          <div v-if="loadingMore" class="text-center mt-8 py-8">
+            <div class="flex items-center justify-center">
+              <div class="loading-spinner mr-3"></div>
+              <span class="text-gray-600">正在加载更多文章...</span>
+            </div>
+          </div>
+
+          <!-- 没有更多内容提示 -->
+          <div
+            v-else-if="!hasMore && moreArticles.length > 0"
+            class="text-center mt-8 py-8"
+          >
+            <div class="text-gray-400 mb-2">
+              <CheckCircleIcon class="w-8 h-8 mx-auto" />
+            </div>
+            <p class="text-gray-600">已加载全部文章</p>
           </div>
         </div>
       </section>
@@ -390,7 +478,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, onUnmounted } from "vue";
 import { useRouter } from "vue-router";
 import { articleApi } from "../api";
 
@@ -404,6 +492,18 @@ const CalendarIcon = {
 const EyeIcon = {
   template: `<svg viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4">
     <path d="M12,9A3,3 0 0,0 9,12A3,3 0 0,0 12,15A3,3 0 0,0 15,12A3,3 0 0,0 12,9M12,17A5,5 0 0,1 7,12A5,5 0 0,1 12,7A5,5 0 0,1 17,12A5,5 0 0,1 12,17M12,4.5C7,4.5 2.73,7.61 1,12C2.73,16.39 7,19.5 12,19.5C17,19.5 21.27,16.39 23,12C21.27,7.61 17,4.5 12,4.5Z" />
+  </svg>`,
+};
+
+const CheckCircleIcon = {
+  template: `<svg viewBox="0 0 24 24" fill="currentColor" class="w-8 h-8">
+    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+  </svg>`,
+};
+
+const DocumentTextIcon = {
+  template: `<svg viewBox="0 0 24 24" fill="currentColor" class="w-16 h-16">
+    <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z" />
   </svg>`,
 };
 
@@ -428,6 +528,15 @@ const formatDate = (dateString) => {
     month: "long",
     day: "numeric",
   });
+};
+
+// 格式化阅读量显示
+const formatViewCount = (count) => {
+  if (count === 0) return "0 阅读";
+  if (count < 1000) return `${count} 阅读`;
+  if (count < 10000) return `${(count / 1000).toFixed(1)}k 阅读`;
+  if (count < 100000) return `${(count / 10000).toFixed(1)}w 阅读`;
+  return `${Math.floor(count / 10000)}w+ 阅读`;
 };
 
 // 生成文章的简洁样式（无边框）
@@ -538,9 +647,46 @@ const initializeData = async () => {
   }
 };
 
-// 组件挂载时加载数据
+// 无限滚动处理函数
+const handleScroll = () => {
+  // 如果正在加载或没有更多内容，则不处理
+  if (loadingMore.value || !hasMore.value) return;
+
+  // 获取滚动位置
+  const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+  const windowHeight = window.innerHeight;
+  const documentHeight = document.documentElement.scrollHeight;
+
+  // 当滚动到距离底部200px时开始加载
+  if (scrollTop + windowHeight >= documentHeight - 200) {
+    console.log("触发无限滚动加载");
+    loadMoreArticles();
+  }
+};
+
+// 节流函数，避免频繁触发
+let scrollTimer = null;
+const throttledHandleScroll = () => {
+  if (scrollTimer) return;
+  scrollTimer = setTimeout(() => {
+    handleScroll();
+    scrollTimer = null;
+  }, 100);
+};
+
+// 组件挂载时加载数据并添加滚动监听
 onMounted(() => {
   initializeData();
+  // 添加滚动监听器
+  window.addEventListener("scroll", throttledHandleScroll);
+});
+
+// 组件卸载时移除滚动监听器
+onUnmounted(() => {
+  window.removeEventListener("scroll", throttledHandleScroll);
+  if (scrollTimer) {
+    clearTimeout(scrollTimer);
+  }
 });
 </script>
 
