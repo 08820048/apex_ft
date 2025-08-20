@@ -40,7 +40,6 @@
         <p class="text-lg text-gray-600 max-w-2xl mx-auto leading-relaxed">
           简单是效率的灵魂。
         </p>
-
       </div>
     </div>
 
@@ -459,12 +458,10 @@ const loadTopArticles = async () => {
 // 加载最新文章
 const loadLatestArticles = async () => {
   try {
-    const data = await articleApi.getList({
-      page: 0,
-      size: 6, // 获取更多文章，然后过滤掉置顶的
-    });
+    // 使用专门的最新文章API，返回最新的10篇文章
+    const data = await articleApi.getLatest();
 
-    const allArticles = data.content || [];
+    const allArticles = data || [];
     const topIds = topArticles.value.map((a) => a.id);
 
     // 过滤掉置顶文章，取前3篇作为最新文章
@@ -473,6 +470,8 @@ const loadLatestArticles = async () => {
       .slice(0, 3);
 
     console.log("最新文章数据:", latestArticles.value);
+    console.log("总文章数量:", allArticles.length);
+    console.log("置顶文章ID:", topIds);
   } catch (error) {
     console.error("加载最新文章失败:", error);
     latestArticles.value = [];

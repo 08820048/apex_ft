@@ -31,6 +31,11 @@ export const articleApi = {
   getTop() {
     return http.get("/articles/top");
   },
+
+  // 获取最新文章
+  getLatest() {
+    return http.get("/articles/latest");
+  },
 };
 
 // 分类相关 API
