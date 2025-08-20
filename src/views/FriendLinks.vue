@@ -3,17 +3,17 @@
     <div class="max-w-7xl mx-auto">
       <!-- 页面标题 -->
       <div class="text-center mb-12">
-        <h1 class="text-4xl font-bold text-white mb-4">友情链接</h1>
-        <p class="text-xl text-gray-200">与优秀的朋友们一起成长</p>
+        <h1 class="text-4xl font-bold text-gray-900 mb-4">友情链接</h1>
+        <p class="text-xl text-gray-600">与优秀的朋友们一起成长</p>
       </div>
 
       <!-- 本站友链信息 -->
       <div class="glass-effect p-6 mb-8 border border-blue-500/30">
-        <h2 class="text-xl font-bold text-white mb-4 flex items-center">
+        <h2 class="text-xl font-bold text-gray-900 mb-4 flex items-center">
           <span class="w-2 h-2 bg-blue-500 rounded-full mr-3"></span>
           本站友链信息
         </h2>
-        <p class="text-gray-200 text-sm mb-4">
+        <p class="text-gray-600 text-sm mb-4">
           如果您想添加本站到您的友链中，请使用以下信息：
         </p>
         <div class="bg-gray-50 dark:bg-gray-800 p-4 space-y-3">
@@ -80,10 +80,8 @@
 
       <!-- 友链申请说明 -->
       <div class="glass-effect p-6 mb-8">
-        <h2 class="text-xl font-bold text-gray-900 dark:text-white mb-4">
-          友链申请
-        </h2>
-        <div class="text-gray-600 dark:text-gray-300 space-y-2">
+        <h2 class="text-xl font-bold text-gray-900 mb-4">友链申请</h2>
+        <div class="text-gray-600 space-y-2">
           <p>欢迎与我交换友情链接！申请前请确保：</p>
           <ul class="list-disc list-inside space-y-1 ml-4">
             <li>网站内容积极向上，无违法违规内容</li>
@@ -104,9 +102,7 @@
 
       <!-- 友链列表 -->
       <div>
-        <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-6">
-          友站推荐
-        </h2>
+        <h2 class="text-2xl font-bold text-gray-900 mb-6">友站推荐</h2>
 
         <!-- 加载状态 -->
         <div
@@ -190,10 +186,8 @@
           <div class="text-gray-400 dark:text-gray-500 mb-4">
             <LinkIcon class="w-16 h-16 mx-auto" />
           </div>
-          <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">
-            暂无友链
-          </h3>
-          <p class="text-gray-600 dark:text-gray-300">
+          <h3 class="text-lg font-semibold text-gray-900 mb-2">暂无友链</h3>
+          <p class="text-gray-600">
             还没有添加任何友情链接，欢迎申请交换友链。
           </p>
         </div>
@@ -201,11 +195,9 @@
 
       <!-- 友链统计 -->
       <div v-if="friendLinks.length > 0" class="mt-8 text-center">
-        <p class="text-gray-600 dark:text-white/80">
+        <p class="text-gray-600">
           共有
-          <span class="font-bold text-gray-900 dark:text-white">{{
-            friendLinks.length
-          }}</span>
+          <span class="font-bold text-gray-900">{{ friendLinks.length }}</span>
           个友站
         </p>
       </div>

@@ -3,8 +3,8 @@
     <div class="max-w-7xl mx-auto">
       <!-- 页面标题 -->
       <div class="text-center mb-12">
-        <h1 class="text-4xl font-bold text-white mb-4">文章标签</h1>
-        <p class="text-xl text-gray-200">通过标签快速找到相关文章</p>
+        <h1 class="text-4xl font-bold text-gray-900 mb-4">文章标签</h1>
+        <p class="text-xl text-gray-600">通过标签快速找到相关文章</p>
       </div>
 
       <!-- 标签云 -->
@@ -51,15 +51,15 @@
           <div class="text-gray-400 mb-4">
             <TagIcon class="w-16 h-16 mx-auto" />
           </div>
-          <h3 class="text-lg font-semibold text-white mb-2">暂无标签</h3>
-          <p class="text-gray-200">还没有创建任何标签，请稍后再来查看。</p>
+          <h3 class="text-lg font-semibold text-gray-900 mb-2">暂无标签</h3>
+          <p class="text-gray-600">还没有创建任何标签，请稍后再来查看。</p>
         </div>
       </Transition>
 
       <!-- 标签列表 -->
       <Transition name="fade">
         <div v-if="!loading && tags.length > 0" class="mt-8">
-          <h2 class="text-2xl font-bold text-white mb-6">所有标签</h2>
+          <h2 class="text-2xl font-bold text-gray-900 mb-6">所有标签</h2>
           <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             <div
               v-for="tag in tags"
@@ -74,7 +74,7 @@
                     :style="{ backgroundColor: tag.color || '#3b82f6' }"
                   ></div>
                   <span
-                    class="font-medium text-white group-hover:text-blue-400 transition-colors"
+                    class="font-medium text-gray-900 group-hover:text-blue-600 transition-colors"
                   >
                     {{ tag.name }}
                   </span>

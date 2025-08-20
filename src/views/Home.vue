@@ -1,426 +1,313 @@
 <template>
   <div class="min-h-screen">
-    <!-- 主要内容区域 -->
-    <div class="max-w-7xl mx-auto px-4 py-8">
-      <div class="flex flex-col lg:flex-row gap-8 lg:items-start">
-        <!-- 主内容区 -->
-        <div class="flex-1 lg:max-w-3xl">
-          <!-- 文章列表 -->
-          <div
-            class="flex flex-col"
-            :class="
-              articles.length >= 5 ? 'lg:min-h-[750px]' : 'lg:max-h-[850px]'
-            "
+    <!-- 全屏主要内容区域 -->
+    <div class="max-w-full mx-auto px-4 py-8">
+      <!-- 置顶文章区域 - 两个大卡片 -->
+      <section v-if="topArticles.length > 0" class="mb-12">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          <article
+            v-for="article in topArticles.slice(0, 2)"
+            :key="'top-' + article.id"
+            class="glass-effect cursor-pointer card-hover relative group h-[480px] overflow-hidden rounded-xl"
+            :style="getArticleStyle(article)"
+            @click="goToArticle(article.id)"
           >
-            <!-- 加载状态 -->
-            <Transition name="loading">
-              <div v-if="loading" class="space-y-6">
-                <div
-                  v-for="i in 3"
-                  :key="i"
-                  class="glass-effect p-6 animate-pulse"
-                >
-                  <div class="flex gap-4">
-                    <div class="w-32 h-24 bg-gray-600 rounded"></div>
-                    <div class="flex-1">
-                      <div class="h-6 bg-gray-600 rounded mb-3"></div>
-                      <div class="h-4 bg-gray-600 rounded mb-2"></div>
-                      <div class="h-4 bg-gray-600 rounded w-3/4"></div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </Transition>
-
-            <!-- 文章列表 -->
-            <TransitionGroup
-              v-if="articles.length > 0"
-              name="list"
-              tag="div"
-              class="flex-1 flex flex-col gap-4"
-            >
-              <article
-                v-for="article in articles"
-                :key="article.id"
-                :class="[
-                  'glass-effect p-5 cursor-pointer card-hover flex-1 min-h-[160px] flex flex-col justify-between relative group',
-                  article.isTop ? 'top-article' : '',
-                ]"
-                :style="getArticleStyle(article)"
-                @click="goToArticle(article.id)"
+            <!-- 置顶标识 -->
+            <div class="absolute top-4 right-4 z-20">
+              <div
+                class="bg-black px-3 py-1 text-sm font-medium shadow-lg"
+                style="color: #ffffff !important"
               >
-                <!-- 置顶提示 - 仅在悬停时显示 -->
-                <div
-                  v-if="article.isTop"
-                  class="absolute top-2 right-2 z-10 top-tooltip opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-x-2 group-hover:translate-x-0"
-                >
-                  <div
-                    class="bg-black text-white px-2 py-1 text-xs font-medium shadow-lg top-badge"
-                  >
-                    置顶
-                  </div>
-                </div>
-                <div class="flex gap-4 h-full">
-                  <div
-                    v-if="article.coverImage"
-                    class="w-32 h-28 flex-shrink-0"
-                  >
-                    <img
-                      :src="article.coverImage"
-                      :alt="article.title"
-                      class="w-full h-full object-cover rounded"
-                    />
-                  </div>
-                  <div class="flex-1 flex flex-col justify-between">
-                    <div>
-                      <h3
-                        class="text-xl font-semibold text-white mb-2 hover:text-blue-400 transition-colors line-clamp-2"
-                      >
-                        {{ article.title }}
-                      </h3>
-                      <p
-                        class="text-gray-200 line-clamp-3 mb-3"
-                        :class="{ 'flex-1': articles.length >= 5 }"
-                      >
-                        {{ article.summary }}
-                      </p>
-
-                      <!-- 当文章数量少于5条时，显示正文内容填充空白 -->
-                      <div
-                        v-if="articles.length < 5 && article.renderedContent"
-                        class="text-gray-200 text-sm leading-relaxed mt-4 overflow-hidden"
-                        :class="{
-                          'flex-1': articles.length < 5,
-                          'max-h-20': articles.length === 4,
-                          'max-h-24': articles.length === 3,
-                          'max-h-32': articles.length === 2,
-                          'max-h-40': articles.length === 1,
-                        }"
-                      >
-                        <div class="border-t border-gray-600 pt-3 mt-3">
-                          <div class="text-xs text-gray-400 mb-2 font-medium">
-                            正文预览
-                          </div>
-                          <div
-                            class="markdown-content overflow-hidden"
-                            v-html="article.renderedContent"
-                          ></div>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="flex items-center justify-between mt-auto">
-                      <div
-                        class="flex items-center space-x-4 text-sm text-gray-400"
-                      >
-                        <span>{{ formatDate(article.publishedAt) }}</span>
-                        <span>{{ article.viewCount }} 阅读</span>
-                        <span
-                          v-if="article.authorName"
-                          class="flex items-center"
-                        >
-                          <svg
-                            class="w-4 h-4 mr-1"
-                            fill="currentColor"
-                            viewBox="0 0 24 24"
-                          >
-                            <path
-                              d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"
-                            />
-                          </svg>
-                          {{ article.authorName }}
-                        </span>
-                      </div>
-                      <div class="flex items-center gap-2">
-                        <!-- 文章分类 -->
-                        <span
-                          v-if="article.category"
-                          class="px-2 py-1 text-xs bg-gradient-to-r from-purple-900/40 to-purple-800/40 text-purple-300 font-medium border border-purple-500/30"
-                        >
-                          <svg
-                            class="w-3 h-3 inline mr-1"
-                            fill="currentColor"
-                            viewBox="0 0 24 24"
-                          >
-                            <path d="M4 6h16v2H4zm0 5h16v2H4zm0 5h16v2H4z" />
-                          </svg>
-                          {{ article.category.name }}
-                        </span>
-                        <!-- 标签 -->
-                        <div class="flex flex-wrap gap-2">
-                          <span
-                            v-for="tag in article.tags?.slice(0, 6)"
-                            :key="tag.id"
-                            class="px-2 py-1 text-xs"
-                            :style="`background-color: ${tag.color}20; color: ${tag.color} !important;`"
-                          >
-                            #{{ tag.name }}
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </article>
-            </TransitionGroup>
-
-            <!-- 空状态 -->
-            <div
-              v-else-if="!loading && articles.length === 0"
-              class="glass-effect p-12 text-center"
-            >
-              <div class="text-gray-400 mb-4">
-                <svg
-                  class="w-16 h-16 mx-auto"
-                  fill="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"
-                  />
-                </svg>
+                置顶
               </div>
-              <h3 class="text-lg font-semibold text-white mb-2">暂无文章</h3>
-              <p class="text-gray-200">还没有发布任何文章，请稍后再来查看。</p>
             </div>
-          </div>
-        </div>
 
-        <!-- 侧边栏 -->
-        <div
-          class="w-full lg:w-80 flex-shrink-0 lg:min-h-[850px] flex flex-col"
-        >
-          <!-- 热门标签 -->
-          <div class="glass-effect p-6 mb-6">
-            <h3
-              class="text-lg font-semibold text-white mb-4 flex items-center sidebar-title"
-            >
-              <TagIcon class="w-5 h-5 mr-2 text-blue-600 dark:text-blue-400" />
-              热门标签
-            </h3>
-            <TransitionGroup
-              v-if="popularTags.length > 0"
-              name="list"
-              tag="div"
-              class="flex flex-wrap gap-2"
-            >
-              <span
-                v-for="tag in popularTags"
-                :key="tag.id"
-                @click="goToTag(tag.id)"
-                class="px-3 py-1 text-sm cursor-pointer tag-hover"
-                :style="`background-color: ${tag.color}20; color: ${tag.color} !important;`"
-              >
-                {{ tag.name }}
-              </span>
-            </TransitionGroup>
-            <div v-else class="text-gray-400">暂无标签</div>
-          </div>
-
-          <!-- 博客统计 -->
-          <div class="glass-effect p-6 mb-6">
-            <h3
-              class="text-lg font-semibold text-white mb-4 flex items-center sidebar-title"
-            >
+            <!-- 封面图片区域 (2/3 高度 = 320px) -->
+            <div class="relative h-80 overflow-hidden">
               <img
-                src="/apex.jpg"
-                alt="ApexBlog Logo"
-                class="w-6 h-6 rounded-full object-cover mr-2 shadow-sm"
+                v-if="article.coverImage"
+                :src="article.coverImage"
+                :alt="article.title"
+                class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
               />
-              博客统计
-            </h3>
-            <div class="grid grid-cols-2 gap-3">
               <div
-                class="text-center p-4 bg-gradient-to-br from-blue-900/30 to-blue-800/30 border border-blue-500/30 hover:shadow-md transition-shadow"
+                v-else
+                class="w-full h-full bg-gradient-to-br from-blue-600 to-purple-600 flex items-center justify-center"
               >
-                <div class="text-2xl font-bold text-blue-400 mb-1">
-                  {{ stats.articleCount }}
-                </div>
-                <div class="text-xs text-gray-300">文章总数</div>
+                <DocumentTextIcon class="w-16 h-16 text-white opacity-50" />
               </div>
+              <!-- 渐变遮罩 -->
               <div
-                class="text-center p-4 bg-gradient-to-br from-green-900/30 to-green-800/30 border border-green-500/30 hover:shadow-md transition-shadow"
-              >
-                <div class="text-2xl font-bold text-green-400 mb-1">
-                  {{ stats.viewCount }}
-                </div>
-                <div class="text-xs text-gray-300">总访问量</div>
+                class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"
+              ></div>
+            </div>
+
+            <!-- 内容信息区域 (1/3 高度 = 160px) -->
+            <div class="p-6 h-40 flex flex-col justify-between">
+              <div>
+                <h2
+                  class="text-xl font-bold text-gray-900 mb-2 line-clamp-2 hover:text-blue-600 transition-colors"
+                >
+                  {{ article.title }}
+                </h2>
+                <p class="text-gray-600 text-sm line-clamp-2 mb-3">
+                  {{ article.summary }}
+                </p>
               </div>
-              <div
-                class="text-center p-4 bg-gradient-to-br from-purple-900/30 to-purple-800/30 border border-purple-500/30 hover:shadow-md transition-shadow"
-              >
-                <div class="text-2xl font-bold text-purple-400 mb-1">
-                  {{ stats.subscriberCount }}
+
+              <!-- 底部信息 - 时间、分类、标签都在一行 -->
+              <div class="flex items-center justify-between text-xs">
+                <div class="flex items-center text-gray-500">
+                  <CalendarIcon class="w-3 h-3 mr-1" />
+                  {{ formatDate(article.createdAt) }}
                 </div>
-                <div class="text-xs text-gray-300">订阅用户</div>
-              </div>
-              <div
-                class="text-center p-4 bg-gradient-to-br from-red-900/30 to-red-800/30 border border-red-500/30 hover:shadow-md transition-shadow"
-              >
-                <div class="text-2xl font-bold text-red-400 mb-1">
-                  {{ stats.friendLinkCount }}
+                <div class="flex flex-wrap gap-1">
+                  <!-- 分类标识 -->
+                  <span
+                    v-if="article.category"
+                    class="px-2 py-1 bg-gradient-to-r from-purple-900/40 to-purple-800/40 text-purple-300 font-medium border border-purple-500/30"
+                  >
+                    {{ article.category.name }}
+                  </span>
+                  <!-- 标签 -->
+                  <span
+                    v-for="tag in article.tags?.slice(0, 3)"
+                    :key="tag.id"
+                    class="px-2 py-1"
+                    :style="`background-color: ${
+                      tag.color || '#3b82f6'
+                    }20; color: ${tag.color || '#3b82f6'};`"
+                  >
+                    {{ tag.name }}
+                  </span>
                 </div>
-                <div class="text-xs text-gray-300">友链数量</div>
               </div>
             </div>
-          </div>
+          </article>
+        </div>
+      </section>
 
-          <!-- 分页 -->
-          <Transition name="fade">
-            <div v-if="totalPages > 1" class="glass-effect p-6">
-              <h3
-                class="text-lg font-semibold text-white mb-4 flex items-center sidebar-title"
-              >
-                <svg
-                  class="w-5 h-5 mr-2 text-blue-600 dark:text-blue-400"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M7 4V2a1 1 0 011-1h8a1 1 0 011 1v2h4a1 1 0 011 1v2a1 1 0 01-1 1h-1v12a2 2 0 01-2 2H6a2 2 0 01-2-2V8H3a1 1 0 01-1-1V5a1 1 0 011-1h4zM9 3v1h6V3H9zm0 5v10h6V8H9z"
-                  />
-                </svg>
-                页面导航
-              </h3>
-
-              <!-- 分页信息 -->
+      <!-- 最新文章区域 - 三个较小卡片 -->
+      <section v-if="latestArticles.length > 0" class="mb-12">
+        <h2 class="text-2xl font-bold text-gray-900 mb-6 flex items-center">
+          <ClockIcon class="w-6 h-6 mr-2 text-blue-600" />
+          最新文章
+        </h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <article
+            v-for="article in latestArticles.slice(0, 3)"
+            :key="'latest-' + article.id"
+            class="glass-effect cursor-pointer card-hover relative group h-96 overflow-hidden rounded-xl"
+            :style="getArticleStyle(article)"
+            @click="goToArticle(article.id)"
+          >
+            <!-- 封面图片区域 (2/3 高度 = 213px) -->
+            <div class="relative h-52 overflow-hidden">
+              <img
+                v-if="article.coverImage"
+                :src="article.coverImage"
+                :alt="article.title"
+                class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+              />
               <div
-                class="text-center p-4 bg-gradient-to-br from-blue-900/30 to-blue-800/30 border border-blue-500/30 mb-4"
+                v-else
+                class="w-full h-full bg-gradient-to-br from-green-600 to-blue-600 flex items-center justify-center"
               >
-                <div class="text-sm font-medium text-blue-300 mb-1">
-                  第 {{ currentPage }} / {{ totalPages }} 页
-                </div>
-                <div class="text-xs text-blue-400">
-                  共 {{ totalElements }} 篇文章
-                </div>
+                <DocumentTextIcon class="w-12 h-12 text-white opacity-50" />
+              </div>
+              <!-- 渐变遮罩 -->
+              <div
+                class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"
+              ></div>
+            </div>
+
+            <!-- 内容信息区域 (1/3 高度 = 128px) -->
+            <div class="p-4 h-32 flex flex-col justify-between">
+              <div>
+                <h3
+                  class="text-base font-semibold text-gray-900 mb-1 line-clamp-2 hover:text-blue-600 transition-colors"
+                >
+                  {{ article.title }}
+                </h3>
+                <p class="text-gray-600 text-sm line-clamp-1 mb-2">
+                  {{ article.summary }}
+                </p>
               </div>
 
-              <!-- 分页按钮 -->
-              <div class="space-y-3">
-                <!-- 上一页 -->
-                <button
-                  @click="changePage(currentPage - 1)"
-                  :disabled="currentPage <= 1"
-                  class="w-full px-4 py-2 text-sm font-medium text-white glass-effect hover:bg-white/10 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 border border-blue-500/30 hover:border-blue-400/50 disabled:border-gray-600/30"
-                >
-                  <svg
-                    class="w-4 h-4 inline mr-2"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M15 19l-7-7 7-7"
-                    />
-                  </svg>
-                  上一页
-                </button>
-
-                <!-- 页码按钮 -->
-                <div v-if="totalPages <= 4" class="grid grid-cols-4 gap-2">
-                  <!-- 简单分页：页数少于等于4页时显示所有页码 -->
-                  <button
-                    v-for="page in totalPages"
-                    :key="page"
-                    @click="changePage(page)"
-                    :class="[
-                      'px-2 py-2 text-xs font-medium transition-all duration-200 glass-effect',
-                      page === currentPage
-                        ? 'border-2 border-blue-400 bg-blue-500/20 text-blue-300 shadow-lg shadow-blue-500/20'
-                        : 'text-gray-200 border border-white/20 hover:bg-white/10 hover:border-blue-400/50',
-                    ]"
-                  >
-                    {{ page }}
-                  </button>
+              <!-- 底部信息 - 时间、分类、标签都在一行 -->
+              <div class="flex items-center justify-between text-xs">
+                <div class="flex items-center text-gray-500">
+                  <CalendarIcon class="w-3 h-3 mr-1" />
+                  {{ formatDate(article.createdAt) }}
                 </div>
+                <div class="flex flex-wrap gap-1">
+                  <!-- 分类标识 -->
+                  <span
+                    v-if="article.category"
+                    class="px-2 py-1 bg-gradient-to-r from-purple-900/40 to-purple-800/40 text-purple-300 font-medium border border-purple-500/30"
+                  >
+                    {{ article.category.name }}
+                  </span>
+                  <!-- 标签 -->
+                  <span
+                    v-for="tag in article.tags?.slice(0, 2)"
+                    :key="tag.id"
+                    class="px-2 py-1"
+                    :style="`background-color: ${
+                      tag.color || '#3b82f6'
+                    }20; color: ${tag.color || '#3b82f6'};`"
+                  >
+                    {{ tag.name }}
+                  </span>
+                </div>
+              </div>
+            </div>
+          </article>
+        </div>
+      </section>
 
-                <!-- 复杂分页：页数大于4页时使用跳转输入框 -->
-                <div v-else class="space-y-3">
-                  <div class="flex items-center gap-2">
-                    <!-- 第一页按钮 -->
-                    <button
-                      @click="changePage(1)"
-                      :class="[
-                        'px-3 py-2 text-xs font-medium transition-all duration-200 flex-shrink-0 glass-effect',
-                        currentPage === 1
-                          ? 'border-2 border-blue-400 bg-blue-500/20 text-blue-300 shadow-lg shadow-blue-500/20'
-                          : 'text-gray-200 border border-white/20 hover:bg-white/10 hover:border-blue-400/50',
-                      ]"
-                    >
-                      1
-                    </button>
+      <!-- 更多文章区域 - 动态加载 -->
+      <section>
+        <h2 class="text-2xl font-bold text-gray-900 mb-6 flex items-center">
+          <DocumentTextIcon class="w-6 h-6 mr-2 text-blue-600" />
+          更多文章
+        </h2>
 
-                    <!-- 跳转输入框和按钮 -->
-                    <div class="flex items-center gap-1 flex-1">
-                      <input
-                        v-model="jumpToPage"
-                        @keyup.enter="handleJumpToPage"
-                        type="number"
-                        :min="1"
-                        :max="totalPages"
-                        placeholder="页码"
-                        class="flex-1 px-2 py-1 text-xs glass-effect border border-white/20 text-white focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400"
-                      />
-                      <button
-                        @click="handleJumpToPage"
-                        class="px-2 py-1 text-xs font-medium text-white glass-effect border border-green-400/50 hover:bg-green-500/20 hover:border-green-400 transition-all duration-200 flex-shrink-0"
-                      >
-                        跳转
-                      </button>
-                    </div>
-
-                    <!-- 最后一页按钮 -->
-                    <button
-                      @click="changePage(totalPages)"
-                      :class="[
-                        'px-3 py-2 text-xs font-medium transition-all duration-200 flex-shrink-0 glass-effect',
-                        currentPage === totalPages
-                          ? 'border-2 border-blue-400 bg-blue-500/20 text-blue-300 shadow-lg shadow-blue-500/20'
-                          : 'text-gray-200 border border-white/20 hover:bg-white/10 hover:border-blue-400/50',
-                      ]"
-                    >
-                      {{ totalPages }}
-                    </button>
-                  </div>
-
-                  <!-- 当前页面提示 -->
-                  <div class="text-center text-xs text-gray-400">
-                    当前第 {{ currentPage }} 页
+        <!-- 文章列表 -->
+        <div class="space-y-6">
+          <!-- 加载状态 -->
+          <Transition name="loading">
+            <div v-if="loading" class="space-y-6">
+              <div
+                v-for="i in 3"
+                :key="i"
+                class="glass-effect p-6 animate-pulse"
+              >
+                <div class="flex gap-4">
+                  <div class="w-32 h-24 bg-gray-600 rounded"></div>
+                  <div class="flex-1">
+                    <div class="h-6 bg-gray-600 rounded mb-3"></div>
+                    <div class="h-4 bg-gray-600 rounded mb-2"></div>
+                    <div class="h-4 bg-gray-600 rounded w-3/4"></div>
                   </div>
                 </div>
-
-                <!-- 下一页 -->
-                <button
-                  @click="changePage(currentPage + 1)"
-                  :disabled="currentPage >= totalPages"
-                  class="w-full px-4 py-2 text-sm font-medium text-white glass-effect hover:bg-white/10 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 border border-blue-500/30 hover:border-blue-400/50 disabled:border-gray-600/30"
-                >
-                  下一页
-                  <svg
-                    class="w-4 h-4 inline ml-2"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M9 5l7 7-7 7"
-                    />
-                  </svg>
-                </button>
               </div>
             </div>
           </Transition>
+
+          <!-- 更多文章列表 - 长条卡片 -->
+          <TransitionGroup
+            v-if="moreArticles.length > 0"
+            name="list"
+            tag="div"
+            class="space-y-6"
+          >
+            <article
+              v-for="article in moreArticles"
+              :key="'more-' + article.id"
+              class="glass-effect cursor-pointer card-hover h-48 overflow-hidden rounded-xl relative group"
+              :style="getArticleStyle(article)"
+              @click="goToArticle(article.id)"
+            >
+              <div class="flex h-full">
+                <!-- 封面图片区域 (2/3 宽度) -->
+                <div class="relative w-2/3 overflow-hidden">
+                  <img
+                    v-if="article.coverImage"
+                    :src="article.coverImage"
+                    :alt="article.title"
+                    class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                  />
+                  <div
+                    v-else
+                    class="w-full h-full bg-gradient-to-br from-purple-600 to-pink-600 flex items-center justify-center"
+                  >
+                    <DocumentTextIcon class="w-16 h-16 text-white opacity-50" />
+                  </div>
+                  <!-- 渐变遮罩 -->
+                  <div
+                    class="absolute inset-0 bg-gradient-to-r from-transparent via-transparent to-black/60"
+                  ></div>
+                </div>
+
+                <!-- 内容信息区域 (1/3 宽度) -->
+                <div class="w-1/3 p-6 flex flex-col justify-between">
+                  <div>
+                    <h3
+                      class="text-lg font-semibold text-gray-900 mb-3 line-clamp-2 hover:text-blue-600 transition-colors"
+                    >
+                      {{ article.title }}
+                    </h3>
+                    <p class="text-gray-600 text-sm line-clamp-3 mb-4">
+                      {{ article.summary }}
+                    </p>
+                  </div>
+
+                  <!-- 底部信息 - 时间、阅读量、分类、标签都在一行 -->
+                  <div class="flex items-center justify-between text-xs">
+                    <div class="flex items-center text-gray-500">
+                      <CalendarIcon class="w-3 h-3 mr-1" />
+                      {{ formatDate(article.publishedAt || article.createdAt) }}
+                      <span class="mx-2">•</span>
+                      <EyeIcon class="w-3 h-3 mr-1" />
+                      {{ article.viewCount || 0 }} 阅读
+                    </div>
+
+                    <div class="flex flex-wrap gap-1">
+                      <!-- 文章分类 -->
+                      <span
+                        v-if="article.category"
+                        class="px-2 py-1 bg-gradient-to-r from-purple-900/40 to-purple-800/40 text-purple-300 font-medium border border-purple-500/30"
+                      >
+                        {{ article.category.name }}
+                      </span>
+                      <!-- 标签 -->
+                      <span
+                        v-for="tag in article.tags?.slice(0, 2)"
+                        :key="tag.id"
+                        class="px-2 py-1"
+                        :style="`background-color: ${
+                          tag.color || '#3b82f6'
+                        }20; color: ${tag.color || '#3b82f6'};`"
+                      >
+                        {{ tag.name }}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </article>
+          </TransitionGroup>
+
+          <!-- 空状态 -->
+          <div
+            v-else-if="!loading && moreArticles.length === 0"
+            class="glass-effect p-12 text-center"
+          >
+            <div class="text-gray-400 mb-4">
+              <DocumentTextIcon class="w-16 h-16 mx-auto" />
+            </div>
+            <h3 class="text-lg font-semibold text-gray-900 mb-2">
+              暂无更多文章
+            </h3>
+            <p class="text-gray-600">所有文章都已展示完毕。</p>
+          </div>
+
+          <!-- 加载更多按钮 -->
+          <div v-if="hasMore && !loading" class="text-center mt-8">
+            <button
+              @click="loadMoreArticles"
+              class="glass-effect px-8 py-3 text-gray-900 font-medium hover:bg-gray-100 transition-all duration-200 card-hover"
+            >
+              <span v-if="!loadingMore">加载更多</span>
+              <span v-else class="flex items-center justify-center">
+                <div class="loading-spinner mr-2"></div>
+                加载中...
+              </span>
+            </button>
+          </div>
         </div>
-      </div>
+      </section>
     </div>
   </div>
 </template>
@@ -428,35 +315,44 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
-import { articleApi, tagApi, statsApi } from "../api";
-import { renderMarkdown } from "../utils/markdown";
-import { useTheme } from "../composables/useTheme.js";
+import { articleApi } from "../api";
 
 // 图标组件
-const TagIcon = {
-  template: `<svg viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5">
-    <path d="M17.63,5.84C17.27,5.33 16.67,5 16,5L5,5.01C3.9,5.01 3,5.9 3,7V17C3,18.1 3.9,18.99 5,18.99L16,19C16.67,19 17.27,18.67 17.63,18.16L22,12L17.63,5.84Z" />
+const CalendarIcon = {
+  template: `<svg viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4">
+    <path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z"/>
+  </svg>`,
+};
+
+const ClockIcon = {
+  template: `<svg viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
+    <path d="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M16.2,16.2L11,13V7H12.5V12.2L17,14.7L16.2,16.2Z" />
+  </svg>`,
+};
+
+const DocumentTextIcon = {
+  template: `<svg viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
+    <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z" />
+  </svg>`,
+};
+
+const EyeIcon = {
+  template: `<svg viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4">
+    <path d="M12,9A3,3 0 0,0 9,12A3,3 0 0,0 12,15A3,3 0 0,0 15,12A3,3 0 0,0 12,9M12,17A5,5 0 0,1 7,12A5,5 0 0,1 12,7A5,5 0 0,1 17,12A5,5 0 0,1 12,17M12,4.5C7,4.5 2.73,7.61 1,12C2.73,16.39 7,19.5 12,19.5C17,19.5 21.27,16.39 23,12C21.27,7.61 17,4.5 12,4.5Z" />
   </svg>`,
 };
 
 const router = useRouter();
-const { isDark } = useTheme();
 
 // 响应式数据
-const articles = ref([]);
-const popularTags = ref([]);
-const stats = ref({
-  articleCount: 0,
-  viewCount: 0,
-  tagCount: 0,
-  categoryCount: 0,
-});
+const topArticles = ref([]);
+const latestArticles = ref([]);
+const moreArticles = ref([]);
 const loading = ref(false);
+const loadingMore = ref(false);
+const hasMore = ref(true);
 const currentPage = ref(1);
-const totalPages = ref(0);
-const totalElements = ref(0);
-const pageSize = 5;
-const jumpToPage = ref(""); // 跳转页面输入框
+const pageSize = 10;
 
 // 格式化日期
 const formatDate = (dateString) => {
@@ -509,203 +405,109 @@ const getArticleStyle = (article) => {
   };
 };
 
-// 跳转到文章详情
-const goToArticle = (id) => {
-  router.push({ name: "article", params: { id } });
+// 跳转到文章详情页
+const goToArticle = (articleId) => {
+  router.push({ name: "article", params: { id: articleId } });
 };
 
-// 跳转到标签页面
-const goToTag = (tagId) => {
-  router.push({ name: "search", query: { tag: tagId } });
-};
-
-// 加载文章列表
-const loadArticles = async (page = 1) => {
+// 加载置顶文章
+const loadTopArticles = async () => {
   try {
-    loading.value = true;
+    const data = await articleApi.getTop();
+    topArticles.value = data || [];
+    console.log("置顶文章数据:", topArticles.value);
+  } catch (error) {
+    console.error("加载置顶文章失败:", error);
+    topArticles.value = [];
+  }
+};
+
+// 加载最新文章
+const loadLatestArticles = async () => {
+  try {
     const data = await articleApi.getList({
-      page: page - 1,
+      page: 0,
+      size: 6, // 获取更多文章，然后过滤掉置顶的
+    });
+
+    const allArticles = data.content || [];
+    const topIds = topArticles.value.map((a) => a.id);
+
+    // 过滤掉置顶文章，取前3篇作为最新文章
+    latestArticles.value = allArticles
+      .filter((article) => !topIds.includes(article.id))
+      .slice(0, 3);
+
+    console.log("最新文章数据:", latestArticles.value);
+  } catch (error) {
+    console.error("加载最新文章失败:", error);
+    latestArticles.value = [];
+  }
+};
+
+// 加载更多文章
+const loadMoreArticles = async (isInitial = false) => {
+  try {
+    if (isInitial) {
+      loading.value = true;
+      currentPage.value = 1;
+    } else {
+      loadingMore.value = true;
+    }
+
+    const data = await articleApi.getList({
+      page: currentPage.value - 1,
       size: pageSize,
     });
 
-    articles.value = data.content || [];
-    currentPage.value = page;
-    totalPages.value = data.totalPages || 0;
-    totalElements.value = data.totalElements || 0;
+    const newArticles = data.content || [];
 
-    // 如果文章数量少于5条，获取每篇文章的正文内容用于填充空白
-    if (articles.value.length < 5 && articles.value.length > 0) {
-      await loadArticleContents();
+    if (isInitial) {
+      // 过滤掉置顶文章和最新文章中已经显示的文章
+      const topIds = topArticles.value.map((a) => a.id);
+      const latestIds = latestArticles.value.map((a) => a.id);
+      const excludeIds = [...topIds, ...latestIds];
+
+      moreArticles.value = newArticles.filter(
+        (article) => !excludeIds.includes(article.id)
+      );
+    } else {
+      moreArticles.value = [...moreArticles.value, ...newArticles];
     }
+
+    hasMore.value = currentPage.value < (data.totalPages || 0);
+    currentPage.value++;
   } catch (error) {
-    console.error("加载文章失败:", error);
-    articles.value = [];
+    console.error("加载更多文章失败:", error);
+  } finally {
+    loading.value = false;
+    loadingMore.value = false;
+  }
+};
+
+// 初始化所有数据
+const initializeData = async () => {
+  try {
+    loading.value = true;
+
+    // 先加载置顶文章
+    await loadTopArticles();
+
+    // 然后加载最新文章（需要过滤掉置顶文章）
+    await loadLatestArticles();
+
+    // 最后加载更多文章（初始加载）
+    await loadMoreArticles(true);
+  } catch (error) {
+    console.error("初始化数据失败:", error);
   } finally {
     loading.value = false;
   }
 };
 
-// 加载文章正文内容（当文章数量少于5条时）
-const loadArticleContents = async () => {
-  try {
-    // 并行获取所有文章的详细内容
-    const contentPromises = articles.value.map(async (article) => {
-      try {
-        const detail = await articleApi.getDetail(article.id);
-        if (detail && detail.content) {
-          try {
-            // 更彻底地清理markdown内容，避免解析错误
-            let cleanContent = detail.content
-              // 移除所有markdown语法元素
-              .replace(/!\[.*?\]\(.*?\)/g, "") // 移除图片
-              .replace(/\[.*?\]\(.*?\)/g, "") // 移除链接
-              .replace(/```[\s\S]*?```/g, "") // 移除代码块
-              .replace(/`[^`]*`/g, "") // 移除行内代码
-              .replace(/#{1,6}\s+/g, "") // 移除标题标记
-              .replace(/[*_]{1,3}([^*_]*)[*_]{1,3}/g, "$1") // 移除加粗斜体标记
-              .replace(/^\s*[-*+]\s+/gm, "") // 移除无序列表标记
-              .replace(/^\s*\d+\.\s+/gm, "") // 移除有序列表标记
-              .replace(/^\s*>\s*/gm, "") // 移除引用标记
-              .replace(/\|.*?\|/g, "") // 移除表格
-              .replace(/---+/g, "") // 移除分隔线
-              .replace(/\$\$[\s\S]*?\$\$/g, "") // 移除数学公式块
-              .replace(/\$[^$]*\$/g, "") // 移除行内数学公式
-              .replace(/\[.*?\]:\s*\S+/g, "") // 移除引用链接定义
-              .replace(/<!--[\s\S]*?-->/g, "") // 移除HTML注释
-              .replace(/<[^>]*>/g, "") // 移除HTML标签
-              .replace(/&[a-zA-Z0-9#]+;/g, "") // 移除HTML实体
-              .replace(/\n{3,}/g, "\n\n") // 规范化多个换行
-              .replace(/^\s+|\s+$/gm, "") // 移除行首行尾空白
-              .trim();
-
-            // 进一步清理特殊字符和符号
-            cleanContent = cleanContent
-              .replace(/[^\w\s\u4e00-\u9fff.,!?;:()""''—–\-]/g, "") // 只保留基本字符
-              .replace(/\s{2,}/g, " ") // 规范化空格
-              .trim();
-
-            // 根据文章数量动态调整内容长度，确保总高度不超过右侧功能栏
-            const maxContentLength =
-              articles.value.length === 1
-                ? 200
-                : articles.value.length === 2
-                ? 150
-                : articles.value.length === 3
-                ? 100
-                : 80;
-
-            // 截取适当长度的内容
-            if (cleanContent.length > maxContentLength) {
-              cleanContent =
-                cleanContent.substring(0, maxContentLength) + "...";
-            }
-
-            // 如果清理后内容太短或为空，使用摘要内容
-            if (cleanContent.length < 30) {
-              cleanContent = article.summary || "暂无预览内容";
-            }
-
-            // 将纯文本转换为简单的段落格式，限制段落数量
-            const maxSentences =
-              articles.value.length === 1
-                ? 2
-                : articles.value.length === 2
-                ? 1
-                : 1;
-
-            const sentences = cleanContent
-              .split(/[.。!！?？]/)
-              .filter((s) => s.trim().length > 5);
-            const formattedContent = sentences
-              .slice(0, maxSentences)
-              .map((s) => `<p>${s.trim()}。</p>`)
-              .join("");
-
-            article.renderedContent =
-              formattedContent || `<p>${cleanContent}</p>`;
-          } catch (error) {
-            console.error(`处理文章 ${article.id} 内容时出错:`, error);
-            // 出错时使用摘要作为后备内容
-            article.renderedContent = `<p>${
-              article.summary || "内容加载失败"
-            }</p>`;
-          }
-        }
-      } catch (error) {
-        console.error(`加载文章 ${article.id} 内容失败:`, error);
-        // 如果获取失败，不设置renderedContent，这样就不会显示正文填充
-      }
-    });
-
-    await Promise.all(contentPromises);
-  } catch (error) {
-    console.error("批量加载文章内容失败:", error);
-  }
-};
-
-// 切换页面
-const changePage = (page) => {
-  if (page !== currentPage.value && page >= 1 && page <= totalPages.value) {
-    loadArticles(page);
-    // 滚动到顶部
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  }
-};
-
-// 跳转到指定页面
-const handleJumpToPage = () => {
-  const page = parseInt(jumpToPage.value);
-  if (page && page >= 1 && page <= totalPages.value) {
-    changePage(page);
-    jumpToPage.value = ""; // 清空输入框
-  } else {
-    // 输入无效时清空输入框
-    jumpToPage.value = "";
-  }
-};
-
-// 加载热门标签
-const loadPopularTags = async () => {
-  try {
-    const data = await tagApi.getPopular();
-    popularTags.value = data || [];
-  } catch (error) {
-    console.error("加载热门标签失败:", error);
-    popularTags.value = [];
-  }
-};
-
-// 加载博客统计
-const loadStats = async () => {
-  try {
-    // 使用新的综合统计接口
-    const statsData = await statsApi.getOverview();
-
-    stats.value = {
-      articleCount: statsData.totalArticles || 0,
-      viewCount: statsData.totalVisits || 0,
-      subscriberCount: statsData.totalSubscribers || 0,
-      friendLinkCount: statsData.totalFriendLinks || 0,
-    };
-  } catch (error) {
-    console.error("加载统计数据失败:", error);
-    // 失败时使用静态数据作为后备
-    stats.value = {
-      articleCount: 5,
-      viewCount: 1250,
-      subscriberCount: 12,
-      friendLinkCount: 6,
-    };
-  }
-};
-
 // 组件挂载时加载数据
-onMounted(async () => {
-  try {
-    await Promise.all([loadArticles(), loadPopularTags(), loadStats()]);
-  } catch (error) {
-    console.error("加载页面数据失败:", error);
-  }
+onMounted(() => {
+  initializeData();
 });
 </script>
 

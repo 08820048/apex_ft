@@ -17,8 +17,8 @@
               class="absolute inset-0 bg-purple-100 dark:bg-purple-900 rounded-full opacity-20 blur-xl"
             ></div>
           </div>
-          <h3 class="text-xl font-bold text-white mb-4">进入禅模式</h3>
-          <p class="text-gray-200 mb-4">
+          <h3 class="text-xl font-bold text-gray-900 mb-4">进入禅模式</h3>
+          <p class="text-gray-600 mb-4">
             请输入"阿弥陀佛"，让心灵沉静下来，专注于文字的力量
           </p>
 
@@ -180,7 +180,7 @@
           >
             <h1
               :class="[
-                'font-bold text-white mb-4 transition-all duration-500',
+                'font-bold text-gray-900 mb-4 transition-all duration-500',
                 zenMode
                   ? 'text-4xl md:text-6xl leading-tight'
                   : 'text-3xl md:text-4xl',
@@ -192,7 +192,7 @@
             <!-- 文章元信息 -->
             <div
               v-if="!zenMode"
-              class="flex flex-wrap items-center gap-4 text-sm text-gray-300 mb-6"
+              class="flex flex-wrap items-center gap-4 text-sm text-gray-600 mb-6"
             >
               <div class="flex items-center">
                 <UserIcon class="w-4 h-4 mr-1" />
@@ -345,8 +345,8 @@
               />
             </svg>
           </div>
-          <h3 class="text-lg font-semibold text-white mb-2">文章不存在</h3>
-          <p class="text-gray-200 mb-6">抱歉，您访问的文章不存在或已被删除</p>
+          <h3 class="text-lg font-semibold text-gray-900 mb-2">文章不存在</h3>
+          <p class="text-gray-600 mb-6">抱歉，您访问的文章不存在或已被删除</p>
           <RouterLink
             to="/"
             class="inline-flex items-center px-6 py-3 bg-blue-500 hover:bg-blue-600 text-white rounded-full transition-colors"
@@ -634,7 +634,7 @@ watch(
 <style scoped>
 /* 自定义 prose 样式覆盖 */
 .prose {
-  @apply text-gray-200;
+  @apply text-gray-700;
 }
 
 .prose :deep(h1),
@@ -643,15 +643,15 @@ watch(
 .prose :deep(h4),
 .prose :deep(h5),
 .prose :deep(h6) {
-  @apply text-white;
+  @apply text-gray-900;
 }
 
 .prose :deep(strong) {
-  @apply text-white;
+  @apply text-gray-900;
 }
 
 .prose :deep(blockquote) {
-  @apply border-blue-400 text-gray-300;
+  @apply border-blue-500 text-gray-600;
 }
 
 .prose :deep(code) {

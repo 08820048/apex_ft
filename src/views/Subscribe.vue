@@ -3,8 +3,8 @@
     <div class="max-w-4xl mx-auto">
       <!-- 页面标题 -->
       <div class="text-center mb-12">
-        <h1 class="text-4xl font-bold text-white mb-4">邮箱订阅</h1>
-        <p class="text-xl text-gray-200">订阅我的博客，第一时间获取最新文章</p>
+        <h1 class="text-4xl font-bold text-gray-900 mb-4">邮箱订阅</h1>
+        <p class="text-xl text-gray-600">订阅我的博客，第一时间获取最新文章</p>
       </div>
 
       <!-- 订阅表单 -->
@@ -16,8 +16,8 @@
             >
               <EmailIcon class="w-8 h-8 text-white email-icon" />
             </div>
-            <h2 class="text-2xl font-bold text-white mb-2">订阅更新</h2>
-            <p class="text-gray-200">
+            <h2 class="text-2xl font-bold text-gray-900 mb-2">订阅更新</h2>
+            <p class="text-gray-600">
               输入您的邮箱地址，我们会在发布新文章时通知您
             </p>
           </div>
@@ -26,7 +26,7 @@
             <div>
               <label
                 for="email"
-                class="block text-sm font-medium text-gray-200 mb-2"
+                class="block text-sm font-medium text-gray-700 mb-2"
               >
                 邮箱地址
               </label>
@@ -36,7 +36,7 @@
                 type="email"
                 required
                 placeholder="请输入您的邮箱地址"
-                class="w-full px-4 py-3 glass-effect border border-white/20 text-white focus:ring-2 focus:ring-blue-400 focus:border-blue-400 transition-colors"
+                class="w-full px-4 py-3 bg-white border border-gray-300 text-gray-900 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
                 :disabled="subscribing"
               />
             </div>
@@ -70,8 +70,8 @@
 
       <!-- 订阅说明 -->
       <div class="glass-effect rounded-2xl p-8 mb-8">
-        <h3 class="text-xl font-bold text-white mb-4">订阅说明</h3>
-        <div class="space-y-3 text-gray-200">
+        <h3 class="text-xl font-bold text-gray-900 mb-4">订阅说明</h3>
+        <div class="space-y-3 text-gray-600">
           <div class="flex items-start">
             <CheckIcon
               class="w-5 h-5 text-green-500 mr-3 mt-0.5 flex-shrink-0"
@@ -101,8 +101,8 @@
 
       <!-- RSS 订阅 -->
       <div class="glass-effect rounded-2xl p-8">
-        <h3 class="text-xl font-bold text-white mb-4">RSS 订阅</h3>
-        <p class="text-gray-200 mb-4">
+        <h3 class="text-xl font-bold text-gray-900 mb-4">RSS 订阅</h3>
+        <p class="text-gray-600 mb-4">
           如果您更喜欢使用 RSS 阅读器，可以订阅我们的 RSS 源：
         </p>
         <div class="space-y-3">
@@ -111,7 +111,7 @@
           >
             <div class="flex items-center">
               <RssIcon class="w-5 h-5 text-orange-500 mr-3" />
-              <span class="font-medium text-white">RSS 2.0</span>
+              <span class="font-medium text-gray-900">RSS 2.0</span>
             </div>
             <a
               href="/api/rss/feed.xml"
@@ -126,7 +126,7 @@
           >
             <div class="flex items-center">
               <RssIcon class="w-5 h-5 text-orange-500 mr-3" />
-              <span class="font-medium text-white">Atom</span>
+              <span class="font-medium text-gray-900">Atom</span>
             </div>
             <a
               href="/api/rss/atom.xml"
@@ -141,11 +141,9 @@
 
       <!-- 订阅统计 -->
       <div v-if="subscriberCount > 0" class="mt-8 text-center">
-        <p class="text-gray-600 dark:text-white/80">
+        <p class="text-gray-600">
           已有
-          <span class="font-bold text-gray-900 dark:text-white">{{
-            subscriberCount
-          }}</span>
+          <span class="font-bold text-gray-900">{{ subscriberCount }}</span>
           位朋友订阅了我们的更新
         </p>
       </div>

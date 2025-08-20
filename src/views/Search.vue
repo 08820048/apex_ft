@@ -130,7 +130,7 @@
           <button
             @click="goToPage(currentPage - 1)"
             :disabled="currentPage <= 1"
-            class="px-4 py-2 bg-white/20 hover:bg-white/30 text-white rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            class="px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-900 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
             上一页
           </button>
@@ -144,7 +144,7 @@
                 'px-3 py-2 rounded-lg transition-colors',
                 page === currentPage
                   ? 'bg-white text-gray-900'
-                  : 'bg-white/20 hover:bg-white/30 text-white',
+                  : 'bg-gray-200 hover:bg-gray-300 text-gray-900',
               ]"
             >
               {{ page }}
@@ -154,7 +154,7 @@
           <button
             @click="goToPage(currentPage + 1)"
             :disabled="currentPage >= totalPages"
-            class="px-4 py-2 bg-white/20 hover:bg-white/30 text-white rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            class="px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-900 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
             下一页
           </button>

@@ -3,8 +3,8 @@
     <div class="max-w-7xl mx-auto">
       <!-- 页面标题 -->
       <div class="text-center mb-12">
-        <h1 class="text-4xl font-bold text-white mb-4">文章分类</h1>
-        <p class="text-xl text-gray-200">按分类浏览所有文章</p>
+        <h1 class="text-4xl font-bold text-gray-900 mb-4">文章分类</h1>
+        <p class="text-xl text-gray-600">按分类浏览所有文章</p>
       </div>
 
       <!-- 分类网格 -->
@@ -39,7 +39,7 @@
         >
           <div class="flex items-center justify-between mb-4">
             <h3
-              class="text-xl font-bold text-white group-hover:transition-colors"
+              class="text-xl font-bold text-gray-900 group-hover:transition-colors"
               :class="`group-hover:${getCategoryColor(category.id).hover}`"
             >
               {{ category.name }}
@@ -54,17 +54,17 @@
 
           <p
             v-if="category.description"
-            class="text-gray-200 mb-4 line-clamp-2"
+            class="text-gray-600 mb-4 line-clamp-2"
           >
             {{ category.description }}
           </p>
 
           <div class="flex items-center justify-between">
-            <span class="text-sm text-gray-400">
+            <span class="text-sm text-gray-500">
               {{ formatDate(category.createdAt) }}
             </span>
             <div
-              class="flex items-center text-blue-400 group-hover:translate-x-1 transition-transform"
+              class="flex items-center text-blue-600 group-hover:translate-x-1 transition-transform"
             >
               <span class="text-sm mr-1">查看更多</span>
               <ArrowRightIcon class="w-4 h-4" />

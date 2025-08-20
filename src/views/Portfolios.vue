@@ -3,13 +3,13 @@
     <div class="max-w-7xl mx-auto">
       <!-- 页面标题 -->
       <div class="text-center mb-12">
-        <h1 class="text-4xl font-bold text-white mb-4">我的作品集</h1>
-        <p class="text-xl text-gray-200">展示我的项目和技术成果</p>
+        <h1 class="text-4xl font-bold text-gray-900 mb-4">我的作品集</h1>
+        <p class="text-xl text-gray-600">展示我的项目和技术成果</p>
       </div>
 
       <!-- 精选作品 -->
       <div v-if="featuredPortfolios.length > 0" class="mb-12">
-        <h2 class="text-2xl font-bold text-white mb-6">精选作品</h2>
+        <h2 class="text-2xl font-bold text-gray-900 mb-6">精选作品</h2>
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
           <div
             v-for="portfolio in featuredPortfolios"
@@ -35,11 +35,11 @@
             </div>
             <div class="p-6">
               <h3
-                class="text-xl font-bold text-white mb-3 group-hover:text-blue-400 transition-colors"
+                class="text-xl font-bold text-gray-900 mb-3 group-hover:text-blue-600 transition-colors"
               >
                 {{ portfolio.name }}
               </h3>
-              <p class="text-gray-200 mb-4 line-clamp-3">
+              <p class="text-gray-600 mb-4 line-clamp-3">
                 {{ portfolio.description }}
               </p>
               <div v-if="portfolio.technologies" class="mb-4">
@@ -76,7 +76,7 @@
 
       <!-- 所有作品 -->
       <div>
-        <h2 class="text-2xl font-bold text-white mb-6">所有作品</h2>
+        <h2 class="text-2xl font-bold text-gray-900 mb-6">所有作品</h2>
 
         <!-- 加载状态 -->
         <div
@@ -124,11 +124,11 @@
             </div>
             <div class="p-4">
               <h3
-                class="text-lg font-bold text-white mb-2 group-hover:text-blue-400 transition-colors"
+                class="text-lg font-bold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors"
               >
                 {{ portfolio.name }}
               </h3>
-              <p class="text-gray-200 text-sm mb-3 line-clamp-2">
+              <p class="text-gray-600 text-sm mb-3 line-clamp-2">
                 {{ portfolio.description }}
               </p>
               <div v-if="portfolio.technologies" class="mb-3">
@@ -144,7 +144,7 @@
                   </span>
                   <span
                     v-if="portfolio.technologies.split(',').length > 3"
-                    class="px-2 py-1 bg-gray-700/50 text-gray-300 text-xs rounded-full border border-gray-500/30"
+                    class="px-2 py-1 bg-gray-200 text-gray-700 text-xs rounded-full border border-gray-300"
                   >
                     +{{ portfolio.technologies.split(",").length - 3 }}
                   </span>
@@ -261,59 +261,5 @@ onMounted(async () => {
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
-}
-
-/* 亮色模式优化 */
-html.light .text-white {
-  color: #111827 !important;
-}
-
-html.light .text-gray-200 {
-  color: #4b5563 !important;
-}
-
-html.light .text-gray-400 {
-  color: #6b7280 !important;
-}
-
-html.light .text-gray-600 {
-  color: #4b5563 !important;
-}
-
-html.light .text-gray-900 {
-  color: #111827 !important;
-}
-
-html.light .text-blue-400 {
-  color: #2563eb !important;
-}
-
-html.light .text-blue-300 {
-  color: #3b82f6 !important;
-}
-
-html.light .text-green-400 {
-  color: #059669 !important;
-}
-
-html.light .bg-blue-900\/30 {
-  background-color: rgba(59, 130, 246, 0.1) !important;
-}
-
-html.light .border-blue-500\/30 {
-  border-color: rgba(59, 130, 246, 0.3) !important;
-}
-
-html.light .bg-green-900\/30 {
-  background-color: rgba(34, 197, 94, 0.1) !important;
-}
-
-html.light .border-green-500\/30 {
-  border-color: rgba(34, 197, 94, 0.3) !important;
-}
-
-/* 亮色模式下的加载状态 */
-html.light .bg-gray-600 {
-  background-color: #d1d5db !important;
 }
 </style>

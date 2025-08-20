@@ -10,7 +10,7 @@
             class="w-10 h-10 rounded-full object-cover group-hover:scale-105 transition-transform shadow-md"
           />
           <span
-            class="text-3xl font-bold text-white group-hover:scale-105 transition-transform logo-text special-font"
+            class="text-3xl font-bold text-gray-900 group-hover:scale-105 transition-transform logo-text special-font"
           >
             八尺妖剑
           </span>
@@ -37,34 +37,30 @@
               @keyup.enter="handleSearch"
               type="text"
               placeholder="搜索文章..."
-              class="w-64 px-4 py-2 pl-10 bg-white/20 backdrop-blur-sm border-2 border-white/30 text-white placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-white/50 focus:border-white/50 focus:bg-white/30 transition-all shadow-sm search-input"
+              class="w-64 px-4 py-2 pl-10 bg-white border-2 border-gray-300 text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all shadow-sm search-input"
             />
             <SearchIcon
-              class="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-300"
+              class="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-500"
             />
           </div>
           <button
             @click="handleSearch"
-            class="px-4 py-2 bg-gray-900 hover:bg-black transition-colors search-btn"
-            style="color: white !important"
+            class="px-4 py-2 bg-black text-white hover:bg-gray-800 transition-colors search-btn"
           >
             搜索
           </button>
-
-          <!-- 拉线开关 -->
-          <PullChainSwitch />
         </div>
 
         <!-- 移动端菜单按钮 -->
         <button
           @click="toggleMobileMenu"
-          class="md:hidden p-2 hover:bg-white/10 transition-colors mobile-menu-btn"
+          class="md:hidden p-2 hover:bg-gray-100 transition-colors mobile-menu-btn"
         >
           <MenuIcon
             v-if="!mobileMenuOpen"
-            class="w-6 h-6 text-white menu-icon"
+            class="w-6 h-6 text-gray-900 menu-icon"
           />
-          <XIcon v-else class="w-6 h-6 text-white menu-icon" />
+          <XIcon v-else class="w-6 h-6 text-gray-900 menu-icon" />
         </button>
       </div>
 
@@ -84,7 +80,7 @@
               class="w-8 h-8 rounded-full object-cover mr-2 shadow-sm"
             />
             <span
-              class="text-2xl font-bold text-white mobile-logo-text special-font"
+              class="text-2xl font-bold text-gray-900 mobile-logo-text special-font"
               >八尺妖剑</span
             >
           </div>
@@ -95,15 +91,10 @@
               :key="item.path"
               :to="item.path"
               @click="closeMobileMenu"
-              class="flex items-center px-4 py-2 text-white hover:bg-white/10 transition-colors mobile-nav-link"
+              class="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-100 transition-colors mobile-nav-link"
             >
               {{ item.name }}
             </RouterLink>
-
-            <!-- 移动端拉线开关 -->
-            <div class="px-4 py-2 border-t border-gray-200 flex justify-center">
-              <PullChainSwitch />
-            </div>
 
             <!-- 移动端搜索 -->
             <div class="px-4">
@@ -113,10 +104,10 @@
                   @keyup.enter="handleSearch"
                   type="text"
                   placeholder="搜索文章..."
-                  class="w-full px-4 py-2 pl-10 bg-white/20 backdrop-blur-sm border-2 border-white/30 text-white placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-white/50 focus:border-white/50 focus:bg-white/30 transition-all shadow-sm mobile-search-input"
+                  class="w-full px-4 py-2 pl-10 bg-white border-2 border-gray-300 text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all shadow-sm mobile-search-input"
                 />
                 <SearchIcon
-                  class="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-300"
+                  class="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-500"
                 />
               </div>
             </div>
@@ -130,8 +121,6 @@
 <script setup>
 import { ref } from "vue";
 import { useRouter } from "vue-router";
-import { useTheme } from "../composables/useTheme.js";
-import PullChainSwitch from "./PullChainSwitch.vue";
 
 // 图标组件 (使用简单的 SVG)
 const HomeIcon = {
@@ -179,9 +168,6 @@ const router = useRouter();
 const searchKeyword = ref("");
 const mobileMenuOpen = ref(false);
 
-// 主题功能
-const { isDark } = useTheme();
-
 const navItems = [
   { name: "首页", path: "/" },
   { name: "分类", path: "/categories" },
@@ -211,40 +197,20 @@ const closeMobileMenu = () => {
 <style scoped>
 /* Header样式 */
 .app-header {
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-  background: rgba(0, 0, 0, 0.2);
-  overflow: visible; /* 允许拉线超出header */
+  border-bottom: 1px solid rgba(0, 0, 0, 0.15);
+  background: rgba(255, 255, 255, 0.95);
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
   position: relative;
   z-index: 50;
 }
 
-html.light .app-header {
-  border-bottom: 1px solid rgba(0, 0, 0, 0.15);
-  background: rgba(255, 255, 255, 0.95);
-  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
-}
-
 /* 导航链接样式 */
 .nav-link {
-  @apply flex items-center px-3 py-2 text-white hover:text-gray-200 transition-all duration-200 hover:bg-white/10;
+  @apply flex items-center px-3 py-2 text-gray-700 hover:text-gray-900 transition-all duration-200 hover:bg-gray-100;
 }
 
 .nav-link-active {
-  @apply text-white bg-white/20;
-}
-
-/* 亮色模式下的导航链接 */
-html.light .nav-link {
-  @apply text-gray-700 hover:text-gray-900;
-}
-
-html.light .nav-link:hover {
-  background: rgba(0, 0, 0, 0.1);
-}
-
-html.light .nav-link-active {
-  @apply text-gray-900;
-  background: rgba(0, 0, 0, 0.15);
+  @apply text-gray-900 bg-gray-200;
 }
 
 /* Logo特殊字体样式 - 简洁风格 */
@@ -285,125 +251,8 @@ html.light .nav-link-active {
   text-shadow: 0 3px 6px rgba(0, 0, 0, 0.5);
 }
 
-/* Logo文字亮色模式 */
-html.light .logo-text {
-  @apply text-gray-900;
-}
-
-html.light .special-font {
-  color: #111827;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-  transform: scale(1.1);
-}
-
-html.light .special-font:hover {
-  transform: scale(1.15);
-  text-shadow: 0 3px 6px rgba(0, 0, 0, 0.3);
-}
-
-html.light .special-font::after {
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(0, 0, 0, 0.4),
-    transparent
-  );
-}
-
-/* 移动端亮色模式样式 */
-html.light .mobile-menu {
-  background: rgba(255, 255, 255, 0.95);
-  border-top: 1px solid rgba(0, 0, 0, 0.1);
-}
-
-html.light .mobile-logo-text {
-  @apply text-gray-900;
-}
-
-html.light .mobile-nav-link {
-  @apply text-gray-700 hover:text-gray-900;
-}
-
-html.light .mobile-nav-link:hover {
-  background: rgba(0, 0, 0, 0.05);
-}
-
-html.light .mobile-theme-btn {
-  @apply text-gray-700 hover:text-gray-900;
-}
-
-html.light .mobile-theme-btn:hover {
-  background: rgba(0, 0, 0, 0.05);
-}
-
-html.light .mobile-menu-btn {
-  /* 移动端菜单按钮亮色模式样式 */
-}
-
-html.light .mobile-menu-btn:hover {
-  background: rgba(0, 0, 0, 0.1);
-}
-
-html.light .menu-icon {
-  @apply text-gray-700;
-}
-
-/* 搜索框亮色模式样式 */
-html.light .search-input {
-  background: rgba(255, 255, 255, 0.9) !important;
-  border-color: rgba(0, 0, 0, 0.15) !important;
-  color: #111827 !important;
-}
-
-html.light .search-input::placeholder {
-  color: #6b7280 !important;
-}
-
-html.light .search-input:focus {
-  background: rgba(255, 255, 255, 0.95) !important;
-  border-color: rgba(0, 0, 0, 0.25) !important;
-  box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.1) !important;
-}
-
-/* 亮色模式下的搜索图标 */
-html.light .search-input + svg {
-  color: #6b7280 !important;
-}
-
-/* 移动端搜索框亮色模式样式 */
-html.light .mobile-search-input {
-  background: rgba(255, 255, 255, 0.9) !important;
-  border-color: rgba(0, 0, 0, 0.15) !important;
-  color: #111827 !important;
-}
-
-html.light .mobile-search-input::placeholder {
-  color: #6b7280 !important;
-}
-
-html.light .mobile-search-input:focus {
-  background: rgba(255, 255, 255, 0.95) !important;
-  border-color: rgba(0, 0, 0, 0.25) !important;
-  box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.1) !important;
-}
-
 /* 搜索按钮样式 - 确保文字始终为白色 */
 .search-btn {
   color: white !important;
-}
-
-html.light .search-btn {
-  background: #111827 !important;
-  color: white !important;
-}
-
-html.light .search-btn:hover {
-  background: #000000 !important;
-  color: white !important;
-}
-
-/* 主题切换按钮亮色模式样式 */
-html.light .theme-toggle-btn:hover {
-  background: rgba(0, 0, 0, 0.1);
 }
 </style>
