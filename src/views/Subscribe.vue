@@ -8,11 +8,11 @@
       </div>
 
       <!-- 订阅表单 -->
-      <div class="glass-effect rounded-2xl p-8 mb-8">
+      <div class="glass-effect rounded-2xl p-8 mb-8 border-2 border-black">
         <div class="max-w-md mx-auto">
           <div class="text-center mb-6">
             <div
-              class="w-16 h-16 bg-blue-600 rounded-full flex items-center justify-center mx-auto mb-4"
+              class="w-16 h-16 bg-black rounded-full flex items-center justify-center mx-auto mb-4"
             >
               <EmailIcon class="w-8 h-8 text-white email-icon" />
             </div>
@@ -44,7 +44,7 @@
             <button
               type="submit"
               :disabled="subscribing || !email"
-              class="w-full bg-blue-600 text-white py-3 px-6 font-medium hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+              class="w-full bg-black text-white py-3 px-6 font-medium hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-all border-2 border-black"
             >
               <span v-if="subscribing" class="flex items-center justify-center">
                 <LoadingIcon class="w-5 h-5 mr-2 animate-spin" />
@@ -69,7 +69,7 @@
       </div>
 
       <!-- 订阅说明 -->
-      <div class="glass-effect rounded-2xl p-8 mb-8">
+      <div class="glass-effect rounded-2xl p-8 mb-8 border-2 border-black">
         <h3 class="text-xl font-bold text-gray-900 mb-4">订阅说明</h3>
         <div class="space-y-3 text-gray-600">
           <div class="flex items-start">
@@ -100,14 +100,14 @@
       </div>
 
       <!-- RSS 订阅 -->
-      <div class="glass-effect rounded-2xl p-8">
+      <div class="glass-effect rounded-2xl p-8 border-2 border-black">
         <h3 class="text-xl font-bold text-gray-900 mb-4">RSS 订阅</h3>
         <p class="text-gray-600 mb-4">
           如果您更喜欢使用 RSS 阅读器，可以订阅我们的 RSS 源：
         </p>
         <div class="space-y-3">
           <div
-            class="flex items-center justify-between p-3 glass-effect rounded-lg border border-white/10"
+            class="flex items-center justify-between p-3 glass-effect rounded-lg border-2 border-black"
           >
             <div class="flex items-center">
               <RssIcon class="w-5 h-5 text-orange-500 mr-3" />
@@ -116,13 +116,13 @@
             <a
               href="/api/rss/feed.xml"
               target="_blank"
-              class="text-blue-400 hover:text-blue-300 transition-colors"
+              class="text-black hover:text-gray-600 transition-colors font-medium"
             >
               订阅
             </a>
           </div>
           <div
-            class="flex items-center justify-between p-3 glass-effect rounded-lg border border-white/10"
+            class="flex items-center justify-between p-3 glass-effect rounded-lg border-2 border-black"
           >
             <div class="flex items-center">
               <RssIcon class="w-5 h-5 text-orange-500 mr-3" />
@@ -131,7 +131,7 @@
             <a
               href="/api/rss/atom.xml"
               target="_blank"
-              class="text-blue-400 hover:text-blue-300 transition-colors"
+              class="text-black hover:text-gray-600 transition-colors font-medium"
             >
               订阅
             </a>

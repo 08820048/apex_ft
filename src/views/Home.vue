@@ -1,10 +1,13 @@
 <template>
   <div class="min-h-screen">
     <!-- 全屏主要内容区域 -->
-    <div class="max-w-full mx-auto px-4 py-8">
+    <div
+      class="max-w-full mx-auto py-8"
+      style="padding-left: 90px; padding-right: 90px"
+    >
       <!-- 置顶文章区域 - 两个大卡片 -->
       <section v-if="topArticles.length > 0" class="mb-12">
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <article
             v-for="article in topArticles.slice(0, 2)"
             :key="'top-' + article.id"
@@ -65,7 +68,7 @@
                   <!-- 分类标识 -->
                   <span
                     v-if="article.category"
-                    class="px-2 py-1 bg-gradient-to-r from-purple-900/40 to-purple-800/40 text-purple-300 font-medium border border-purple-500/30"
+                    class="px-2 py-1 bg-black text-white font-medium"
                   >
                     {{ article.category.name }}
                   </span>
@@ -144,7 +147,7 @@
                   <!-- 分类标识 -->
                   <span
                     v-if="article.category"
-                    class="px-2 py-1 bg-gradient-to-r from-purple-900/40 to-purple-800/40 text-purple-300 font-medium border border-purple-500/30"
+                    class="px-2 py-1 bg-black text-white font-medium"
                   >
                     {{ article.category.name }}
                   </span>
@@ -257,7 +260,7 @@
                       <!-- 文章分类 -->
                       <span
                         v-if="article.category"
-                        class="px-2 py-1 bg-gradient-to-r from-purple-900/40 to-purple-800/40 text-purple-300 font-medium border border-purple-500/30"
+                        class="px-2 py-1 bg-black text-white font-medium"
                       >
                         {{ article.category.name }}
                       </span>
@@ -297,7 +300,7 @@
           <div v-if="hasMore && !loading" class="text-center mt-8">
             <button
               @click="loadMoreArticles"
-              class="glass-effect px-8 py-3 text-gray-900 font-medium hover:bg-gray-100 transition-all duration-200 card-hover"
+              class="bg-black text-white px-8 py-3 font-medium hover:bg-gray-800 transition-all duration-200 border-2 border-black"
             >
               <span v-if="!loadingMore">加载更多</span>
               <span v-else class="flex items-center justify-center">
@@ -365,43 +368,11 @@ const formatDate = (dateString) => {
   });
 };
 
-// 生成文章的个性化边框样式
+// 生成文章的简洁样式（无边框）
 const getArticleStyle = (article) => {
-  if (!article.tags || article.tags.length === 0) {
-    // 如果没有标签，使用默认的灰色边框
-    return {
-      borderImage: `linear-gradient(135deg, #6b7280, #9ca3af) 1`,
-      borderWidth: "2px",
-      borderStyle: "solid",
-      boxShadow: `0 0 8px rgba(107, 114, 128, 0.15)`,
-    };
-  }
-
-  // 提取标签颜色
-  const tagColors = article.tags
-    .slice(0, 3)
-    .map((tag) => tag.color || "#6b7280");
-
-  // 如果只有一个标签，创建该颜色的渐变
-  if (tagColors.length === 1) {
-    const color = tagColors[0];
-    return {
-      borderImage: `linear-gradient(135deg, ${color}, ${color}88, ${color}44) 1`,
-      borderWidth: "2px",
-      borderStyle: "solid",
-      boxShadow: `0 0 12px ${color}20`,
-    };
-  }
-
-  // 多个标签时，创建彩色渐变
-  const gradientColors = tagColors.join(", ");
-  const shadowColor = tagColors[0]; // 使用第一个标签颜色作为阴影
-
+  // 使用简洁的阴影效果，不添加边框
   return {
-    borderImage: `linear-gradient(135deg, ${gradientColors}) 1`,
-    borderWidth: "2px",
-    borderStyle: "solid",
-    boxShadow: `0 0 12px ${shadowColor}20`,
+    boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
   };
 };
 

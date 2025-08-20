@@ -118,7 +118,7 @@
         </p>
         <RouterLink
           to="/"
-          class="inline-flex items-center px-6 py-3 bg-blue-500 hover:bg-blue-600 text-white transition-colors search-return-btn"
+          class="inline-flex items-center px-6 py-3 bg-black hover:bg-gray-800 text-white transition-colors search-return-btn border-2 border-black"
         >
           返回首页
         </RouterLink>
@@ -130,7 +130,7 @@
           <button
             @click="goToPage(currentPage - 1)"
             :disabled="currentPage <= 1"
-            class="px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-900 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            class="px-4 py-2 bg-white hover:bg-gray-100 text-black rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed border-2 border-black"
           >
             上一页
           </button>
@@ -144,7 +144,7 @@
                 'px-3 py-2 rounded-lg transition-colors',
                 page === currentPage
                   ? 'bg-white text-gray-900'
-                  : 'bg-gray-200 hover:bg-gray-300 text-gray-900',
+                  : 'bg-white hover:bg-gray-100 text-black border-2 border-black',
               ]"
             >
               {{ page }}
@@ -154,7 +154,7 @@
           <button
             @click="goToPage(currentPage + 1)"
             :disabled="currentPage >= totalPages"
-            class="px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-900 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            class="px-4 py-2 bg-white hover:bg-gray-100 text-black rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed border-2 border-black"
           >
             下一页
           </button>

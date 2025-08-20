@@ -35,7 +35,7 @@
           v-for="category in categories"
           :key="category.id"
           @click="goToCategory(category.id)"
-          class="glass-effect rounded-2xl p-6 card-hover cursor-pointer group"
+          class="glass-effect rounded-2xl p-6 card-hover cursor-pointer group border-2 border-black"
         >
           <div class="flex items-center justify-between mb-4">
             <h3

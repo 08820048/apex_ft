@@ -8,7 +8,7 @@
       </div>
 
       <!-- 本站友链信息 -->
-      <div class="glass-effect p-6 mb-8 border border-blue-500/30">
+      <div class="glass-effect p-6 mb-8 border-2 border-black">
         <h2 class="text-xl font-bold text-gray-900 mb-4 flex items-center">
           <span class="w-2 h-2 bg-blue-500 rounded-full mr-3"></span>
           本站友链信息
@@ -79,7 +79,7 @@
       </div>
 
       <!-- 友链申请说明 -->
-      <div class="glass-effect p-6 mb-8">
+      <div class="glass-effect p-6 mb-8 border-2 border-black">
         <h2 class="text-xl font-bold text-gray-900 mb-4">友链申请</h2>
         <div class="text-gray-600 space-y-2">
           <p>欢迎与我交换友情链接！申请前请确保：</p>
@@ -133,7 +133,7 @@
             :href="link.url"
             target="_blank"
             rel="noopener noreferrer"
-            class="glass-effect p-6 card-hover group block"
+            class="glass-effect p-6 card-hover group block border-2 border-black"
           >
             <div class="flex items-center mb-4">
               <div class="w-12 h-12 flex-shrink-0 mr-4">
@@ -182,7 +182,7 @@
         </div>
 
         <!-- 空状态 -->
-        <div v-else class="glass-effect p-12 text-center">
+        <div v-else class="glass-effect p-12 text-center border-2 border-black">
           <div class="text-gray-400 dark:text-gray-500 mb-4">
             <LinkIcon class="w-16 h-16 mx-auto" />
           </div>

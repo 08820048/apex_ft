@@ -112,7 +112,7 @@
         <div v-if="zenMode" class="fixed top-6 right-6 z-40">
           <button
             @click="exitZenMode"
-            class="group p-3 bg-white dark:bg-gray-800 bg-opacity-90 dark:bg-opacity-90 hover:bg-opacity-100 dark:hover:bg-opacity-100 text-gray-700 dark:text-gray-300 rounded-full backdrop-blur-sm transition-all duration-300 shadow-lg hover:shadow-xl border border-gray-200 dark:border-gray-600"
+            class="group p-3 bg-black text-white hover:bg-gray-800 rounded-full transition-all duration-300 shadow-lg hover:shadow-xl border-2 border-white"
             title="退出禅模式"
           >
             <svg
@@ -138,7 +138,7 @@
         >
           <button
             @click="showZenTip = true"
-            class="group relative w-14 h-14 glass-effect text-white shadow-lg hover:shadow-xl border border-white/20 hover:border-purple-400 transform hover:scale-105 transition-all duration-300 flex items-center justify-center"
+            class="group relative w-14 h-14 bg-black text-white shadow-lg hover:shadow-xl border-2 border-white hover:bg-gray-800 transform hover:scale-105 transition-all duration-300 flex items-center justify-center rounded-full"
             title="进入禅模式"
           >
             <span
@@ -149,11 +149,11 @@
             </span>
             <!-- 悬浮提示 -->
             <div
-              class="absolute bottom-full right-0 mb-2 px-3 py-1 bg-gray-900 dark:bg-gray-700 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap"
+              class="absolute bottom-full right-0 mb-2 px-3 py-1 bg-black text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap"
             >
               进入禅模式
               <div
-                class="absolute top-full right-4 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-gray-900 dark:border-t-gray-700"
+                class="absolute top-full right-4 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-black"
               ></div>
             </div>
           </button>

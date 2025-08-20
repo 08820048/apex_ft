@@ -220,8 +220,8 @@ const closeMobileMenu = () => {
   font-weight: 700;
   font-size: 1.3em; /* 适度增大 */
   letter-spacing: 0.1em;
-  color: white;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  color: #111827 !important; /* 深灰色，确保在白色背景上清晰可见 */
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
   position: relative;
 }
 
@@ -235,7 +235,7 @@ const closeMobileMenu = () => {
   background: linear-gradient(
     90deg,
     transparent,
-    rgba(255, 255, 255, 0.6),
+    rgba(17, 24, 39, 0.6),
     transparent
   );
   opacity: 0;
@@ -248,7 +248,7 @@ const closeMobileMenu = () => {
 
 .special-font:hover {
   transform: scale(1.15); /* 悬停时进一步放大 */
-  text-shadow: 0 3px 6px rgba(0, 0, 0, 0.5);
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 /* 搜索按钮样式 - 确保文字始终为白色 */
