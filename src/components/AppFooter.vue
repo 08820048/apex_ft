@@ -5,9 +5,9 @@
         <!-- 版权信息 -->
         <div class="flex items-center space-x-2">
           <img
-            src="/apex.jpg"
+            src="/Apex.png"
             alt="ApexBlog Logo"
-            class="w-6 h-6 rounded-full object-cover"
+            class="w-6 h-6 object-cover"
           />
           <p>© {{ currentYear }} ApexBlog. All rights reserved.</p>
         </div>

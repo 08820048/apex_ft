@@ -31,20 +31,47 @@ body {
   min-height: 100vh;
 }
 
-/* 卡片效果 - 矩形硬朗风格 */
+/* 卡片效果 - 精细工程化网格风格 */
 .glass-effect {
-  background: #ffffff;
-  border: 2px solid rgba(0, 0, 0, 0.12);
-  border-radius: 0; /* 矩形硬朗风格 */
-  box-shadow: 0 4px 8px -1px rgba(0, 0, 0, 0.15),
-    0 2px 6px -1px rgba(0, 0, 0, 0.1);
+  background: rgba(255, 255, 255, 0.92);
+  border: 1px solid rgba(156, 163, 175, 0.2);
+  border-radius: 0;
+  box-shadow: 0 4px 16px -4px rgba(0, 0, 0, 0.1),
+    0 2px 8px -2px rgba(0, 0, 0, 0.06), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(12px);
+  position: relative;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.glass-effect::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: linear-gradient(
+      rgba(156, 163, 175, 0.08) 0.5px,
+      transparent 0.5px
+    ),
+    linear-gradient(90deg, rgba(156, 163, 175, 0.08) 0.5px, transparent 0.5px);
+  background-size: 16px 16px;
+  border-radius: 0;
+  pointer-events: none;
+  opacity: 0.3;
+  transition: opacity 0.3s ease;
 }
 
 .glass-effect:hover {
-  background: #ffffff;
-  border-color: rgba(0, 0, 0, 0.18);
-  box-shadow: 0 8px 16px -2px rgba(0, 0, 0, 0.2),
-    0 4px 8px -1px rgba(0, 0, 0, 0.15);
+  background: rgba(255, 255, 255, 0.95);
+  border-color: rgba(59, 130, 246, 0.25);
+  box-shadow: 0 8px 24px -6px rgba(0, 0, 0, 0.15),
+    0 4px 16px -4px rgba(0, 0, 0, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  transform: translateY(-4px);
+}
+
+.glass-effect:hover::before {
+  opacity: 0.6;
 }
 
 /* 卡片悬停效果 */
@@ -258,6 +285,82 @@ button {
 input,
 textarea {
   border-radius: 0;
+}
+
+/* 浅蓝色斜线条背景效果 */
+.diagonal-stripes-bg {
+  background: linear-gradient(
+    -45deg,
+    #e7f2fe 25%,
+    transparent 25%,
+    transparent 50%,
+    #e7f2fe 50%,
+    #e7f2fe 75%,
+    transparent 75%,
+    transparent
+  );
+  background-size: 8px 8px;
+  background-color: #f0f9ff;
+}
+
+/* 纸张质感背景效果 */
+.paper-texture-bg {
+  background-color: #f5f5f1;
+  background-image:
+    /* 主要纤维纹理 */ radial-gradient(
+      circle at 20% 80%,
+      rgba(120, 119, 108, 0.3) 1px,
+      transparent 1px
+    ),
+    radial-gradient(
+      circle at 80% 20%,
+      rgba(120, 119, 108, 0.3) 1px,
+      transparent 1px
+    ),
+    radial-gradient(
+      circle at 40% 40%,
+      rgba(120, 119, 108, 0.2) 1px,
+      transparent 1px
+    ),
+    radial-gradient(
+      circle at 60% 60%,
+      rgba(120, 119, 108, 0.2) 1px,
+      transparent 1px
+    ),
+    /* 细小的纤维点 */
+      radial-gradient(
+        circle at 10% 10%,
+        rgba(120, 119, 108, 0.1) 0.5px,
+        transparent 0.5px
+      ),
+    radial-gradient(
+      circle at 90% 90%,
+      rgba(120, 119, 108, 0.1) 0.5px,
+      transparent 0.5px
+    ),
+    radial-gradient(
+      circle at 30% 70%,
+      rgba(120, 119, 108, 0.1) 0.5px,
+      transparent 0.5px
+    ),
+    radial-gradient(
+      circle at 70% 30%,
+      rgba(120, 119, 108, 0.1) 0.5px,
+      transparent 0.5px
+    ),
+    /* 更细微的质感 */
+      radial-gradient(
+        circle at 15% 45%,
+        rgba(120, 119, 108, 0.05) 0.5px,
+        transparent 0.5px
+      ),
+    radial-gradient(
+      circle at 85% 55%,
+      rgba(120, 119, 108, 0.05) 0.5px,
+      transparent 0.5px
+    );
+  background-size: 250px 250px, 300px 300px, 200px 200px, 180px 180px,
+    100px 100px, 120px 120px, 80px 80px, 90px 90px, 60px 60px, 70px 70px;
 }
 
 /* 禅模式样式 */

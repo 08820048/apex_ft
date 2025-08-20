@@ -118,7 +118,8 @@
         </p>
         <RouterLink
           to="/"
-          class="inline-flex items-center px-6 py-3 bg-black hover:bg-gray-800 text-white transition-colors search-return-btn border-2 border-black"
+          class="inline-flex items-center px-6 py-3 text-white hover:opacity-90 transition-all search-return-btn border-2"
+          style="background-color: #0751cf; border-color: #0751cf"
         >
           返回首页
         </RouterLink>
@@ -335,13 +336,14 @@ html.light .bg-gray-300 {
   background-color: #d1d5db !important;
 }
 
-/* 亮色模式下的返回首页按钮 - 改为纯黑色 */
+/* 亮色模式下的返回首页按钮 - 改为蓝色 */
 html.light .search-return-btn {
-  background-color: #111827 !important;
+  background-color: #0751cf !important;
   color: white !important;
+  border-color: #0751cf !important;
 }
 
 html.light .search-return-btn:hover {
-  background-color: #000000 !important;
+  opacity: 0.9 !important;
 }
 </style>

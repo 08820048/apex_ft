@@ -1,33 +1,31 @@
 <template>
-  <header class="app-header glass-effect sticky top-0 z-50 backdrop-blur-lg">
+  <header class="app-header fixed top-0 left-0 right-0 z-50 backdrop-blur-lg">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex items-center justify-between h-16">
-        <!-- Logo -->
-        <RouterLink to="/" class="group flex items-center space-x-3">
-          <img
-            src="/apex.jpg"
-            alt="ApexBlog Logo"
-            class="w-10 h-10 rounded-full object-cover group-hover:scale-105 transition-transform shadow-md"
-          />
-          <span
-            class="text-3xl font-bold text-gray-900 group-hover:scale-105 transition-transform logo-text special-font"
-          >
-            八尺妖剑
-          </span>
-        </RouterLink>
-
-        <!-- 导航菜单 -->
-        <nav class="hidden md:flex items-center space-x-8">
-          <RouterLink
-            v-for="item in navItems"
-            :key="item.path"
-            :to="item.path"
-            class="nav-link"
-            :class="{ 'nav-link-active': $route.path === item.path }"
-          >
-            {{ item.name }}
+        <!-- Logo和导航菜单 -->
+        <div class="flex items-center space-x-6">
+          <!-- Logo -->
+          <RouterLink to="/" class="group flex items-center">
+            <img
+              src="/Apex.png"
+              alt="ApexBlog Logo"
+              class="w-12 h-12 object-cover group-hover:scale-105 transition-transform"
+            />
           </RouterLink>
-        </nav>
+
+          <!-- 导航菜单 -->
+          <nav class="hidden md:flex items-center space-x-8">
+            <RouterLink
+              v-for="item in navItems"
+              :key="item.path"
+              :to="item.path"
+              class="nav-link"
+              :class="{ 'nav-link-active': $route.path === item.path }"
+            >
+              {{ item.name }}
+            </RouterLink>
+          </nav>
+        </div>
 
         <!-- 搜索框和拉线开关 -->
         <div class="hidden lg:flex items-center space-x-4 relative">
@@ -45,7 +43,8 @@
           </div>
           <button
             @click="handleSearch"
-            class="px-4 py-2 bg-black text-white hover:bg-gray-800 transition-colors search-btn"
+            class="px-4 py-2 text-white hover:opacity-90 transition-all search-btn"
+            style="background-color: #0751cf"
           >
             搜索
           </button>
@@ -75,14 +74,10 @@
             class="flex items-center justify-center px-4 pb-4 border-b border-gray-100"
           >
             <img
-              src="/apex.jpg"
+              src="/Apex.png"
               alt="ApexBlog Logo"
-              class="w-8 h-8 rounded-full object-cover mr-2 shadow-sm"
+              class="w-10 h-10 object-cover"
             />
-            <span
-              class="text-2xl font-bold text-gray-900 mobile-logo-text special-font"
-              >八尺妖剑</span
-            >
           </div>
 
           <div class="flex flex-col space-y-4 pt-4">
@@ -198,15 +193,21 @@ const closeMobileMenu = () => {
 /* Header样式 */
 .app-header {
   border-bottom: 1px solid rgba(0, 0, 0, 0.15);
-  background: rgba(255, 255, 255, 0.95);
+  background: #f7f7f2;
   box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
-  position: relative;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
   z-index: 50;
+  /* 添加原glass-effect的基础样式，但不包含hover效果 */
+  border: 1px solid rgba(156, 163, 175, 0.2);
+  backdrop-filter: blur(12px);
 }
 
 /* 导航链接样式 */
 .nav-link {
-  @apply flex items-center px-3 py-2 text-gray-700 hover:text-gray-900 transition-all duration-200 hover:bg-gray-100;
+  @apply flex items-center px-3 py-2 text-gray-700 hover:text-gray-900 transition-colors duration-200 hover:bg-gray-100;
 }
 
 .nav-link-active {
@@ -240,15 +241,6 @@ const closeMobileMenu = () => {
   );
   opacity: 0;
   transition: opacity 0.3s ease;
-}
-
-.special-font:hover::after {
-  opacity: 1;
-}
-
-.special-font:hover {
-  transform: scale(1.15); /* 悬停时进一步放大 */
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 /* 搜索按钮样式 - 确保文字始终为白色 */

@@ -8,7 +8,7 @@
             class="w-32 h-32 mx-auto mb-6 rounded-full overflow-hidden shadow-lg"
           >
             <img
-              src="/apex.jpg"
+              src="/Apex.png"
               alt="ApexBlog Logo"
               class="w-full h-full object-cover"
             />

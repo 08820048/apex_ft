@@ -12,7 +12,8 @@
         <div class="max-w-md mx-auto">
           <div class="text-center mb-6">
             <div
-              class="w-16 h-16 bg-black rounded-full flex items-center justify-center mx-auto mb-4"
+              class="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4"
+              style="background-color: #0751cf"
             >
               <EmailIcon class="w-8 h-8 text-white email-icon" />
             </div>
@@ -44,7 +45,12 @@
             <button
               type="submit"
               :disabled="subscribing || !email"
-              class="w-full bg-black text-white py-3 px-6 font-medium hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-all border-2 border-black"
+              class="w-full text-white py-3 px-6 font-medium hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-all border-2"
+              style="
+                background-color: #0751cf;
+                border-color: #0751cf;
+                --tw-ring-color: #0751cf;
+              "
             >
               <span v-if="subscribing" class="flex items-center justify-center">
                 <LoadingIcon class="w-5 h-5 mr-2 animate-spin" />
@@ -69,7 +75,10 @@
       </div>
 
       <!-- 订阅说明 -->
-      <div class="glass-effect rounded-2xl p-8 mb-8 border-2 border-black">
+      <div
+        class="glass-effect rounded-2xl p-8 mb-8 border-2"
+        style="border-color: #0751cf"
+      >
         <h3 class="text-xl font-bold text-gray-900 mb-4">订阅说明</h3>
         <div class="space-y-3 text-gray-600">
           <div class="flex items-start">
@@ -100,14 +109,18 @@
       </div>
 
       <!-- RSS 订阅 -->
-      <div class="glass-effect rounded-2xl p-8 border-2 border-black">
+      <div
+        class="glass-effect rounded-2xl p-8 border-2"
+        style="border-color: #0751cf"
+      >
         <h3 class="text-xl font-bold text-gray-900 mb-4">RSS 订阅</h3>
         <p class="text-gray-600 mb-4">
           如果您更喜欢使用 RSS 阅读器，可以订阅我们的 RSS 源：
         </p>
         <div class="space-y-3">
           <div
-            class="flex items-center justify-between p-3 glass-effect rounded-lg border-2 border-black"
+            class="flex items-center justify-between p-3 glass-effect rounded-lg border-2"
+            style="border-color: #0751cf"
           >
             <div class="flex items-center">
               <RssIcon class="w-5 h-5 text-orange-500 mr-3" />
@@ -116,13 +129,15 @@
             <a
               href="/api/rss/feed.xml"
               target="_blank"
-              class="text-black hover:text-gray-600 transition-colors font-medium"
+              class="hover:opacity-80 transition-all font-medium"
+              style="color: #0751cf"
             >
               订阅
             </a>
           </div>
           <div
-            class="flex items-center justify-between p-3 glass-effect rounded-lg border-2 border-black"
+            class="flex items-center justify-between p-3 glass-effect rounded-lg border-2"
+            style="border-color: #0751cf"
           >
             <div class="flex items-center">
               <RssIcon class="w-5 h-5 text-orange-500 mr-3" />
@@ -307,16 +322,16 @@ html.light .glass-effect input:focus {
   box-shadow: 0 0 0 2px rgba(17, 24, 39, 0.2) !important;
 }
 
-/* 亮色模式下的按钮样式 - 改为纯黑色 */
+/* 亮色模式下的按钮样式 - 改为蓝色 */
 html.light .bg-blue-600 {
-  background-color: #111827 !important;
+  background-color: #0751cf !important;
 }
 
 html.light .bg-blue-600:hover {
-  background-color: #000000 !important;
+  opacity: 0.9 !important;
 }
 
-/* 确保按钮文字在黑色背景上是白色 */
+/* 确保按钮文字在蓝色背景上是白色 */
 html.light .bg-blue-600 {
   color: white !important;
 }

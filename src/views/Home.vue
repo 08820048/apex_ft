@@ -1,25 +1,80 @@
 <template>
-  <div class="min-h-screen">
+  <div class="min-h-screen relative bg-white">
+    <!-- 简洁背景 -->
+    <div class="absolute inset-0 bg-gray-50"></div>
+
+    <!-- 博客标语区域 -->
+    <div
+      class="relative text-center py-12 mb-8 overflow-hidden"
+      style="background: #ffffff"
+    >
+      <!-- 网格背景层 -->
+      <div
+        class="absolute inset-0"
+        style="
+          background-image: linear-gradient(#c7d2fe 1px, transparent 1px),
+            linear-gradient(90deg, #c7d2fe 1px, transparent 1px);
+          background-size: 12px 12px;
+        "
+      ></div>
+      <!-- 渐变遮罩层 - 从上到下网格透明度递增 -->
+      <div
+        class="absolute inset-0"
+        style="
+          background: linear-gradient(
+            to bottom,
+            rgba(255, 255, 255, 0.8) 0%,
+            rgba(255, 255, 255, 0.5) 30%,
+            rgba(255, 255, 255, 0.2) 60%,
+            rgba(255, 255, 255, 0) 100%
+          );
+        "
+      ></div>
+      <div class="relative max-w-4xl mx-auto px-4 z-10">
+        <h1
+          class="text-4xl md:text-5xl font-bold text-gray-900 mb-4 tracking-tight"
+        >
+          From The Blog
+        </h1>
+        <p class="text-lg text-gray-600 max-w-2xl mx-auto leading-relaxed">
+          分享技术见解，记录开发历程，探索编程世界的无限可能
+        </p>
+        <!-- 装饰性分割线 -->
+        <div class="mt-6 flex justify-center">
+          <div
+            class="w-24 h-1 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full"
+          ></div>
+        </div>
+      </div>
+    </div>
+
     <!-- 全屏主要内容区域 -->
     <div
-      class="max-w-full mx-auto py-8"
+      class="relative max-w-full mx-auto pb-8"
       style="padding-left: 90px; padding-right: 90px"
     >
       <!-- 置顶文章区域 - 两个大卡片 -->
-      <section v-if="topArticles.length > 0" class="mb-12">
+      <section v-if="topArticles.length > 0" class="mb-12 relative">
+        <!-- 区域分割线 -->
+        <div
+          class="absolute -top-4 left-0 right-0 h-px bg-gradient-to-r from-transparent via-gray-300 to-transparent opacity-60"
+        ></div>
+        <div
+          class="absolute -top-4 left-1/4 right-1/4 h-px bg-gradient-to-r from-transparent via-blue-400 to-transparent opacity-40"
+        ></div>
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <article
             v-for="article in topArticles.slice(0, 2)"
             :key="'top-' + article.id"
-            class="glass-effect cursor-pointer card-hover relative group h-[480px] overflow-hidden rounded-xl"
+            class="glass-effect cursor-pointer card-hover relative group h-[480px] overflow-hidden"
             :style="getArticleStyle(article)"
             @click="goToArticle(article.id)"
           >
             <!-- 置顶标识 -->
             <div class="absolute top-4 right-4 z-20">
               <div
-                class="bg-black px-3 py-1 text-sm font-medium shadow-lg"
-                style="color: #ffffff !important"
+                class="px-3 py-1 text-sm font-medium shadow-lg"
+                style="background-color: #0751cf; color: #ffffff !important"
               >
                 置顶
               </div>
@@ -27,26 +82,33 @@
 
             <!-- 封面图片区域 (2/3 高度 = 320px) -->
             <div class="relative h-80 overflow-hidden">
-              <img
-                v-if="article.coverImage"
-                :src="article.coverImage"
-                :alt="article.title"
-                class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-              />
-              <div
-                v-else
-                class="w-full h-full bg-gradient-to-br from-blue-600 to-purple-600 flex items-center justify-center"
-              >
-                <DocumentTextIcon class="w-16 h-16 text-white opacity-50" />
+              <!-- 浅蓝色斜线条背景 -->
+              <div class="absolute inset-0 diagonal-stripes-bg"></div>
+              <!-- 封面图片容器 - 带间隔 -->
+              <div class="absolute inset-1.5">
+                <img
+                  v-if="article.coverImage"
+                  :src="article.coverImage"
+                  :alt="article.title"
+                  class="w-full h-full object-cover"
+                />
+                <div
+                  v-else
+                  class="w-full h-full bg-gradient-to-br from-blue-600 to-purple-600 flex items-center justify-center"
+                >
+                  <DocumentTextIcon class="w-16 h-16 text-white opacity-50" />
+                </div>
               </div>
               <!-- 渐变遮罩 -->
               <div
-                class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"
+                class="absolute inset-1.5 bg-gradient-to-t from-black/60 via-transparent to-transparent"
               ></div>
             </div>
 
             <!-- 内容信息区域 (1/3 高度 = 160px) -->
-            <div class="p-6 h-40 flex flex-col justify-between">
+            <div
+              class="p-6 h-40 flex flex-col justify-between paper-texture-bg"
+            >
               <div>
                 <h2
                   class="text-xl font-bold text-gray-900 mb-2 line-clamp-2 hover:text-blue-600 transition-colors"
@@ -68,7 +130,8 @@
                   <!-- 分类标识 -->
                   <span
                     v-if="article.category"
-                    class="px-2 py-1 bg-black text-white font-medium"
+                    class="px-2 py-1 text-white font-medium"
+                    style="background-color: #0751cf"
                   >
                     {{ article.category.name }}
                   </span>
@@ -91,41 +154,51 @@
       </section>
 
       <!-- 最新文章区域 - 三个较小卡片 -->
-      <section v-if="latestArticles.length > 0" class="mb-12">
-        <h2 class="text-2xl font-bold text-gray-900 mb-6 flex items-center">
-          <ClockIcon class="w-6 h-6 mr-2 text-blue-600" />
-          最新文章
-        </h2>
+      <section v-if="latestArticles.length > 0" class="mb-16 relative">
+        <!-- 区域分割线 -->
+        <div
+          class="absolute -top-8 left-0 right-0 h-px bg-gradient-to-r from-transparent via-gray-300 to-transparent opacity-60"
+        ></div>
+        <div
+          class="absolute -top-8 left-1/3 right-1/3 h-px bg-gradient-to-r from-transparent via-green-400 to-transparent opacity-40"
+        ></div>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           <article
             v-for="article in latestArticles.slice(0, 3)"
             :key="'latest-' + article.id"
-            class="glass-effect cursor-pointer card-hover relative group h-96 overflow-hidden rounded-xl"
+            class="glass-effect cursor-pointer card-hover relative group h-96 overflow-hidden flex flex-col"
             :style="getArticleStyle(article)"
             @click="goToArticle(article.id)"
           >
             <!-- 封面图片区域 (2/3 高度 = 213px) -->
             <div class="relative h-52 overflow-hidden">
-              <img
-                v-if="article.coverImage"
-                :src="article.coverImage"
-                :alt="article.title"
-                class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-              />
-              <div
-                v-else
-                class="w-full h-full bg-gradient-to-br from-green-600 to-blue-600 flex items-center justify-center"
-              >
-                <DocumentTextIcon class="w-12 h-12 text-white opacity-50" />
+              <!-- 浅蓝色斜线条背景 -->
+              <div class="absolute inset-0 diagonal-stripes-bg"></div>
+              <!-- 封面图片容器 - 带间隔 -->
+              <div class="absolute inset-1.5">
+                <img
+                  v-if="article.coverImage"
+                  :src="article.coverImage"
+                  :alt="article.title"
+                  class="w-full h-full object-cover"
+                />
+                <div
+                  v-else
+                  class="w-full h-full bg-gradient-to-br from-green-600 to-blue-600 flex items-center justify-center"
+                >
+                  <DocumentTextIcon class="w-12 h-12 text-white opacity-50" />
+                </div>
               </div>
               <!-- 渐变遮罩 -->
               <div
-                class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"
+                class="absolute inset-1.5 bg-gradient-to-t from-black/60 via-transparent to-transparent"
               ></div>
             </div>
 
-            <!-- 内容信息区域 (1/3 高度 = 128px) -->
-            <div class="p-4 h-32 flex flex-col justify-between">
+            <!-- 内容信息区域 (剩余高度) -->
+            <div
+              class="p-4 flex-1 flex flex-col justify-between paper-texture-bg"
+            >
               <div>
                 <h3
                   class="text-base font-semibold text-gray-900 mb-1 line-clamp-2 hover:text-blue-600 transition-colors"
@@ -147,7 +220,8 @@
                   <!-- 分类标识 -->
                   <span
                     v-if="article.category"
-                    class="px-2 py-1 bg-black text-white font-medium"
+                    class="px-2 py-1 text-white font-medium"
+                    style="background-color: #0751cf"
                   >
                     {{ article.category.name }}
                   </span>
@@ -170,12 +244,14 @@
       </section>
 
       <!-- 更多文章区域 - 动态加载 -->
-      <section>
-        <h2 class="text-2xl font-bold text-gray-900 mb-6 flex items-center">
-          <DocumentTextIcon class="w-6 h-6 mr-2 text-blue-600" />
-          更多文章
-        </h2>
-
+      <section class="relative">
+        <!-- 区域分割线 -->
+        <div
+          class="absolute -top-8 left-0 right-0 h-px bg-gradient-to-r from-transparent via-gray-300 to-transparent opacity-60"
+        ></div>
+        <div
+          class="absolute -top-8 left-1/5 right-1/5 h-px bg-gradient-to-r from-transparent via-purple-400 to-transparent opacity-40"
+        ></div>
         <!-- 文章列表 -->
         <div class="space-y-6">
           <!-- 加载状态 -->
@@ -187,11 +263,11 @@
                 class="glass-effect p-6 animate-pulse"
               >
                 <div class="flex gap-4">
-                  <div class="w-32 h-24 bg-gray-600 rounded"></div>
+                  <div class="w-32 h-24 bg-gray-600"></div>
                   <div class="flex-1">
-                    <div class="h-6 bg-gray-600 rounded mb-3"></div>
-                    <div class="h-4 bg-gray-600 rounded mb-2"></div>
-                    <div class="h-4 bg-gray-600 rounded w-3/4"></div>
+                    <div class="h-6 bg-gray-600 mb-3"></div>
+                    <div class="h-4 bg-gray-600 mb-2"></div>
+                    <div class="h-4 bg-gray-600 w-3/4"></div>
                   </div>
                 </div>
               </div>
@@ -208,7 +284,7 @@
             <article
               v-for="article in moreArticles"
               :key="'more-' + article.id"
-              class="glass-effect cursor-pointer card-hover h-48 overflow-hidden rounded-xl relative group"
+              class="glass-effect cursor-pointer card-hover h-48 overflow-hidden relative group"
               :style="getArticleStyle(article)"
               @click="goToArticle(article.id)"
             >
@@ -219,7 +295,7 @@
                     v-if="article.coverImage"
                     :src="article.coverImage"
                     :alt="article.title"
-                    class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                    class="w-full h-full object-cover"
                   />
                   <div
                     v-else
@@ -234,7 +310,9 @@
                 </div>
 
                 <!-- 内容信息区域 (1/3 宽度) -->
-                <div class="w-1/3 p-6 flex flex-col justify-between">
+                <div
+                  class="w-1/3 p-6 flex flex-col justify-between paper-texture-bg"
+                >
                   <div>
                     <h3
                       class="text-lg font-semibold text-gray-900 mb-3 line-clamp-2 hover:text-blue-600 transition-colors"
@@ -260,7 +338,8 @@
                       <!-- 文章分类 -->
                       <span
                         v-if="article.category"
-                        class="px-2 py-1 bg-black text-white font-medium"
+                        class="px-2 py-1 text-white font-medium"
+                        style="background-color: #0751cf"
                       >
                         {{ article.category.name }}
                       </span>
@@ -324,18 +403,6 @@ import { articleApi } from "../api";
 const CalendarIcon = {
   template: `<svg viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4">
     <path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z"/>
-  </svg>`,
-};
-
-const ClockIcon = {
-  template: `<svg viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
-    <path d="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M16.2,16.2L11,13V7H12.5V12.2L17,14.7L16.2,16.2Z" />
-  </svg>`,
-};
-
-const DocumentTextIcon = {
-  template: `<svg viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
-    <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z" />
   </svg>`,
 };
 
@@ -667,6 +734,6 @@ html.light .sidebar-tag {
 /* 亮色模式下的置顶文本颜色 */
 html.light .top-badge {
   color: #ffffff !important;
-  background-color: #000000 !important;
+  background-color: #0751cf !important;
 }
 </style>

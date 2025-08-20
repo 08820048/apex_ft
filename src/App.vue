@@ -2,7 +2,7 @@
   <div id="app">
     <AppHeader />
     <ServerTip />
-    <main class="flex-1">
+    <main class="flex-1 pt-16">
       <RouterView v-slot="{ Component }">
         <Transition name="page" mode="out-in">
           <component :is="Component" />
