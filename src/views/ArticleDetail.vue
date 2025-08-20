@@ -166,7 +166,7 @@
             'overflow-hidden transition-all duration-500',
             zenMode
               ? 'zen-article fixed inset-0 bg-gradient-to-br from-amber-50 via-white to-orange-50'
-              : 'glass-effect rounded-2xl relative',
+              : 'article-content-card rounded-2xl relative',
             // 当有目录时，将文章容器向左移动，为右侧目录组件腾出空间
             !zenMode && tableOfContents.length > 0 ? 'xl:-translate-x-48' : '',
           ]"
@@ -654,8 +654,13 @@ watch(
   @apply border-blue-500 text-gray-600;
 }
 
-.prose :deep(code) {
-  @apply text-blue-300 bg-gray-800/50;
+.prose :deep(code:not(pre code)) {
+  color: #0751cf !important;
+  background: rgba(7, 81, 207, 0.1) !important;
+  border: 1px solid rgba(7, 81, 207, 0.2) !important;
+  border-radius: 4px !important;
+  font-weight: 500 !important;
+  padding: 2px 6px !important;
 }
 
 .prose :deep(pre) {
@@ -799,8 +804,38 @@ body.zen-mode-active button:not(.zen-mode button) {
   font-size: 1.1em;
 }
 
+/* 文章内容卡片样式 - 不带hover效果的glass-effect */
+.article-content-card {
+  background: rgba(255, 255, 255, 0.92);
+  border: 1px solid rgba(156, 163, 175, 0.2);
+  border-radius: 0;
+  box-shadow: 0 4px 16px -4px rgba(0, 0, 0, 0.1),
+    0 2px 8px -2px rgba(0, 0, 0, 0.06), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(12px);
+  position: relative;
+}
+
+.article-content-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: linear-gradient(
+      rgba(199, 210, 254, 0.3) 1px,
+      transparent 1px
+    ),
+    linear-gradient(90deg, rgba(199, 210, 254, 0.3) 1px, transparent 1px);
+  background-size: 14px 14px;
+  border-radius: 0;
+  pointer-events: none;
+  opacity: 0.3;
+}
+
 /* 亮色模式优化 */
-html.light .glass-effect h1 {
+html.light .glass-effect h1,
+html.light .article-content-card h1 {
   color: #111827 !important;
 }
 
@@ -864,8 +899,11 @@ html.light .prose pre code {
 
 /* 内联代码在亮色模式下的样式 */
 html.light .prose code:not(pre code) {
-  color: #dc2626 !important;
-  background-color: rgba(0, 0, 0, 0.05) !important;
+  color: #0751cf !important;
+  background-color: rgba(7, 81, 207, 0.1) !important;
+  border: 1px solid rgba(7, 81, 207, 0.2) !important;
+  border-radius: 4px !important;
+  font-weight: 500 !important;
 }
 
 /* 确保代码块不受glass-effect的白色背景影响 */

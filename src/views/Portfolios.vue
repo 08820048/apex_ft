@@ -14,7 +14,8 @@
           <div
             v-for="portfolio in featuredPortfolios"
             :key="portfolio.id"
-            class="glass-effect rounded-2xl overflow-hidden card-hover group border-2 border-black"
+            class="glass-effect rounded-2xl overflow-hidden card-hover group border-2"
+            style="border-color: #0751cf"
           >
             <div
               v-if="portfolio.coverImage"
@@ -103,7 +104,8 @@
           <div
             v-for="portfolio in portfolios"
             :key="portfolio.id"
-            class="glass-effect rounded-2xl overflow-hidden card-hover group border-2 border-black"
+            class="glass-effect rounded-2xl overflow-hidden card-hover group border-2"
+            style="border-color: #0751cf"
           >
             <div
               v-if="portfolio.coverImage"
@@ -173,7 +175,8 @@
         <!-- 空状态 -->
         <div
           v-else
-          class="glass-effect rounded-2xl p-12 text-center border-2 border-black"
+          class="glass-effect rounded-2xl p-12 text-center border-2"
+          style="border-color: #0751cf"
         >
           <div class="text-gray-400 mb-4">
             <FolderIcon class="w-16 h-16 mx-auto" />
