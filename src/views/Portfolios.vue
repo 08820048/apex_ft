@@ -48,7 +48,7 @@
                   <span
                     v-for="tech in portfolio.technologies.split(',')"
                     :key="tech.trim()"
-                    class="px-2 py-1 bg-blue-900/30 text-blue-300 text-xs rounded-full border border-blue-500/30"
+                    class="px-3 py-1 bg-blue-600 text-white text-xs rounded-full font-medium shadow-sm hover:bg-blue-700 transition-colors"
                   >
                     {{ tech.trim() }}
                   </span>
@@ -140,13 +140,13 @@
                       .split(',')
                       .slice(0, 3)"
                     :key="tech.trim()"
-                    class="px-2 py-1 bg-blue-900/30 text-blue-300 text-xs rounded-full border border-blue-500/30"
+                    class="px-2 py-1 bg-blue-600 text-white text-xs rounded-full font-medium shadow-sm hover:bg-blue-700 transition-colors"
                   >
                     {{ tech.trim() }}
                   </span>
                   <span
                     v-if="portfolio.technologies.split(',').length > 3"
-                    class="px-2 py-1 bg-gray-200 text-gray-700 text-xs rounded-full border border-gray-300"
+                    class="px-2 py-1 bg-gray-600 text-white text-xs rounded-full font-medium shadow-sm"
                   >
                     +{{ portfolio.technologies.split(",").length - 3 }}
                   </span>

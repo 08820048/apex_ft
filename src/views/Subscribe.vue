@@ -146,7 +146,8 @@
             <a
               href="/api/rss/atom.xml"
               target="_blank"
-              class="text-black hover:text-gray-600 transition-colors font-medium"
+              class="hover:opacity-80 transition-all font-medium"
+              style="color: #0751cf"
             >
               订阅
             </a>
