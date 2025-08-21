@@ -5,7 +5,7 @@ const routes = [
     path: "/",
     name: "home",
     component: () => import("../views/Home.vue"),
-    meta: { title: "ApexBlog - 技术博客" },
+    meta: { title: "ApexBlog - 八尺妖剑" },
   },
   {
     path: "/article/:id",
