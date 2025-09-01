@@ -50,6 +50,12 @@ const routes = [
     meta: { title: "邮箱订阅 - ApexBlog" },
   },
   {
+    path: "/background-test",
+    name: "background-test",
+    component: () => import("../views/BackgroundEffectTest.vue"),
+    meta: { title: "稿纸背景效果测试 - ApexBlog" },
+  },
+  {
     path: "/about",
     name: "about",
     component: () => import("../views/About.vue"),

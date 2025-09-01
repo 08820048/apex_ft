@@ -7,8 +7,8 @@ import { resolve } from "path";
 
 // https://vite.dev/config/
 export default defineConfig({
-  // 设置基础路径为相对路径，解决部署后资源加载问题
-  base: "./",
+  // 设置基础路径为根路径，确保资源正确加载
+  base: "/",
   plugins: [
     vue({
       template: {
