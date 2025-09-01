@@ -481,6 +481,7 @@
 import { ref, onMounted, onUnmounted } from "vue";
 import { useRouter } from "vue-router";
 import { articleApi } from "../api";
+import { useSEO } from "../composables/useSEO";
 
 // 图标组件
 const CalendarIcon = {
@@ -679,6 +680,10 @@ onMounted(() => {
   initializeData();
   // 添加滚动监听器
   window.addEventListener("scroll", throttledHandleScroll);
+
+  // 设置首页 SEO
+  const { setBlogStructuredData } = useSEO();
+  setBlogStructuredData();
 });
 
 // 组件卸载时移除滚动监听器

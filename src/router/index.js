@@ -62,6 +62,12 @@ const routes = [
     meta: { title: "关于 - ApexBlog" },
   },
   {
+    path: "/seo-tools",
+    name: "seo-tools",
+    component: () => import("../views/SEOTools.vue"),
+    meta: { title: "SEO 工具 - ApexBlog" },
+  },
+  {
     path: "/background-demo",
     name: "background-demo",
     component: () => import("../views/BackgroundDemo.vue"),

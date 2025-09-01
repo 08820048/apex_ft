@@ -372,6 +372,7 @@ import {
 import { useRoute } from "vue-router";
 import { articleApi } from "../api";
 import { renderMarkdown } from "../utils/markdown";
+import { useSEO } from "../composables/useSEO";
 
 // 图标组件
 const UserIcon = {
@@ -606,6 +607,11 @@ const loadArticle = async () => {
       setTimeout(() => {
         updateReadingProgress();
       }, 100);
+
+      // 设置文章页面 SEO
+      const { setArticleSEO, setArticleStructuredData } = useSEO();
+      setArticleSEO(data);
+      setArticleStructuredData(data);
     }
   } catch (error) {
     console.error("加载文章失败:", error);

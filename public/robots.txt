@@ -1,0 +1,28 @@
+User-agent: *
+Allow: /
+
+# 允许搜索引擎访问所有页面
+Allow: /api/rss/
+Allow: /assets/
+Allow: /Apex.png
+Allow: /ads.txt
+
+# 禁止访问的路径（如果有的话）
+# Disallow: /admin/
+# Disallow: /private/
+
+# 站点地图位置
+Sitemap: https://ilikexff.cn/sitemap.xml
+
+# 爬取延迟（可选，单位：秒）
+Crawl-delay: 1
+
+# 针对特定搜索引擎的规则
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: Baiduspider
+Allow: /
