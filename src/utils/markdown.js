@@ -173,10 +173,22 @@ window.copyToClipboard = function (button) {
 marked.use({
   renderer: {
     heading(token) {
-      const text = this.parser.parseInline(token.tokens);
+      // 安全检查 token 和 tokens
+      if (!token || typeof token.depth === "undefined") {
+        console.warn("Invalid heading token:", token);
+        return "";
+      }
+
+      const text =
+        token.tokens && token.tokens.length > 0
+          ? this.parser.parseInline(token.tokens)
+          : token.text || "";
+
       const escapedText = text
         .toLowerCase()
-        .replace(/[^\w\u4e00-\u9fa5]+/g, "-");
+        .replace(/[^\w\u4e00-\u9fa5]+/g, "-")
+        .replace(/^-+|-+$/g, "");
+
       return `
         <h${token.depth} id="${escapedText}" class="group relative">
           <a href="#${escapedText}" class="header-anchor absolute -left-6 top-0 opacity-0 group-hover:opacity-100 transition-opacity duration-200 text-gray-400 hover:text-blue-500 no-underline" aria-hidden="true">#</a>
@@ -186,6 +198,12 @@ marked.use({
     },
 
     code(token) {
+      // 安全检查 token
+      if (!token || typeof token.text === "undefined") {
+        console.warn("Invalid code token:", token);
+        return "<pre><code>代码块解析错误</code></pre>";
+      }
+
       const code = token.text;
       const language = token.lang || "";
 
@@ -234,22 +252,43 @@ marked.use({
     },
 
     table(token) {
-      const header = this.parser.parse(token.header);
-      const body = this.parser.parse(token.rows);
-      return `
-        <div class="table-wrapper">
-          <table class="markdown-table">
-            <thead>${header}</thead>
-            <tbody>${body}</tbody>
-          </table>
-        </div>
-      `;
+      // 安全检查 token
+      if (!token || !token.header || !token.rows) {
+        console.warn("Invalid table token:", token);
+        return '<div class="table-error">表格解析错误</div>';
+      }
+
+      try {
+        const header = this.parser.parse(token.header);
+        const body = this.parser.parse(token.rows);
+        return `
+          <div class="table-wrapper">
+            <table class="markdown-table">
+              <thead>${header}</thead>
+              <tbody>${body}</tbody>
+            </table>
+          </div>
+        `;
+      } catch (e) {
+        console.error("Table parsing error:", e);
+        return '<div class="table-error">表格解析错误</div>';
+      }
     },
 
     link(token) {
+      // 安全检查 token
+      if (!token || typeof token.href === "undefined") {
+        console.warn("Invalid link token:", token);
+        return '<span class="link-error">链接解析错误</span>';
+      }
+
       const href = token.href;
-      const title = token.title;
-      const text = this.parser.parseInline(token.tokens);
+      const title = token.title || "";
+      const text =
+        token.tokens && token.tokens.length > 0
+          ? this.parser.parseInline(token.tokens)
+          : token.text || href;
+
       const isExternal =
         href.startsWith("http") && !href.includes(window.location.hostname);
       const target = isExternal
@@ -261,9 +300,15 @@ marked.use({
     },
 
     image(token) {
+      // 安全检查 token
+      if (!token || typeof token.href === "undefined") {
+        console.warn("Invalid image token:", token);
+        return '<div class="image-error">图片解析错误</div>';
+      }
+
       const href = token.href;
-      const title = token.title;
-      const text = token.text;
+      const title = token.title || "";
+      const text = token.text || "";
       const titleAttr = title ? ` title="${title}"` : "";
       return `
         <div class="image-wrapper">
@@ -274,8 +319,19 @@ marked.use({
     },
 
     blockquote(token) {
-      const quote = this.parser.parse(token.tokens);
-      return `<blockquote class="markdown-blockquote">${quote}</blockquote>`;
+      // 安全检查 token
+      if (!token || !token.tokens) {
+        console.warn("Invalid blockquote token:", token);
+        return '<blockquote class="markdown-blockquote">引用解析错误</blockquote>';
+      }
+
+      try {
+        const quote = this.parser.parse(token.tokens);
+        return `<blockquote class="markdown-blockquote">${quote}</blockquote>`;
+      } catch (e) {
+        console.error("Blockquote parsing error:", e);
+        return '<blockquote class="markdown-blockquote">引用解析错误</blockquote>';
+      }
     },
   },
 
@@ -289,14 +345,30 @@ marked.use({
 export function renderMarkdown(content) {
   if (!content) return "";
 
-  // 先处理数学公式，再进行Markdown渲染
-  const processedContent = processMathExpressions(content);
-  let htmlContent = marked(processedContent);
+  try {
+    // 先处理数学公式，再进行Markdown渲染
+    const processedContent = processMathExpressions(content);
+    let htmlContent = marked(processedContent);
 
-  // 处理B站视频链接
-  htmlContent = convertBilibiliLinks(htmlContent);
+    // 处理B站视频链接
+    htmlContent = convertBilibiliLinks(htmlContent);
 
-  return htmlContent;
+    return htmlContent;
+  } catch (error) {
+    console.error("Markdown rendering error:", error);
+    console.error("Content that caused error:", content.substring(0, 500));
+
+    // 返回安全的错误提示和原始内容
+    return `
+      <div class="markdown-error" style="background: #fee; border: 1px solid #fcc; padding: 1rem; border-radius: 4px; margin: 1rem 0;">
+        <h3 style="color: #c33; margin: 0 0 0.5rem 0;">Markdown 解析错误</h3>
+        <p style="margin: 0 0 1rem 0; color: #666;">内容解析时遇到问题，显示原始内容：</p>
+        <pre style="background: #f5f5f5; padding: 0.5rem; border-radius: 4px; overflow-x: auto; white-space: pre-wrap;">${content
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")}</pre>
+      </div>
+    `;
+  }
 }
 
 export default {
