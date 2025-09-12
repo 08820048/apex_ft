@@ -48,6 +48,45 @@ class GoodsService {
   }
 
   /**
+   * 编辑好物
+   * @param {number} id - 好物ID
+   * @param {Object} goodItem - 更新的好物信息
+   * @param {string} goodItem.name - 好物名称，最大200字符
+   * @param {string} goodItem.link - 好物链接，最大500字符
+   * @param {string} goodItem.description - 好物描述，最大2000字符
+   * @param {string} goodItem.submitterEmail - 提交者邮箱（用于权限验证）
+   * @param {string} goodItem.category - 分类，最大50字符
+   * @param {string} goodItem.tags - 标签，用逗号分隔，最大200字符
+   * @param {string} goodItem.coverImage - 封面图片URL，最大500字符（可选）
+   * @returns {Promise<Object>} 更新响应
+   */
+  async updateGood(id, goodItem) {
+    try {
+      const response = await http.put(`/good-items/${id}`, goodItem);
+      return response;
+    } catch (error) {
+      console.error('编辑好物失败:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * 删除好物
+   * @param {number} id - 好物ID
+   * @param {string} submitterEmail - 提交者邮箱（用于权限验证）
+   * @returns {Promise<Object>} 删除响应
+   */
+  async deleteGood(id, submitterEmail) {
+    try {
+      const response = await http.delete(`/good-items/${id}?submitterEmail=${encodeURIComponent(submitterEmail)}`);
+      return response;
+    } catch (error) {
+      console.error('删除好物失败:', error);
+      throw error;
+    }
+  }
+
+  /**
    * 获取分类列表
    * @returns {Promise<Array>} 分类列表
    */

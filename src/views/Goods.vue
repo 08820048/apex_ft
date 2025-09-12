@@ -18,8 +18,8 @@
               <input
                 v-model="filters.keyword"
                 type="text"
-                placeholder="搜索好物..."
-                @input="filterGoods"
+                placeholder="搜索好物名称、描述或标签..."
+                @input="debounceSearch"
                 class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
@@ -30,12 +30,22 @@
                 class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
               >
                 <option value="">全部分类</option>
-                <option value="工具">工具</option>
-                <option value="网站">网站</option>
-                <option value="软件">软件</option>
-                <option value="书籍">书籍</option>
-                <option value="其他">其他</option>
+                <option v-for="category in categories" :key="category" :value="category">
+                  {{ category }}
+                </option>
               </select>
+            </div>
+            <div class="flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-lg">
+              <input
+                id="featured-filter"
+                v-model="filters.featured"
+                type="checkbox"
+                @change="filterGoods"
+                class="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+              />
+              <label for="featured-filter" class="text-sm text-gray-700 whitespace-nowrap">
+                仅精选
+              </label>
             </div>
             <button 
               class="px-4 py-2 text-gray-600 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
@@ -45,22 +55,61 @@
             </button>
           </div>
           
-          <button
-            class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center gap-2"
-            @click="showForm = true"
-          >
-            <PlusIcon class="w-5 h-5" />
-            推荐好物
-          </button>
+          <div class="flex items-center gap-4">
+            <!-- 邮箱验证输入 -->
+            <div class="flex items-center gap-2">
+              <input
+                v-model="userEmail"
+                type="email"
+                placeholder="输入邮箱以管理您的好物"
+                class="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+                style="width: 200px;"
+              />
+              <span v-if="userEmail" class="text-xs text-green-600">✓ 已验证</span>
+            </div>
+            
+            <button
+               class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center gap-2"
+               @click="openAddForm"
+             >
+              <PlusIcon class="w-5 h-5" />
+              推荐好物
+            </button>
+          </div>
         </div>
       </div>
 
       <!-- 好物列表 -->
       <div>
-        <h2 class="text-2xl font-bold text-gray-900 mb-6">推荐列表</h2>
-        <div v-if="goodsList.length === 0" class="text-center py-12">
+        <div class="flex justify-between items-center mb-6">
+          <h2 class="text-2xl font-bold text-gray-900">推荐列表</h2>
+          <div v-if="pagination.totalElements > 0" class="text-sm text-gray-500">
+            共 {{ pagination.totalElements }} 个好物
+          </div>
+        </div>
+        
+        <!-- 加载状态 -->
+        <div v-if="loading && goodsList.length === 0" class="text-center py-12">
           <div class="glass-effect rounded-2xl p-8 border-2 border-black">
-            <p class="text-gray-500 text-lg">暂无推荐，快来提交第一个好物吧！</p>
+            <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-4"></div>
+            <p class="text-gray-500 text-lg">正在加载好物列表...</p>
+          </div>
+        </div>
+        
+        <!-- 空状态 -->
+        <div v-else-if="goodsList.length === 0 && !loading" class="text-center py-12">
+          <div class="glass-effect rounded-2xl p-8 border-2 border-black">
+            <div class="text-6xl mb-4">🎁</div>
+            <p class="text-gray-500 text-lg mb-4">
+              {{ filters.keyword || filters.category || filters.featured ? '没有找到符合条件的好物' : '暂无推荐，快来提交第一个好物吧！' }}
+            </p>
+            <button
+              v-if="filters.keyword || filters.category || filters.featured"
+              @click="resetFilters"
+              class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+            >
+              清除筛选条件
+            </button>
           </div>
         </div>
         <div
@@ -109,10 +158,30 @@
               
               <!-- 推荐者信息 -->
               <div v-if="good.submitterName" class="mb-3">
-                <div class="flex items-center text-xs text-gray-500">
-                  <LocationIcon class="w-3 h-3 mr-1" />
-                  <span>推荐者: {{ good.submitterName }}</span>
+                <div class="flex items-center">
+                  <LocationIcon class="w-4 h-4 mr-2 text-purple-600" />
+                  <span class="text-sm font-medium text-purple-700">
+                    推荐者: <span class="text-purple-800 font-semibold">{{ good.submitterName }}</span>
+                  </span>
                 </div>
+              </div>
+              
+              <!-- 操作按钮区域 -->
+              <div v-if="good.submitterEmail && userEmail && good.submitterEmail === userEmail" class="flex gap-2 mb-3">
+                <button
+                  @click="editGood(good)"
+                  class="flex-1 px-3 py-1.5 text-xs bg-blue-100 text-blue-700 rounded hover:bg-blue-200 transition-colors flex items-center justify-center gap-1"
+                >
+                  <EditIcon class="w-3 h-3" />
+                  编辑
+                </button>
+                <button
+                  @click="confirmDeleteGood(good)"
+                  class="flex-1 px-3 py-1.5 text-xs bg-red-100 text-red-700 rounded hover:bg-red-200 transition-colors flex items-center justify-center gap-1"
+                >
+                  <DeleteIcon class="w-3 h-3" />
+                  删除
+                </button>
               </div>
               
               <div class="flex justify-between items-center">
@@ -171,7 +240,7 @@
           @click.stop
         >
           <div class="flex justify-between items-center mb-6">
-            <h2 class="text-2xl font-bold text-gray-900">推荐好物</h2>
+            <h2 class="text-2xl font-bold text-gray-900">{{ form.id ? '编辑好物' : '推荐好物' }}</h2>
             <button
               @click="closeForm"
               class="text-gray-500 hover:text-gray-700 transition-colors"
@@ -226,11 +295,9 @@
                   class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                 >
                   <option value="">请选择分类</option>
-                  <option value="工具">工具</option>
-                  <option value="网站">网站</option>
-                  <option value="软件">软件</option>
-                  <option value="书籍">书籍</option>
-                  <option value="其他">其他</option>
+                  <option v-for="category in categories" :key="category" :value="category">
+                    {{ category }}
+                  </option>
                 </select>
               </div>
               <div class="md:col-span-2">
@@ -337,6 +404,20 @@ const LocationIcon = {
   </svg>`,
 };
 
+// 编辑图标组件
+const EditIcon = {
+  template: `<svg viewBox="0 0 24 24" fill="currentColor">
+    <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/>
+  </svg>`,
+};
+
+// 删除图标组件
+const DeleteIcon = {
+  template: `<svg viewBox="0 0 24 24" fill="currentColor">
+    <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/>
+  </svg>`,
+};
+
 // 表单数据
 const form = ref({
   name: "",
@@ -378,6 +459,9 @@ const loading = ref(false);
 // 表单显示状态
 const showForm = ref(false);
 
+// 搜索防抖定时器
+let searchTimer = null;
+
 // 位置信息状态
 const locationInfo = ref({
   ip: '',
@@ -386,11 +470,38 @@ const locationInfo = ref({
   country: ''
 });
 
+// 用户邮箱验证状态
+const userEmail = ref('');
+const showEmailInput = ref(false);
+
 /**
  * 关闭表单弹窗
  */
 const closeForm = () => {
   showForm.value = false;
+  // 重置表单ID，确保下次打开是新增模式
+  if (form.value.id) {
+    form.value = {
+      name: "",
+      link: "",
+      image: "",
+      category: "",
+      description: "",
+      submitterEmail: userEmail.value || "",
+      submitterName: "",
+      tags: ""
+    };
+  }
+};
+
+/**
+ * 打开新增表单时自动填充用户邮箱
+ */
+const openAddForm = () => {
+  if (userEmail.value) {
+    form.value.submitterEmail = userEmail.value;
+  }
+  showForm.value = true;
 };
 
 /**
@@ -463,31 +574,71 @@ const formatDate = (dateString) => {
  * 提交好物推荐
  */
 const submitGood = async () => {
-  if (!form.value.name || !form.value.link || !form.value.description) {
-    warningToast('请填写完整信息', '名称、链接和描述为必填项');
+  // 表单验证
+  if (!form.value.name || form.value.name.length > 200) {
+    warningToast('名称格式错误', '名称为必填项，且不能超过200个字符');
     return;
   }
 
-  if (!form.value.submitterEmail || !form.value.submitterName) {
-    warningToast('请填写提交者信息', '邮箱和姓名为必填项');
+  if (!form.value.link || form.value.link.length > 500) {
+    warningToast('链接格式错误', '链接为必填项，且不能超过500个字符');
+    return;
+  }
+
+  if (!form.value.description || form.value.description.length > 2000) {
+    warningToast('描述格式错误', '描述为必填项，且不能超过2000个字符');
+    return;
+  }
+
+  if (!form.value.submitterEmail) {
+    warningToast('请填写邮箱', '邮箱为必填项');
+    return;
+  }
+
+  if (!form.value.submitterName || form.value.submitterName.length > 50) {
+    warningToast('姓名格式错误', '姓名为必填项，且不能超过50个字符');
+    return;
+  }
+
+  if (form.value.category && form.value.category.length > 50) {
+    warningToast('分类格式错误', '分类不能超过50个字符');
+    return;
+  }
+
+  if (form.value.tags && form.value.tags.length > 200) {
+    warningToast('标签格式错误', '标签不能超过200个字符');
+    return;
+  }
+
+  if (form.value.image && form.value.image.length > 500) {
+    warningToast('图片链接格式错误', '图片链接不能超过500个字符');
     return;
   }
 
   try {
     // 准备提交数据
     const submitData = {
-      name: form.value.name,
-      link: form.value.link,
-      description: form.value.description,
-      submitterEmail: form.value.submitterEmail,
-      submitterName: form.value.submitterName,
-      category: form.value.category || '其他',
-      tags: form.value.tags || '',
-      coverImage: form.value.image || ''
+      name: form.value.name.trim(),
+      link: form.value.link.trim(),
+      description: form.value.description.trim(),
+      submitterEmail: form.value.submitterEmail.trim(),
+      submitterName: form.value.submitterName.trim(),
+      category: form.value.category ? form.value.category.trim() : '其他',
+      tags: form.value.tags ? form.value.tags.trim() : '',
+      coverImage: form.value.image ? form.value.image.trim() : ''
     };
 
-    // 调用后端API提交
-    await goodsService.submitGood(submitData);
+    // 根据是否有ID判断是新增还是编辑
+    let response;
+    if (form.value.id) {
+      // 编辑模式
+      response = await goodsService.updateGood(form.value.id, submitData);
+      successToast('更新成功！', '好物信息已成功更新。');
+    } else {
+      // 新增模式
+      response = await goodsService.submitGood(submitData);
+      successToast('提交成功！', '您的好物推荐已提交，请等待审核。审核结果将通过邮件通知您。');
+    }
 
     // 重置表单
     form.value = {
@@ -503,17 +654,37 @@ const submitGood = async () => {
 
     // 关闭表单
     showForm.value = false;
-
-    successToast('提交成功！', '您的好物推荐已提交，请等待审核');
     
-    // 刷新列表（可能不会立即显示，因为需要审核）
-    // loadGoodsList(true);
+    // 重新加载列表
+    loadGoodsList(true);
+    
   } catch (error) {
     console.error('提交失败:', error);
-    if (error.message.includes('429')) {
+    
+    // 根据错误类型提供具体的用户反馈
+    if (error.response) {
+      const status = error.response.status;
+      const message = error.response.data?.message || error.message;
+      
+      switch (status) {
+        case 429:
+          errorToast('提交过于频繁', '根据限流规则，请稍后再试。每分钟最多2次提交，每小时最多20次。');
+          break;
+        case 400:
+          errorToast('提交数据有误', message || '请检查填写的信息是否正确');
+          break;
+        case 500:
+          errorToast('服务器错误', '服务器暂时无法处理请求，请稍后重试');
+          break;
+        default:
+          errorToast('提交失败', message || '网络错误，请检查网络连接后重试');
+      }
+    } else if (error.message.includes('429')) {
       errorToast('提交过于频繁', '请稍后再试');
+    } else if (error.message.includes('Network')) {
+      errorToast('网络错误', '请检查网络连接后重试');
     } else {
-      errorToast('提交失败', error.message || '网络错误或服务异常，请稍后重试');
+      errorToast('提交失败', error.message || '未知错误，请稍后重试');
     }
   }
 };
@@ -532,34 +703,63 @@ const loadGoodsList = async (reset = false) => {
     
     const params = {
       page: pagination.value.page,
-      size: pagination.value.size,
-      ...filters.value
+      size: pagination.value.size
     };
     
-    // 移除空值参数
-    Object.keys(params).forEach(key => {
-      if (params[key] === '' || params[key] === null || params[key] === undefined) {
-        delete params[key];
-      }
-    });
+    // 添加筛选参数
+    if (filters.value.category) {
+      params.category = filters.value.category;
+    }
+    if (filters.value.keyword && filters.value.keyword.trim()) {
+      params.keyword = filters.value.keyword.trim();
+    }
+    if (filters.value.featured) {
+      params.featured = filters.value.featured;
+    }
     
     const response = await goodsService.getGoodsList(params);
     
-    if (reset) {
-      goodsList.value = response.content || [];
+    // 根据接口文档的响应格式处理数据
+    if (response && response.data) {
+      const data = response.data;
+      
+      if (reset) {
+        goodsList.value = data.content || [];
+      } else {
+        goodsList.value.push(...(data.content || []));
+      }
+      
+      // 更新分页信息
+      pagination.value = {
+        page: data.page || 0,
+        size: data.size || 20,
+        totalElements: data.totalElements || 0,
+        totalPages: data.totalPages || 0,
+        hasNext: data.hasNext || false,
+        hasPrevious: data.hasPrevious || false,
+        first: data.first || false,
+        last: data.last || false
+      };
     } else {
-      goodsList.value.push(...(response.content || []));
+      // 兼容直接返回数据的情况
+      if (reset) {
+        goodsList.value = response.content || response || [];
+      } else {
+        goodsList.value.push(...(response.content || response || []));
+      }
+      
+      // 更新分页信息
+      pagination.value = {
+        page: response.page || 0,
+        size: response.size || 20,
+        totalElements: response.totalElements || 0,
+        totalPages: response.totalPages || 0,
+        hasNext: response.hasNext || false,
+        hasPrevious: response.hasPrevious || false,
+        first: response.first || false,
+        last: response.last || false
+      };
     }
-    
-    // 更新分页信息
-    pagination.value = {
-      page: response.page || 0,
-      size: response.size || 20,
-      totalElements: response.totalElements || 0,
-      totalPages: response.totalPages || 0,
-      hasNext: response.hasNext || false,
-      hasPrevious: response.hasPrevious || false
-    };
     
   } catch (error) {
     console.error('获取好物列表失败:', error);
@@ -575,9 +775,18 @@ const loadGoodsList = async (reset = false) => {
 const loadCategories = async () => {
   try {
     const response = await goodsService.getCategories();
-    categories.value = response || [];
+    
+    // 根据接口文档的响应格式处理数据
+    if (response && response.data) {
+      categories.value = response.data || [];
+    } else {
+      // 兼容直接返回数据的情况
+      categories.value = response || [];
+    }
   } catch (error) {
     console.error('获取分类列表失败:', error);
+    // 如果获取分类失败，使用默认分类
+    categories.value = ['AI工具', '开发工具', '设计工具', '其他'];
   }
 };
 
@@ -589,6 +798,22 @@ const loadMore = () => {
     pagination.value.page += 1;
     loadGoodsList(false);
   }
+};
+
+/**
+ * 防抖搜索功能
+ * @param {Event} event - 输入事件
+ */
+const debounceSearch = (event) => {
+  // 清除之前的定时器
+  if (searchTimer) {
+    clearTimeout(searchTimer);
+  }
+  
+  // 设置新的定时器，500ms后执行搜索
+  searchTimer = setTimeout(() => {
+    filterGoods();
+  }, 500);
 };
 
 /**
@@ -608,6 +833,58 @@ const resetFilters = () => {
     featured: false
   };
   loadGoodsList(true);
+};
+
+/**
+ * 编辑好物
+ * @param {Object} good - 要编辑的好物对象
+ */
+const editGood = (good) => {
+  // 预填充表单数据
+  form.value = {
+    id: good.id,
+    name: good.name,
+    description: good.description,
+    link: good.link,
+    category: good.category,
+    featured: good.featured,
+    submitterEmail: good.submitterEmail,
+    submitterName: good.submitterName,
+    tags: good.tags ? good.tags.join(', ') : ''
+  };
+  
+  // 显示表单
+  showForm.value = true;
+};
+
+/**
+ * 确认删除好物
+ * @param {Object} good - 要删除的好物对象
+ */
+const confirmDeleteGood = (good) => {
+  if (confirm(`确定要删除好物「${good.name}」吗？此操作不可恢复。`)) {
+    deleteGood(good.id);
+  }
+};
+
+/**
+ * 删除好物
+ * @param {number} goodId - 好物ID
+ */
+const deleteGood = async (goodId) => {
+  try {
+    loading.value = true;
+    await goodsService.deleteGood(goodId);
+    successToast('删除成功');
+    
+    // 重新加载列表
+    loadGoodsList(true);
+  } catch (error) {
+    console.error('删除好物失败:', error);
+    errorToast('删除失败，请稍后重试');
+  } finally {
+    loading.value = false;
+  }
 };
 
 // 组件挂载时加载数据
