@@ -111,7 +111,7 @@
           <div
             v-for="good in goodsList"
             :key="good.id"
-            class="glass-effect rounded-2xl overflow-hidden card-hover border-2 border-black"
+            class="glass-effect rounded-2xl overflow-hidden card-hover border-2 border-black group relative"
           >
             <div class="h-48 relative">
               <img
@@ -158,18 +158,18 @@
                 </div>
               </div>
               
-              <!-- 操作按钮区域 - 所有卡片都显示，点击时验证邮箱 -->
-              <div class="flex gap-2 mb-3">
+              <!-- 操作按钮区域 - 悬停时显示 -->
+              <div class="flex gap-2 mb-3 opacity-0 group-hover:opacity-100 transition-all duration-300 ease-in-out transform translate-y-2 group-hover:translate-y-0">
                 <button
                   @click="editGood(good)"
-                  class="flex-1 px-3 py-1.5 text-xs bg-blue-100 text-blue-700 rounded hover:bg-blue-200 transition-colors flex items-center justify-center gap-1"
+                  class="flex-1 px-3 py-1.5 text-xs bg-blue-100 text-blue-700 rounded hover:bg-blue-200 transition-colors flex items-center justify-center gap-1 shadow-md hover:shadow-lg"
                 >
                   <EditIcon class="w-3 h-3" />
                   编辑
                 </button>
                 <button
                   @click="confirmDeleteGood(good)"
-                  class="flex-1 px-3 py-1.5 text-xs bg-red-100 text-red-700 rounded hover:bg-red-200 transition-colors flex items-center justify-center gap-1"
+                  class="flex-1 px-3 py-1.5 text-xs bg-red-100 text-red-700 rounded hover:bg-red-200 transition-colors flex items-center justify-center gap-1 shadow-md hover:shadow-lg"
                 >
                   <DeleteIcon class="w-3 h-3" />
                   删除
@@ -743,7 +743,7 @@ const submitGood = async () => {
         email: submitData.submitterEmail
       };
       response = await goodsService.updateGood(form.value.id, editData);
-      successToast('更新成功！', '好物信息已成功更新。');
+      successToast('更新成功！', '好物信息已成功更新，已重新提交审核。审核通过前，更新内容不会在前台显示。');
     } else {
       // 新增模式
       response = await goodsService.submitGood(submitData);

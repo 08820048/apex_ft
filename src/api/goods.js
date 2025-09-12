@@ -50,32 +50,8 @@ class GoodsService {
 
 
   /**
-   * 更新好物信息（使用编辑令牌）
-   * @param {number} id - 好物ID
-   * @param {Object} goodItem - 好物信息
-   * @param {string} goodItem.editToken - 编辑令牌
-   * @param {string} goodItem.name - 好物名称
-   * @param {string} goodItem.link - 好物链接
-   * @param {string} goodItem.description - 好物描述
-   * @param {string} goodItem.category - 分类
-   * @param {string} goodItem.tags - 标签
-   * @param {string} goodItem.coverImage - 封面图片URL（可选）
-   * @returns {Promise<Object>} 更新响应
-   */
-  async updateGood(id, goodItem) {
-    try {
-      const response = await http.put(`/good-items/${id}/edit`, goodItem);
-      return response;
-    } catch (error) {
-      console.error('更新好物失败:', error);
-      throw error;
-    }
-  }
-
-
-
-  /**
    * 编辑好物（通过邮箱验证）
+   * 注意：编辑后的好物将重新进入审核流程，审核通过前不会在前台显示更新内容
    * @param {number} id - 好物ID
    * @param {Object} goodItem - 好物信息
    * @param {string} goodItem.email - 提交者邮箱地址，用于验证身份
