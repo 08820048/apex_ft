@@ -176,6 +176,7 @@ const navItems = [
   { name: "作品", path: "/portfolios" },
   { name: "友链", path: "/friend-links" },
   { name: "订阅", path: "/subscribe" },
+  { name: "好物", path: "/goods" },
   { name: "关于", path: "/about" },
 ];
 

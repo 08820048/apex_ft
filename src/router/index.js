@@ -73,6 +73,12 @@ const routes = [
     component: () => import("../views/BackgroundDemo.vue"),
     meta: { title: "动态背景效果预览 - ApexBlog" },
   },
+  {
+    path: "/goods",
+    name: "goods",
+    component: () => import("../views/Goods.vue"),
+    meta: { title: "好物推荐 - ApexBlog" },
+  },
 ];
 
 const router = createRouter({
