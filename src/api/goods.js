@@ -47,38 +47,67 @@ class GoodsService {
     }
   }
 
+
+
   /**
-   * 编辑好物
+   * 更新好物信息（使用编辑令牌）
    * @param {number} id - 好物ID
-   * @param {Object} goodItem - 更新的好物信息
-   * @param {string} goodItem.name - 好物名称，最大200字符
-   * @param {string} goodItem.link - 好物链接，最大500字符
-   * @param {string} goodItem.description - 好物描述，最大2000字符
-   * @param {string} goodItem.submitterEmail - 提交者邮箱（用于权限验证）
-   * @param {string} goodItem.category - 分类，最大50字符
-   * @param {string} goodItem.tags - 标签，用逗号分隔，最大200字符
-   * @param {string} goodItem.coverImage - 封面图片URL，最大500字符（可选）
+   * @param {Object} goodItem - 好物信息
+   * @param {string} goodItem.editToken - 编辑令牌
+   * @param {string} goodItem.name - 好物名称
+   * @param {string} goodItem.link - 好物链接
+   * @param {string} goodItem.description - 好物描述
+   * @param {string} goodItem.category - 分类
+   * @param {string} goodItem.tags - 标签
+   * @param {string} goodItem.coverImage - 封面图片URL（可选）
    * @returns {Promise<Object>} 更新响应
    */
   async updateGood(id, goodItem) {
     try {
-      const response = await http.put(`/good-items/${id}`, goodItem);
+      const response = await http.put(`/good-items/${id}/edit`, goodItem);
       return response;
     } catch (error) {
-      console.error('编辑好物失败:', error);
+      console.error('更新好物失败:', error);
+      throw error;
+    }
+  }
+
+
+
+  /**
+   * 编辑好物（通过邮箱验证）
+   * @param {number} id - 好物ID
+   * @param {Object} goodItem - 好物信息
+   * @param {string} goodItem.email - 提交者邮箱地址，用于验证身份
+   * @param {string} goodItem.name - 好物名称
+   * @param {string} goodItem.link - 好物链接
+   * @param {string} goodItem.description - 好物描述
+   * @param {string} goodItem.category - 分类
+   * @param {string} goodItem.tags - 标签
+   * @param {string} goodItem.coverImage - 封面图片URL（可选）
+   * @returns {Promise<Object>} 更新响应
+   */
+  async updateGood(id, goodItem) {
+    try {
+      const response = await http.put(`/good-items/${id}/edit`, goodItem);
+      return response;
+    } catch (error) {
+      console.error('更新好物失败:', error);
       throw error;
     }
   }
 
   /**
-   * 删除好物
+   * 删除好物（通过邮箱验证）
    * @param {number} id - 好物ID
-   * @param {string} submitterEmail - 提交者邮箱（用于权限验证）
+   * @param {string} email - 提交者邮箱地址，用于验证身份
    * @returns {Promise<Object>} 删除响应
    */
-  async deleteGood(id, submitterEmail) {
+  async deleteGood(id, email) {
     try {
-      const response = await http.delete(`/good-items/${id}?submitterEmail=${encodeURIComponent(submitterEmail)}`);
+      const response = await http.delete(`/good-items/${id}`, {
+        email: email
+      });
       return response;
     } catch (error) {
       console.error('删除好物失败:', error);

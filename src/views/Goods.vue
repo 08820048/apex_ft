@@ -56,28 +56,20 @@
           </div>
           
           <div class="flex items-center gap-4">
-            <!-- 邮箱验证输入 -->
-            <div class="flex items-center gap-2">
-              <input
-                v-model="userEmail"
-                type="email"
-                placeholder="输入邮箱以管理您的好物"
-                class="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
-                style="width: 200px;"
-              />
-              <span v-if="userEmail" class="text-xs text-green-600">✓ 已验证</span>
+            <div class="flex items-center gap-3">
+              <button
+                 class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center gap-2"
+                 @click="openAddForm"
+               >
+                <PlusIcon class="w-5 h-5" />
+                推荐好物
+              </button>
             </div>
-            
-            <button
-               class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center gap-2"
-               @click="openAddForm"
-             >
-              <PlusIcon class="w-5 h-5" />
-              推荐好物
-            </button>
           </div>
         </div>
       </div>
+
+
 
       <!-- 好物列表 -->
       <div>
@@ -166,8 +158,8 @@
                 </div>
               </div>
               
-              <!-- 操作按钮区域 -->
-              <div v-if="good.submitterEmail && userEmail && good.submitterEmail === userEmail" class="flex gap-2 mb-3">
+              <!-- 操作按钮区域 - 所有卡片都显示，点击时验证邮箱 -->
+              <div class="flex gap-2 mb-3">
                 <button
                   @click="editGood(good)"
                   class="flex-1 px-3 py-1.5 text-xs bg-blue-100 text-blue-700 rounded hover:bg-blue-200 transition-colors flex items-center justify-center gap-1"
@@ -185,7 +177,10 @@
               </div>
               
               <div class="flex justify-between items-center">
-                <span class="text-xs text-gray-500">{{ formatDate(good.createdAt) }}</span>
+                <div class="flex flex-col">
+                  <span class="text-xs text-gray-500">{{ formatDate(good.createdAt) }}</span>
+                  <span class="text-xs text-gray-400">ID: {{ good.id }}</span>
+                </div>
                 <a
                   :href="good.link"
                   target="_blank"
@@ -347,6 +342,7 @@
                   placeholder="请输入标签，用逗号分隔"
                 />
               </div>
+
             </div>
             <div class="mt-6 flex justify-end space-x-3">
               <button
@@ -366,7 +362,107 @@
           </form>
         </div>
       </div>
-    </Transition>
+     </Transition>
+
+    <!-- 邮箱验证模态框 -->
+    <div v-if="showEmailModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" @click.self="closeEmailModal">
+      <div class="bg-white rounded-2xl p-6 w-full max-w-md mx-4 shadow-2xl transform transition-all">
+        <div class="text-center mb-6">
+          <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <svg class="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+            </svg>
+          </div>
+          <h3 class="text-xl font-semibold text-gray-900 mb-2">
+            {{ emailModalType === 'edit' ? '验证邮箱以编辑' : '验证邮箱以删除' }}
+          </h3>
+          <p class="text-gray-600 text-sm">
+            请输入您提交「{{ currentGood?.name }}」时使用的邮箱地址
+          </p>
+        </div>
+        
+        <div class="mb-6">
+          <label class="block text-sm font-medium text-gray-700 mb-2">邮箱地址</label>
+          <input
+            v-model="modalEmail"
+            type="email"
+            placeholder="请输入邮箱地址"
+            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+            :class="{ 'border-red-500 focus:ring-red-500': emailError }"
+            @input="emailError = ''"
+            @keyup.enter="confirmEmailAction"
+          />
+          <p v-if="emailError" class="text-red-500 text-sm mt-2 flex items-center">
+            <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path>
+            </svg>
+            {{ emailError }}
+          </p>
+        </div>
+        
+        <div class="flex gap-3">
+          <button
+            @click="closeEmailModal"
+            class="flex-1 px-4 py-3 text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors font-medium"
+          >
+            取消
+          </button>
+          <button
+            @click="confirmEmailAction"
+            :disabled="!modalEmail.trim()"
+            class="flex-1 px-4 py-3 text-white rounded-lg font-medium transition-colors"
+            :class="emailModalType === 'delete' ? 'bg-red-600 hover:bg-red-700 disabled:bg-red-300' : 'bg-blue-600 hover:bg-blue-700 disabled:bg-blue-300'"
+          >
+            {{ emailModalType === 'edit' ? '确认编辑' : '确认删除' }}
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 删除确认对话框 -->
+    <div v-if="showDeleteConfirm" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" @click.self="closeDeleteConfirm">
+      <div class="bg-white rounded-2xl p-6 w-full max-w-md mx-4 shadow-2xl transform transition-all">
+        <div class="text-center mb-6">
+          <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <svg class="w-8 h-8 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
+            </svg>
+          </div>
+          <h3 class="text-xl font-semibold text-gray-900 mb-2">
+            确认删除好物
+          </h3>
+          <p class="text-gray-600 text-sm mb-4">
+            您确定要删除好物「<span class="font-medium text-gray-900">{{ deleteGoodData?.name }}</span>」吗？
+          </p>
+          <div class="bg-red-50 border border-red-200 rounded-lg p-3 mb-4">
+            <p class="text-red-700 text-sm flex items-center justify-center">
+              <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path>
+              </svg>
+              此操作不可恢复
+            </p>
+          </div>
+        </div>
+        
+        <div class="flex gap-3">
+          <button
+            @click="closeDeleteConfirm"
+            class="flex-1 px-4 py-3 text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors font-medium"
+          >
+            取消
+          </button>
+          <button
+            @click="confirmDelete"
+            class="flex-1 px-4 py-3 text-white bg-red-600 rounded-lg hover:bg-red-700 transition-colors font-medium flex items-center justify-center gap-2"
+          >
+            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9zM4 5a2 2 0 012-2v1a1 1 0 001 1h6a1 1 0 001-1V3a2 2 0 012 2v6.5l1.707 1.707A1 1 0 0117 16v2a2 2 0 01-2 2H5a2 2 0 01-2-2v-2a1 1 0 01.293-.707L5 13.5V5zM8.5 7.5A.5.5 0 019 7h2a.5.5 0 01.5.5v6a.5.5 0 01-.5.5H9a.5.5 0 01-.5-.5v-6z" clip-rule="evenodd"></path>
+            </svg>
+            确认删除
+          </button>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -420,6 +516,7 @@ const DeleteIcon = {
 
 // 表单数据
 const form = ref({
+  id: null,
   name: "",
   link: "",
   image: "",
@@ -470,9 +567,21 @@ const locationInfo = ref({
   country: ''
 });
 
-// 用户邮箱验证状态
-const userEmail = ref('');
+// 移除全局用户邮箱状态，每次操作独立验证
 const showEmailInput = ref(false);
+
+// 邮箱验证模态框状态
+const showEmailModal = ref(false);
+const emailModalType = ref(''); // 'edit' 或 'delete'
+const currentGood = ref(null);
+const modalEmail = ref('');
+const emailError = ref('');
+
+// 删除确认对话框状态
+const showDeleteConfirm = ref(false);
+const deleteGoodData = ref(null);
+
+
 
 /**
  * 关闭表单弹窗
@@ -487,7 +596,7 @@ const closeForm = () => {
       image: "",
       category: "",
       description: "",
-      submitterEmail: userEmail.value || "",
+      submitterEmail: "",
       submitterName: "",
       tags: ""
     };
@@ -495,12 +604,9 @@ const closeForm = () => {
 };
 
 /**
- * 打开新增表单时自动填充用户邮箱
+ * 打开新增表单
  */
 const openAddForm = () => {
-  if (userEmail.value) {
-    form.value.submitterEmail = userEmail.value;
-  }
   showForm.value = true;
 };
 
@@ -631,8 +737,12 @@ const submitGood = async () => {
     // 根据是否有ID判断是新增还是编辑
     let response;
     if (form.value.id) {
-      // 编辑模式
-      response = await goodsService.updateGood(form.value.id, submitData);
+      // 编辑模式 - 通过邮箱验证
+      const editData = {
+        ...submitData,
+        email: submitData.submitterEmail
+      };
+      response = await goodsService.updateGood(form.value.id, editData);
       successToast('更新成功！', '好物信息已成功更新。');
     } else {
       // 新增模式
@@ -642,6 +752,7 @@ const submitGood = async () => {
 
     // 重置表单
     form.value = {
+      id: null,
       name: "",
       link: "",
       image: "",
@@ -840,6 +951,16 @@ const resetFilters = () => {
  * @param {Object} good - 要编辑的好物对象
  */
 const editGood = (good) => {
+  // 显示邮箱验证模态框
+  openEmailModal(good, 'edit');
+};
+
+/**
+ * 执行编辑操作（仅用于预填充表单）
+ * @param {Object} good - 要编辑的好物对象
+ * @param {string} email - 用户邮箱
+ */
+const performEdit = (good, email) => {
   // 预填充表单数据
   form.value = {
     id: good.id,
@@ -847,10 +968,10 @@ const editGood = (good) => {
     description: good.description,
     link: good.link,
     category: good.category,
-    featured: good.featured,
-    submitterEmail: good.submitterEmail,
+    image: good.coverImage || '',
+    submitterEmail: email,
     submitterName: good.submitterName,
-    tags: good.tags ? good.tags.join(', ') : ''
+    tags: good.tags || ''
   };
   
   // 显示表单
@@ -858,32 +979,155 @@ const editGood = (good) => {
 };
 
 /**
+ * 通过邮箱验证执行编辑操作
+ * @param {Object} good - 要编辑的好物对象
+ * @param {string} email - 用户邮箱
+ */
+const performEditWithEmailVerification = async (good, email) => {
+  try {
+    // 构造编辑数据
+    const editData = {
+      email: email,
+      name: good.name,
+      link: good.link,
+      description: good.description,
+      category: good.category,
+      tags: good.tags || '',
+      coverImage: good.coverImage || ''
+    };
+    
+    // 调用API进行邮箱验证和编辑
+    await goodsService.updateGood(good.id, editData);
+    
+    // 编辑成功，预填充表单供用户修改
+    performEdit(good, email);
+    
+    successToast('邮箱验证成功，可以编辑好物');
+  } catch (error) {
+    console.error('邮箱验证失败:', error);
+    errorToast(error.response?.data?.message || '邮箱验证失败，请确认您是该好物的提交者');
+  }
+};
+
+/**
  * 确认删除好物
  * @param {Object} good - 要删除的好物对象
  */
 const confirmDeleteGood = (good) => {
-  if (confirm(`确定要删除好物「${good.name}」吗？此操作不可恢复。`)) {
-    deleteGood(good.id);
-  }
+  // 显示邮箱验证模态框
+  openEmailModal(good, 'delete');
 };
 
 /**
  * 删除好物
  * @param {number} goodId - 好物ID
+ * @param {string} email - 提交者邮箱
  */
-const deleteGood = async (goodId) => {
+const deleteGood = async (goodId, email) => {
   try {
     loading.value = true;
-    await goodsService.deleteGood(goodId);
+    await goodsService.deleteGood(goodId, email);
     successToast('删除成功');
     
     // 重新加载列表
     loadGoodsList(true);
   } catch (error) {
     console.error('删除好物失败:', error);
-    errorToast('删除失败，请稍后重试');
+    if (error.response && error.response.status === 403) {
+      errorToast('权限验证失败', '邮箱地址不匹配，无法删除此好物');
+    } else {
+      errorToast('删除失败，请稍后重试');
+    }
   } finally {
     loading.value = false;
+  }
+};
+
+/**
+ * 打开邮箱验证模态框
+ * @param {Object} good - 好物对象
+ * @param {string} type - 操作类型 'edit' 或 'delete'
+ */
+const openEmailModal = (good, type) => {
+  currentGood.value = good;
+  emailModalType.value = type;
+  modalEmail.value = '';
+  emailError.value = '';
+  showEmailModal.value = true;
+};
+
+/**
+ * 关闭邮箱验证模态框
+ */
+const closeEmailModal = () => {
+  showEmailModal.value = false;
+  currentGood.value = null;
+  emailModalType.value = '';
+  modalEmail.value = '';
+  emailError.value = '';
+};
+
+/**
+ * 确认邮箱操作
+ */
+const confirmEmailAction = async () => {
+  const email = modalEmail.value.trim();
+  
+  // 验证邮箱格式
+  if (!email) {
+    emailError.value = '请输入邮箱地址';
+    return;
+  }
+  
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(email)) {
+    emailError.value = '请输入有效的邮箱地址';
+    return;
+  }
+  
+  // 执行对应操作
+  if (emailModalType.value === 'edit') {
+    // 直接调用编辑API进行邮箱验证
+    await performEditWithEmailVerification(currentGood.value, email);
+  } else if (emailModalType.value === 'delete') {
+    // 显示删除确认对话框
+    deleteGoodData.value = {
+      ...currentGood.value,
+      email: email
+    };
+    showDeleteConfirm.value = true;
+  }
+  
+  // 关闭模态框
+  closeEmailModal();
+};
+
+/**
+ * 关闭删除确认对话框
+ */
+const closeDeleteConfirm = () => {
+  showDeleteConfirm.value = false;
+  deleteGoodData.value = null;
+};
+
+/**
+ * 确认删除操作
+ */
+const confirmDelete = async () => {
+  if (deleteGoodData.value) {
+    try {
+      // 调用API进行邮箱验证和删除
+      await goodsService.deleteGood(deleteGoodData.value.id, deleteGoodData.value.email);
+      
+      // 删除成功，重新加载列表
+      await loadGoodsList(true);
+      
+      successToast('好物删除成功');
+      closeDeleteConfirm();
+    } catch (error) {
+      console.error('删除失败:', error);
+      errorToast(error.response?.data?.message || '删除失败，请确认您是该好物的提交者');
+    }
   }
 };
 
