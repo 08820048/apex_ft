@@ -77,12 +77,12 @@ body {
   opacity: 0.6;
 }
 
-/* 卡片悬停效果 */
-.card-hover {
+/* 卡片悬停效果 - 避免与glass-effect冲突 */
+.card-hover:not(.glass-effect) {
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.card-hover:hover {
+.card-hover:not(.glass-effect):hover {
   transform: translateY(-4px);
 }
 

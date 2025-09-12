@@ -12,7 +12,9 @@
       <!-- 头部操作区 -->
       <div class="mb-8">
         <!-- 搜索和筛选 -->
-        <div class="flex flex-col sm:flex-row gap-4 items-center justify-between">
+        <div
+          class="flex flex-col sm:flex-row gap-4 items-center justify-between"
+        >
           <div class="flex flex-col sm:flex-row gap-4 flex-1">
             <div class="flex-1">
               <input
@@ -30,12 +32,18 @@
                 class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
               >
                 <option value="">全部分类</option>
-                <option v-for="category in categories" :key="category" :value="category">
+                <option
+                  v-for="category in categories"
+                  :key="category"
+                  :value="category"
+                >
                   {{ category }}
                 </option>
               </select>
             </div>
-            <div class="flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-lg">
+            <div
+              class="flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-lg"
+            >
               <input
                 id="featured-filter"
                 v-model="filters.featured"
@@ -43,24 +51,27 @@
                 @change="filterGoods"
                 class="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
               />
-              <label for="featured-filter" class="text-sm text-gray-700 whitespace-nowrap">
+              <label
+                for="featured-filter"
+                class="text-sm text-gray-700 whitespace-nowrap"
+              >
                 仅精选
               </label>
             </div>
-            <button 
+            <button
               class="px-4 py-2 text-gray-600 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
               @click="resetFilters"
             >
               重置
             </button>
           </div>
-          
+
           <div class="flex items-center gap-4">
             <div class="flex items-center gap-3">
               <button
-                 class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center gap-2"
-                 @click="openAddForm"
-               >
+                class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center gap-2"
+                @click="openAddForm"
+              >
                 <PlusIcon class="w-5 h-5" />
                 推荐好物
               </button>
@@ -69,31 +80,41 @@
         </div>
       </div>
 
-
-
       <!-- 好物列表 -->
       <div>
         <div class="flex justify-between items-center mb-6">
           <h2 class="text-2xl font-bold text-gray-900">推荐列表</h2>
-          <div v-if="pagination.totalElements > 0" class="text-sm text-gray-500">
+          <div
+            v-if="pagination.totalElements > 0"
+            class="text-sm text-gray-500"
+          >
             共 {{ pagination.totalElements }} 个好物
           </div>
         </div>
-        
+
         <!-- 加载状态 -->
         <div v-if="loading && goodsList.length === 0" class="text-center py-12">
           <div class="glass-effect rounded-2xl p-8 border-2 border-black">
-            <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-4"></div>
+            <div
+              class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-4"
+            ></div>
             <p class="text-gray-500 text-lg">正在加载好物列表...</p>
           </div>
         </div>
-        
+
         <!-- 空状态 -->
-        <div v-else-if="goodsList.length === 0 && !loading" class="text-center py-12">
+        <div
+          v-else-if="goodsList.length === 0 && !loading"
+          class="text-center py-12"
+        >
           <div class="glass-effect rounded-2xl p-8 border-2 border-black">
             <div class="text-6xl mb-4">🎁</div>
             <p class="text-gray-500 text-lg mb-4">
-              {{ filters.keyword || filters.category || filters.featured ? '没有找到符合条件的好物' : '暂无推荐，快来提交第一个好物吧！' }}
+              {{
+                filters.keyword || filters.category || filters.featured
+                  ? "没有找到符合条件的好物"
+                  : "暂无推荐，快来提交第一个好物吧！"
+              }}
             </p>
             <button
               v-if="filters.keyword || filters.category || filters.featured"
@@ -115,7 +136,10 @@
           >
             <div class="h-48 relative">
               <img
-                :src="good.coverImage || 'https://images.waer.ltd/images/202509120056122310.png'"
+                :src="
+                  good.coverImage ||
+                  'https://images.waer.ltd/images/202509120056122310.png'
+                "
                 :alt="good.name"
                 class="w-full h-full object-cover rounded-t-lg"
                 @error="handleImageError"
@@ -134,7 +158,7 @@
               <p class="text-gray-600 text-sm mb-3 line-clamp-2">
                 {{ good.description }}
               </p>
-              
+
               <!-- 标签显示 -->
               <div v-if="good.tags" class="mb-3">
                 <div class="flex flex-wrap gap-1">
@@ -147,19 +171,24 @@
                   </span>
                 </div>
               </div>
-              
+
               <!-- 推荐者信息 -->
               <div v-if="good.submitterName" class="mb-3">
                 <div class="flex items-center">
                   <LocationIcon class="w-4 h-4 mr-2 text-purple-600" />
                   <span class="text-sm font-medium text-purple-700">
-                    推荐者: <span class="text-purple-800 font-semibold">{{ good.submitterName }}</span>
+                    推荐者:
+                    <span class="text-purple-800 font-semibold">{{
+                      good.submitterName
+                    }}</span>
                   </span>
                 </div>
               </div>
-              
+
               <!-- 操作按钮区域 - 悬停时显示 -->
-              <div class="flex gap-2 mb-3 opacity-0 group-hover:opacity-100 transition-all duration-300 ease-in-out transform translate-y-2 group-hover:translate-y-0">
+              <div
+                class="flex gap-2 mb-3 opacity-0 group-hover:opacity-100 transition-all duration-300 ease-in-out transform translate-y-2 group-hover:translate-y-0"
+              >
                 <button
                   @click="editGood(good)"
                   class="flex-1 px-3 py-1.5 text-xs bg-blue-100 text-blue-700 rounded hover:bg-blue-200 transition-colors flex items-center justify-center gap-1 shadow-md hover:shadow-lg"
@@ -175,10 +204,12 @@
                   删除
                 </button>
               </div>
-              
+
               <div class="flex justify-between items-center">
                 <div class="flex flex-col">
-                  <span class="text-xs text-gray-500">{{ formatDate(good.createdAt) }}</span>
+                  <span class="text-xs text-gray-500">{{
+                    formatDate(good.createdAt)
+                  }}</span>
                   <span class="text-xs text-gray-400">ID: {{ good.id }}</span>
                 </div>
                 <a
@@ -194,7 +225,7 @@
             </div>
           </div>
         </div>
-        
+
         <!-- 加载更多按钮 -->
         <div v-if="pagination.hasNext" class="text-center mt-8">
           <button
@@ -202,12 +233,15 @@
             :disabled="loading"
             class="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
           >
-            {{ loading ? '加载中...' : '加载更多' }}
+            {{ loading ? "加载中..." : "加载更多" }}
           </button>
         </div>
-        
+
         <!-- 没有更多数据提示 -->
-        <div v-else-if="goodsList.length > 0" class="text-center mt-8 text-gray-500">
+        <div
+          v-else-if="goodsList.length > 0"
+          class="text-center mt-8 text-gray-500"
+        >
           没有更多数据了
         </div>
       </div>
@@ -235,7 +269,9 @@
           @click.stop
         >
           <div class="flex justify-between items-center mb-6">
-            <h2 class="text-2xl font-bold text-gray-900">{{ form.id ? '编辑好物' : '推荐好物' }}</h2>
+            <h2 class="text-2xl font-bold text-gray-900">
+              {{ form.id ? "编辑好物" : "推荐好物" }}
+            </h2>
             <button
               @click="closeForm"
               class="text-gray-500 hover:text-gray-700 transition-colors"
@@ -290,7 +326,11 @@
                   class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                 >
                   <option value="">请选择分类</option>
-                  <option v-for="category in categories" :key="category" :value="category">
+                  <option
+                    v-for="category in categories"
+                    :key="category"
+                    :value="category"
+                  >
                     {{ category }}
                   </option>
                 </select>
@@ -342,7 +382,6 @@
                   placeholder="请输入标签，用逗号分隔"
                 />
               </div>
-
             </div>
             <div class="mt-6 flex justify-end space-x-3">
               <button
@@ -362,27 +401,49 @@
           </form>
         </div>
       </div>
-     </Transition>
+    </Transition>
 
     <!-- 邮箱验证模态框 -->
-    <div v-if="showEmailModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" @click.self="closeEmailModal">
-      <div class="bg-white rounded-2xl p-6 w-full max-w-md mx-4 shadow-2xl transform transition-all">
+    <div
+      v-if="showEmailModal"
+      class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+      @click.self="closeEmailModal"
+    >
+      <div
+        class="bg-white rounded-2xl p-6 w-full max-w-md mx-4 shadow-2xl transform transition-all"
+      >
         <div class="text-center mb-6">
-          <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-            <svg class="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+          <div
+            class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4"
+          >
+            <svg
+              class="w-8 h-8 text-blue-600"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+              ></path>
             </svg>
           </div>
           <h3 class="text-xl font-semibold text-gray-900 mb-2">
-            {{ emailModalType === 'edit' ? '验证邮箱以编辑' : '验证邮箱以删除' }}
+            {{
+              emailModalType === "edit" ? "验证邮箱以编辑" : "验证邮箱以删除"
+            }}
           </h3>
           <p class="text-gray-600 text-sm">
             请输入您提交「{{ currentGood?.name }}」时使用的邮箱地址
           </p>
         </div>
-        
+
         <div class="mb-6">
-          <label class="block text-sm font-medium text-gray-700 mb-2">邮箱地址</label>
+          <label class="block text-sm font-medium text-gray-700 mb-2"
+            >邮箱地址</label
+          >
           <input
             v-model="modalEmail"
             type="email"
@@ -392,14 +453,21 @@
             @input="emailError = ''"
             @keyup.enter="confirmEmailAction"
           />
-          <p v-if="emailError" class="text-red-500 text-sm mt-2 flex items-center">
+          <p
+            v-if="emailError"
+            class="text-red-500 text-sm mt-2 flex items-center"
+          >
             <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
-              <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path>
+              <path
+                fill-rule="evenodd"
+                d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+                clip-rule="evenodd"
+              ></path>
             </svg>
             {{ emailError }}
           </p>
         </div>
-        
+
         <div class="flex gap-3">
           <button
             @click="closeEmailModal"
@@ -411,39 +479,66 @@
             @click="confirmEmailAction"
             :disabled="!modalEmail.trim()"
             class="flex-1 px-4 py-3 text-white rounded-lg font-medium transition-colors"
-            :class="emailModalType === 'delete' ? 'bg-red-600 hover:bg-red-700 disabled:bg-red-300' : 'bg-blue-600 hover:bg-blue-700 disabled:bg-blue-300'"
+            :class="
+              emailModalType === 'delete'
+                ? 'bg-red-600 hover:bg-red-700 disabled:bg-red-300'
+                : 'bg-blue-600 hover:bg-blue-700 disabled:bg-blue-300'
+            "
           >
-            {{ emailModalType === 'edit' ? '确认编辑' : '确认删除' }}
+            {{ emailModalType === "edit" ? "确认编辑" : "确认删除" }}
           </button>
         </div>
       </div>
     </div>
 
     <!-- 删除确认对话框 -->
-    <div v-if="showDeleteConfirm" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" @click.self="closeDeleteConfirm">
-      <div class="bg-white rounded-2xl p-6 w-full max-w-md mx-4 shadow-2xl transform transition-all">
+    <div
+      v-if="showDeleteConfirm"
+      class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+      @click.self="closeDeleteConfirm"
+    >
+      <div
+        class="bg-white rounded-2xl p-6 w-full max-w-md mx-4 shadow-2xl transform transition-all"
+      >
         <div class="text-center mb-6">
-          <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
-            <svg class="w-8 h-8 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
+          <div
+            class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4"
+          >
+            <svg
+              class="w-8 h-8 text-red-600"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z"
+              ></path>
             </svg>
           </div>
-          <h3 class="text-xl font-semibold text-gray-900 mb-2">
-            确认删除好物
-          </h3>
+          <h3 class="text-xl font-semibold text-gray-900 mb-2">确认删除好物</h3>
           <p class="text-gray-600 text-sm mb-4">
-            您确定要删除好物「<span class="font-medium text-gray-900">{{ deleteGoodData?.name }}</span>」吗？
+            您确定要删除好物「<span class="font-medium text-gray-900">{{
+              deleteGoodData?.name
+            }}</span
+            >」吗？
           </p>
           <div class="bg-red-50 border border-red-200 rounded-lg p-3 mb-4">
             <p class="text-red-700 text-sm flex items-center justify-center">
               <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path>
+                <path
+                  fill-rule="evenodd"
+                  d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z"
+                  clip-rule="evenodd"
+                ></path>
               </svg>
               此操作不可恢复
             </p>
           </div>
         </div>
-        
+
         <div class="flex gap-3">
           <button
             @click="closeDeleteConfirm"
@@ -456,7 +551,11 @@
             class="flex-1 px-4 py-3 text-white bg-red-600 rounded-lg hover:bg-red-700 transition-colors font-medium flex items-center justify-center gap-2"
           >
             <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-              <path fill-rule="evenodd" d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9zM4 5a2 2 0 012-2v1a1 1 0 001 1h6a1 1 0 001-1V3a2 2 0 012 2v6.5l1.707 1.707A1 1 0 0117 16v2a2 2 0 01-2 2H5a2 2 0 01-2-2v-2a1 1 0 01.293-.707L5 13.5V5zM8.5 7.5A.5.5 0 019 7h2a.5.5 0 01.5.5v6a.5.5 0 01-.5.5H9a.5.5 0 01-.5-.5v-6z" clip-rule="evenodd"></path>
+              <path
+                fill-rule="evenodd"
+                d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9zM4 5a2 2 0 012-2v1a1 1 0 001 1h6a1 1 0 001-1V3a2 2 0 012 2v6.5l1.707 1.707A1 1 0 0117 16v2a2 2 0 01-2 2H5a2 2 0 01-2-2v-2a1 1 0 01.293-.707L5 13.5V5zM8.5 7.5A.5.5 0 019 7h2a.5.5 0 01.5.5v6a.5.5 0 01-.5.5H9a.5.5 0 01-.5-.5v-6z"
+                clip-rule="evenodd"
+              ></path>
             </svg>
             确认删除
           </button>
@@ -467,10 +566,10 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
-import { successToast, errorToast, warningToast } from '../utils/toast.js'
+import { ref, onMounted } from "vue";
+import { successToast, errorToast, warningToast } from "../utils/toast.js";
 
-import goodsService from '../api/goods.js'
+import goodsService from "../api/goods.js";
 
 // 图标组件
 const ExternalLinkIcon = {
@@ -524,7 +623,7 @@ const form = ref({
   description: "",
   submitterEmail: "",
   submitterName: "",
-  tags: ""
+  tags: "",
 });
 
 // 好物列表
@@ -537,14 +636,14 @@ const pagination = ref({
   totalElements: 0,
   totalPages: 0,
   hasNext: false,
-  hasPrevious: false
+  hasPrevious: false,
 });
 
 // 筛选条件
 const filters = ref({
-  category: '',
-  keyword: '',
-  featured: false
+  category: "",
+  keyword: "",
+  featured: false,
 });
 
 // 分类列表
@@ -561,10 +660,10 @@ let searchTimer = null;
 
 // 位置信息状态
 const locationInfo = ref({
-  ip: '',
-  city: '',
-  region: '',
-  country: ''
+  ip: "",
+  city: "",
+  region: "",
+  country: "",
 });
 
 // 移除全局用户邮箱状态，每次操作独立验证
@@ -572,16 +671,14 @@ const showEmailInput = ref(false);
 
 // 邮箱验证模态框状态
 const showEmailModal = ref(false);
-const emailModalType = ref(''); // 'edit' 或 'delete'
+const emailModalType = ref(""); // 'edit' 或 'delete'
 const currentGood = ref(null);
-const modalEmail = ref('');
-const emailError = ref('');
+const modalEmail = ref("");
+const emailError = ref("");
 
 // 删除确认对话框状态
 const showDeleteConfirm = ref(false);
 const deleteGoodData = ref(null);
-
-
 
 /**
  * 关闭表单弹窗
@@ -598,7 +695,7 @@ const closeForm = () => {
       description: "",
       submitterEmail: "",
       submitterName: "",
-      tags: ""
+      tags: "",
     };
   }
 };
@@ -616,27 +713,27 @@ const openAddForm = () => {
 const getUserLocation = async () => {
   try {
     // 使用免费的IP地理位置API服务
-    const response = await fetch('https://ipapi.co/json/');
+    const response = await fetch("https://ipapi.co/json/");
     const data = await response.json();
-    
+
     locationInfo.value = {
-      ip: data.ip || '',
-      city: data.city || '',
-      region: data.region || '',
-      country: data.country_name || ''
+      ip: data.ip || "",
+      city: data.city || "",
+      region: data.region || "",
+      country: data.country_name || "",
     };
-    
+
     return locationInfo.value;
   } catch (error) {
-    console.warn('获取位置信息失败:', error);
+    console.warn("获取位置信息失败:", error);
     // 如果获取失败，尝试备用API
     try {
-      const response = await fetch('https://api.ipify.org?format=json');
+      const response = await fetch("https://api.ipify.org?format=json");
       const data = await response.json();
-      locationInfo.value.ip = data.ip || '';
+      locationInfo.value.ip = data.ip || "";
       return locationInfo.value;
     } catch (backupError) {
-      console.warn('获取IP地址失败:', backupError);
+      console.warn("获取IP地址失败:", backupError);
       return locationInfo.value;
     }
   }
@@ -646,14 +743,16 @@ const getUserLocation = async () => {
  * 格式化位置信息显示文本
  */
 const formatLocationText = (location) => {
-  if (!location) return '未知地区';
-  
+  if (!location) return "未知地区";
+
   const parts = [];
   if (location.city) parts.push(location.city);
-  if (location.region && location.region !== location.city) parts.push(location.region);
-  if (location.country && location.country !== location.region) parts.push(location.country);
-  
-  return parts.length > 0 ? parts.join(', ') : '未知地区';
+  if (location.region && location.region !== location.city)
+    parts.push(location.region);
+  if (location.country && location.country !== location.region)
+    parts.push(location.country);
+
+  return parts.length > 0 ? parts.join(", ") : "未知地区";
 };
 
 /**
@@ -662,7 +761,7 @@ const formatLocationText = (location) => {
  */
 const handleImageError = (event) => {
   // 替换为默认封面
-  event.target.src = 'https://images.waer.ltd/images/202509120056122310.png';
+  event.target.src = "https://images.waer.ltd/images/202509120056122310.png";
 };
 
 // 格式化日期
@@ -682,42 +781,42 @@ const formatDate = (dateString) => {
 const submitGood = async () => {
   // 表单验证
   if (!form.value.name || form.value.name.length > 200) {
-    warningToast('名称格式错误', '名称为必填项，且不能超过200个字符');
+    warningToast("名称格式错误", "名称为必填项，且不能超过200个字符");
     return;
   }
 
   if (!form.value.link || form.value.link.length > 500) {
-    warningToast('链接格式错误', '链接为必填项，且不能超过500个字符');
+    warningToast("链接格式错误", "链接为必填项，且不能超过500个字符");
     return;
   }
 
   if (!form.value.description || form.value.description.length > 2000) {
-    warningToast('描述格式错误', '描述为必填项，且不能超过2000个字符');
+    warningToast("描述格式错误", "描述为必填项，且不能超过2000个字符");
     return;
   }
 
   if (!form.value.submitterEmail) {
-    warningToast('请填写邮箱', '邮箱为必填项');
+    warningToast("请填写邮箱", "邮箱为必填项");
     return;
   }
 
   if (!form.value.submitterName || form.value.submitterName.length > 50) {
-    warningToast('姓名格式错误', '姓名为必填项，且不能超过50个字符');
+    warningToast("姓名格式错误", "姓名为必填项，且不能超过50个字符");
     return;
   }
 
   if (form.value.category && form.value.category.length > 50) {
-    warningToast('分类格式错误', '分类不能超过50个字符');
+    warningToast("分类格式错误", "分类不能超过50个字符");
     return;
   }
 
   if (form.value.tags && form.value.tags.length > 200) {
-    warningToast('标签格式错误', '标签不能超过200个字符');
+    warningToast("标签格式错误", "标签不能超过200个字符");
     return;
   }
 
   if (form.value.image && form.value.image.length > 500) {
-    warningToast('图片链接格式错误', '图片链接不能超过500个字符');
+    warningToast("图片链接格式错误", "图片链接不能超过500个字符");
     return;
   }
 
@@ -729,9 +828,9 @@ const submitGood = async () => {
       description: form.value.description.trim(),
       submitterEmail: form.value.submitterEmail.trim(),
       submitterName: form.value.submitterName.trim(),
-      category: form.value.category ? form.value.category.trim() : '其他',
-      tags: form.value.tags ? form.value.tags.trim() : '',
-      coverImage: form.value.image ? form.value.image.trim() : ''
+      category: form.value.category ? form.value.category.trim() : "其他",
+      tags: form.value.tags ? form.value.tags.trim() : "",
+      coverImage: form.value.image ? form.value.image.trim() : "",
     };
 
     // 根据是否有ID判断是新增还是编辑
@@ -740,14 +839,20 @@ const submitGood = async () => {
       // 编辑模式 - 通过邮箱验证
       const editData = {
         ...submitData,
-        email: submitData.submitterEmail
+        email: submitData.submitterEmail,
       };
       response = await goodsService.updateGood(form.value.id, editData);
-      successToast('更新成功！', '好物信息已成功更新，已重新提交审核。审核通过前，更新内容不会在前台显示。');
+      successToast(
+        "更新成功！",
+        "好物信息已成功更新，已重新提交审核。审核通过前，更新内容不会在前台显示。"
+      );
     } else {
       // 新增模式
       response = await goodsService.submitGood(submitData);
-      successToast('提交成功！', '您的好物推荐已提交，请等待审核。审核结果将通过邮件通知您。');
+      successToast(
+        "提交成功！",
+        "您的好物推荐已提交，请等待审核。审核结果将通过邮件通知您。"
+      );
     }
 
     // 重置表单
@@ -760,42 +865,44 @@ const submitGood = async () => {
       description: "",
       submitterEmail: "",
       submitterName: "",
-      tags: ""
+      tags: "",
     };
 
     // 关闭表单
     showForm.value = false;
-    
+
     // 重新加载列表
     loadGoodsList(true);
-    
   } catch (error) {
-    console.error('提交失败:', error);
-    
+    console.error("提交失败:", error);
+
     // 根据错误类型提供具体的用户反馈
     if (error.response) {
       const status = error.response.status;
       const message = error.response.data?.message || error.message;
-      
+
       switch (status) {
         case 429:
-          errorToast('提交过于频繁', '根据限流规则，请稍后再试。每分钟最多2次提交，每小时最多20次。');
+          errorToast(
+            "提交过于频繁",
+            "根据限流规则，请稍后再试。每分钟最多2次提交，每小时最多20次。"
+          );
           break;
         case 400:
-          errorToast('提交数据有误', message || '请检查填写的信息是否正确');
+          errorToast("提交数据有误", message || "请检查填写的信息是否正确");
           break;
         case 500:
-          errorToast('服务器错误', '服务器暂时无法处理请求，请稍后重试');
+          errorToast("服务器错误", "服务器暂时无法处理请求，请稍后重试");
           break;
         default:
-          errorToast('提交失败', message || '网络错误，请检查网络连接后重试');
+          errorToast("提交失败", message || "网络错误，请检查网络连接后重试");
       }
-    } else if (error.message.includes('429')) {
-      errorToast('提交过于频繁', '请稍后再试');
-    } else if (error.message.includes('Network')) {
-      errorToast('网络错误', '请检查网络连接后重试');
+    } else if (error.message.includes("429")) {
+      errorToast("提交过于频繁", "请稍后再试");
+    } else if (error.message.includes("Network")) {
+      errorToast("网络错误", "请检查网络连接后重试");
     } else {
-      errorToast('提交失败', error.message || '未知错误，请稍后重试');
+      errorToast("提交失败", error.message || "未知错误，请稍后重试");
     }
   }
 };
@@ -807,16 +914,16 @@ const submitGood = async () => {
 const loadGoodsList = async (reset = false) => {
   try {
     loading.value = true;
-    
+
     if (reset) {
       pagination.value.page = 0;
     }
-    
+
     const params = {
       page: pagination.value.page,
-      size: pagination.value.size
+      size: pagination.value.size,
     };
-    
+
     // 添加筛选参数
     if (filters.value.category) {
       params.category = filters.value.category;
@@ -827,19 +934,19 @@ const loadGoodsList = async (reset = false) => {
     if (filters.value.featured) {
       params.featured = filters.value.featured;
     }
-    
+
     const response = await goodsService.getGoodsList(params);
-    
+
     // 根据接口文档的响应格式处理数据
     if (response && response.data) {
       const data = response.data;
-      
+
       if (reset) {
         goodsList.value = data.content || [];
       } else {
         goodsList.value.push(...(data.content || []));
       }
-      
+
       // 更新分页信息
       pagination.value = {
         page: data.page || 0,
@@ -849,7 +956,7 @@ const loadGoodsList = async (reset = false) => {
         hasNext: data.hasNext || false,
         hasPrevious: data.hasPrevious || false,
         first: data.first || false,
-        last: data.last || false
+        last: data.last || false,
       };
     } else {
       // 兼容直接返回数据的情况
@@ -858,7 +965,7 @@ const loadGoodsList = async (reset = false) => {
       } else {
         goodsList.value.push(...(response.content || response || []));
       }
-      
+
       // 更新分页信息
       pagination.value = {
         page: response.page || 0,
@@ -868,13 +975,12 @@ const loadGoodsList = async (reset = false) => {
         hasNext: response.hasNext || false,
         hasPrevious: response.hasPrevious || false,
         first: response.first || false,
-        last: response.last || false
+        last: response.last || false,
       };
     }
-    
   } catch (error) {
-    console.error('获取好物列表失败:', error);
-    errorToast('加载失败', '获取好物列表失败，请稍后重试');
+    console.error("获取好物列表失败:", error);
+    errorToast("加载失败", "获取好物列表失败，请稍后重试");
   } finally {
     loading.value = false;
   }
@@ -886,7 +992,7 @@ const loadGoodsList = async (reset = false) => {
 const loadCategories = async () => {
   try {
     const response = await goodsService.getCategories();
-    
+
     // 根据接口文档的响应格式处理数据
     if (response && response.data) {
       categories.value = response.data || [];
@@ -895,9 +1001,9 @@ const loadCategories = async () => {
       categories.value = response || [];
     }
   } catch (error) {
-    console.error('获取分类列表失败:', error);
+    console.error("获取分类列表失败:", error);
     // 如果获取分类失败，使用默认分类
-    categories.value = ['AI工具', '开发工具', '设计工具', '其他'];
+    categories.value = ["AI工具", "开发工具", "设计工具", "其他"];
   }
 };
 
@@ -920,7 +1026,7 @@ const debounceSearch = (event) => {
   if (searchTimer) {
     clearTimeout(searchTimer);
   }
-  
+
   // 设置新的定时器，500ms后执行搜索
   searchTimer = setTimeout(() => {
     filterGoods();
@@ -939,9 +1045,9 @@ const filterGoods = () => {
  */
 const resetFilters = () => {
   filters.value = {
-    category: '',
-    keyword: '',
-    featured: false
+    category: "",
+    keyword: "",
+    featured: false,
   };
   loadGoodsList(true);
 };
@@ -952,7 +1058,7 @@ const resetFilters = () => {
  */
 const editGood = (good) => {
   // 显示邮箱验证模态框
-  openEmailModal(good, 'edit');
+  openEmailModal(good, "edit");
 };
 
 /**
@@ -968,12 +1074,12 @@ const performEdit = (good, email) => {
     description: good.description,
     link: good.link,
     category: good.category,
-    image: good.coverImage || '',
+    image: good.coverImage || "",
     submitterEmail: email,
     submitterName: good.submitterName,
-    tags: good.tags || ''
+    tags: good.tags || "",
   };
-  
+
   // 显示表单
   showForm.value = true;
 };
@@ -992,20 +1098,22 @@ const performEditWithEmailVerification = async (good, email) => {
       link: good.link,
       description: good.description,
       category: good.category,
-      tags: good.tags || '',
-      coverImage: good.coverImage || ''
+      tags: good.tags || "",
+      coverImage: good.coverImage || "",
     };
-    
+
     // 调用API进行邮箱验证和编辑
     await goodsService.updateGood(good.id, editData);
-    
+
     // 编辑成功，预填充表单供用户修改
     performEdit(good, email);
-    
-    successToast('邮箱验证成功，可以编辑好物');
+
+    successToast("邮箱验证成功，可以编辑好物");
   } catch (error) {
-    console.error('邮箱验证失败:', error);
-    errorToast(error.response?.data?.message || '邮箱验证失败，请确认您是该好物的提交者');
+    console.error("邮箱验证失败:", error);
+    errorToast(
+      error.response?.data?.message || "邮箱验证失败，请确认您是该好物的提交者"
+    );
   }
 };
 
@@ -1015,7 +1123,7 @@ const performEditWithEmailVerification = async (good, email) => {
  */
 const confirmDeleteGood = (good) => {
   // 显示邮箱验证模态框
-  openEmailModal(good, 'delete');
+  openEmailModal(good, "delete");
 };
 
 /**
@@ -1027,16 +1135,16 @@ const deleteGood = async (goodId, email) => {
   try {
     loading.value = true;
     await goodsService.deleteGood(goodId, email);
-    successToast('删除成功');
-    
+    successToast("删除成功");
+
     // 重新加载列表
     loadGoodsList(true);
   } catch (error) {
-    console.error('删除好物失败:', error);
+    console.error("删除好物失败:", error);
     if (error.response && error.response.status === 403) {
-      errorToast('权限验证失败', '邮箱地址不匹配，无法删除此好物');
+      errorToast("权限验证失败", "邮箱地址不匹配，无法删除此好物");
     } else {
-      errorToast('删除失败，请稍后重试');
+      errorToast("删除失败，请稍后重试");
     }
   } finally {
     loading.value = false;
@@ -1051,8 +1159,8 @@ const deleteGood = async (goodId, email) => {
 const openEmailModal = (good, type) => {
   currentGood.value = good;
   emailModalType.value = type;
-  modalEmail.value = '';
-  emailError.value = '';
+  modalEmail.value = "";
+  emailError.value = "";
   showEmailModal.value = true;
 };
 
@@ -1062,9 +1170,9 @@ const openEmailModal = (good, type) => {
 const closeEmailModal = () => {
   showEmailModal.value = false;
   currentGood.value = null;
-  emailModalType.value = '';
-  modalEmail.value = '';
-  emailError.value = '';
+  emailModalType.value = "";
+  modalEmail.value = "";
+  emailError.value = "";
 };
 
 /**
@@ -1072,32 +1180,32 @@ const closeEmailModal = () => {
  */
 const confirmEmailAction = async () => {
   const email = modalEmail.value.trim();
-  
+
   // 验证邮箱格式
   if (!email) {
-    emailError.value = '请输入邮箱地址';
+    emailError.value = "请输入邮箱地址";
     return;
   }
-  
+
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   if (!emailRegex.test(email)) {
-    emailError.value = '请输入有效的邮箱地址';
+    emailError.value = "请输入有效的邮箱地址";
     return;
   }
-  
+
   // 执行对应操作
-  if (emailModalType.value === 'edit') {
+  if (emailModalType.value === "edit") {
     // 直接调用编辑API进行邮箱验证
     await performEditWithEmailVerification(currentGood.value, email);
-  } else if (emailModalType.value === 'delete') {
+  } else if (emailModalType.value === "delete") {
     // 显示删除确认对话框
     deleteGoodData.value = {
       ...currentGood.value,
-      email: email
+      email: email,
     };
     showDeleteConfirm.value = true;
   }
-  
+
   // 关闭模态框
   closeEmailModal();
 };
@@ -1117,16 +1225,21 @@ const confirmDelete = async () => {
   if (deleteGoodData.value) {
     try {
       // 调用API进行邮箱验证和删除
-      await goodsService.deleteGood(deleteGoodData.value.id, deleteGoodData.value.email);
-      
+      await goodsService.deleteGood(
+        deleteGoodData.value.id,
+        deleteGoodData.value.email
+      );
+
       // 删除成功，重新加载列表
       await loadGoodsList(true);
-      
-      successToast('好物删除成功');
+
+      successToast("好物删除成功");
       closeDeleteConfirm();
     } catch (error) {
-      console.error('删除失败:', error);
-      errorToast(error.response?.data?.message || '删除失败，请确认您是该好物的提交者');
+      console.error("删除失败:", error);
+      errorToast(
+        error.response?.data?.message || "删除失败，请确认您是该好物的提交者"
+      );
     }
   }
 };

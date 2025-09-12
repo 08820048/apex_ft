@@ -22,7 +22,7 @@
           <div class="ml-3">
             <p class="text-sm text-blue-700">
               <span class="font-medium">💡 提示：</span>
-              本博客部署在海外服务器，开启科学上网可提高访问速度
+              欢迎访问本博客，如有问题请联系管理员
             </p>
           </div>
         </div>

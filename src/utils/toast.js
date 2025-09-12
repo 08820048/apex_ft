@@ -1,5 +1,5 @@
-import { createApp } from 'vue'
-import Toast from '../components/Toast.vue'
+import { createApp } from "vue";
+import Toast from "../components/Toast.vue";
 
 /**
  * Toast 管理器
@@ -7,8 +7,8 @@ import Toast from '../components/Toast.vue'
  */
 class ToastManager {
   constructor() {
-    this.toasts = []
-    this.container = null
+    this.toasts = [];
+    this.container = null;
   }
 
   /**
@@ -16,9 +16,9 @@ class ToastManager {
    */
   initContainer() {
     if (!this.container) {
-      this.container = document.createElement('div')
-      this.container.id = 'toast-container'
-      document.body.appendChild(this.container)
+      this.container = document.createElement("div");
+      this.container.id = "toast-container";
+      document.body.appendChild(this.container);
     }
   }
 
@@ -32,29 +32,29 @@ class ToastManager {
    * @param {boolean} options.autoClose - 是否自动关闭
    */
   show(options) {
-    this.initContainer()
+    this.initContainer();
 
-    const toastId = Date.now() + Math.random()
-    const toastElement = document.createElement('div')
-    toastElement.id = `toast-${toastId}`
-    this.container.appendChild(toastElement)
+    const toastId = Date.now() + Math.random();
+    const toastElement = document.createElement("div");
+    toastElement.id = `toast-${toastId}`;
+    this.container.appendChild(toastElement);
 
     const app = createApp(Toast, {
       ...options,
       onClose: () => {
-        this.remove(toastId, app, toastElement)
-      }
-    })
+        this.remove(toastId, app, toastElement);
+      },
+    });
 
-    app.mount(toastElement)
+    app.mount(toastElement);
 
     this.toasts.push({
       id: toastId,
       app,
-      element: toastElement
-    })
+      element: toastElement,
+    });
 
-    return toastId
+    return toastId;
   }
 
   /**
@@ -64,17 +64,17 @@ class ToastManager {
    * @param {HTMLElement} element - DOM元素
    */
   remove(toastId, app, element) {
-    const index = this.toasts.findIndex(toast => toast.id === toastId)
+    const index = this.toasts.findIndex((toast) => toast.id === toastId);
     if (index > -1) {
-      this.toasts.splice(index, 1)
+      this.toasts.splice(index, 1);
     }
 
     if (app) {
-      app.unmount()
+      app.unmount();
     }
 
     if (element && element.parentNode) {
-      element.parentNode.removeChild(element)
+      element.parentNode.removeChild(element);
     }
   }
 
@@ -84,13 +84,13 @@ class ToastManager {
    * @param {string} description - 提示描述
    * @param {Object} options - 其他选项
    */
-  success(message, description = '', options = {}) {
+  success(message, description = "", options = {}) {
     return this.show({
       message,
       description,
-      type: 'success',
-      ...options
-    })
+      type: "success",
+      ...options,
+    });
   }
 
   /**
@@ -99,14 +99,14 @@ class ToastManager {
    * @param {string} description - 提示描述
    * @param {Object} options - 其他选项
    */
-  error(message, description = '', options = {}) {
+  error(message, description = "", options = {}) {
     return this.show({
       message,
       description,
-      type: 'error',
+      type: "error",
       duration: 5000, // 错误提示显示更长时间
-      ...options
-    })
+      ...options,
+    });
   }
 
   /**
@@ -115,13 +115,13 @@ class ToastManager {
    * @param {string} description - 提示描述
    * @param {Object} options - 其他选项
    */
-  info(message, description = '', options = {}) {
+  info(message, description = "", options = {}) {
     return this.show({
       message,
       description,
-      type: 'info',
-      ...options
-    })
+      type: "info",
+      ...options,
+    });
   }
 
   /**
@@ -130,36 +130,36 @@ class ToastManager {
    * @param {string} description - 提示描述
    * @param {Object} options - 其他选项
    */
-  warning(message, description = '', options = {}) {
+  warning(message, description = "", options = {}) {
     return this.show({
       message,
       description,
-      type: 'warning',
+      type: "warning",
       duration: 4000,
-      ...options
-    })
+      ...options,
+    });
   }
 
   /**
    * 清除所有提示
    */
   clear() {
-    this.toasts.forEach(toast => {
-      this.remove(toast.id, toast.app, toast.element)
-    })
-    this.toasts = []
+    this.toasts.forEach((toast) => {
+      this.remove(toast.id, toast.app, toast.element);
+    });
+    this.toasts = [];
   }
 }
 
 // 创建全局实例
-const toast = new ToastManager()
+const toast = new ToastManager();
 
-export default toast
+export default toast;
 
 // 便捷方法
-export const showToast = toast.show.bind(toast)
-export const successToast = toast.success.bind(toast)
-export const errorToast = toast.error.bind(toast)
-export const infoToast = toast.info.bind(toast)
-export const warningToast = toast.warning.bind(toast)
-export const clearToasts = toast.clear.bind(toast)
+export const showToast = toast.show.bind(toast);
+export const successToast = toast.success.bind(toast);
+export const errorToast = toast.error.bind(toast);
+export const infoToast = toast.info.bind(toast);
+export const warningToast = toast.warning.bind(toast);
+export const clearToasts = toast.clear.bind(toast);
