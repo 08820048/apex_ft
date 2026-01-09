@@ -28,14 +28,14 @@
               >
                 :)
               </span>
-              <span>非 AI 生成</span>
+              <span>{{ t("footer.nonAi") }}</span>
             </button>
 
             <div
               v-if="isNonAiStatementOpen"
               class="absolute bottom-full left-1/2 z-50 mb-3 w-[320px] -translate-x-1/2 rounded-2xl border border-gray-200 bg-white shadow-xl"
               role="dialog"
-              aria-label="非 AI 生成说明"
+              :aria-label="t('footer.nonAi')"
               @click.stop
             >
               <div class="px-5 py-4 text-gray-800">
@@ -51,17 +51,17 @@
                     </span>
                     <div class="leading-tight">
                       <div class="text-xs font-semibold text-gray-700">
-                        真人撰写
+                        {{ t("footer.humanWritten") }}
                       </div>
                       <div class="text-lg font-extrabold tracking-wide">
-                        非AI生成
+                        {{ t("footer.nonAiTitle") }}
                       </div>
                     </div>
                   </div>
                 </div>
 
                 <div class="text-base leading-7">
-                  除特别注明的引用内容外，本站文章没有任何一句话由 AI 生成。
+                  {{ t("footer.nonAiDesc") }}
                 </div>
 
                 <div class="mt-4">
@@ -70,7 +70,7 @@
                     class="inline-flex items-center gap-1 text-base font-semibold text-gray-900 hover:underline"
                     @click="closeNonAiStatement"
                   >
-                    了解更多 <span aria-hidden="true">↗</span>
+                    {{ t("footer.learnMore") }} <span aria-hidden="true">↗</span>
                   </RouterLink>
                 </div>
               </div>
@@ -133,17 +133,17 @@
 
 <script setup>
 import { computed, ref } from "vue";
+import { useI18n } from "vue-i18n";
 
 const currentYear = computed(() => new Date().getFullYear());
+const { t } = useI18n();
 
 const isNonAiStatementOpen = ref(false);
 
-/** 切换页脚“非 AI 生成”说明弹层显示状态 */
 const toggleNonAiStatement = () => {
   isNonAiStatementOpen.value = !isNonAiStatementOpen.value;
 };
 
-/** 关闭页脚“非 AI 生成”说明弹层 */
 const closeNonAiStatement = () => {
   isNonAiStatementOpen.value = false;
 };

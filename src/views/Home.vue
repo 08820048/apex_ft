@@ -3,6 +3,21 @@
     <!-- 简洁背景 -->
     <div class="absolute inset-0 bg-gray-50"></div>
 
+    <div class="relative z-20 bg-[#0751cf] text-white">
+      <div class="max-w-7xl mx-auto px-4 py-2 text-center text-sm">
+        <span class="mr-1" aria-hidden="true">🎉</span>
+        <span>{{ t("home.bannerPrefix") }}</span>
+        <a
+          href="https://soloforge.dev"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="font-semibold underline underline-offset-4"
+        >
+          https://soloforge.dev
+        </a>
+      </div>
+    </div>
+
     <!-- 博客标语区域 -->
     <div
       class="relative text-center py-12 mb-8 overflow-hidden"
@@ -480,6 +495,7 @@
 <script setup>
 import { ref, onMounted, onUnmounted } from "vue";
 import { useRouter } from "vue-router";
+import { useI18n } from "vue-i18n";
 import { articleApi } from "../api";
 import { useSEO } from "../composables/useSEO";
 
@@ -509,6 +525,7 @@ const DocumentTextIcon = {
 };
 
 const router = useRouter();
+const { t } = useI18n();
 
 // 响应式数据
 const topArticles = ref([]);
