@@ -8,12 +8,12 @@
             class="w-32 h-32 mx-auto mb-6 rounded-full overflow-hidden shadow-lg"
           >
             <img
-              src="/Apex.png"
-              alt="ApexBlog Logo"
+              src="https://images.waer.ltd/notes/202601091843198.JPG"
+              alt="头像"
               class="w-full h-full object-cover"
             />
           </div>
-          <h1 class="text-3xl font-bold text-gray-900 mb-4">关于 Apex博客</h1>
+          <h1 class="text-3xl font-bold text-gray-900 mb-4">Ornata</h1>
           <p class="text-xl text-gray-600">一个专注于技术分享的个人博客</p>
         </div>
 
@@ -22,58 +22,17 @@
             欢迎来到 ApexBlog！这里是我分享技术心得、记录学习历程的地方。
           </p>
 
-          <h2 class="text-2xl font-bold text-gray-900 mb-4">博客简介</h2>
+          <h2 class="text-2xl font-bold text-gray-900 mb-4">个人简介</h2>
           <p class="mb-6">
-            ApexBlog
-            是一个现代化的技术博客平台，专注于全栈开发、语言教程、技术分享、业内资讯、游戏开发等领域的知识分享。
-            我希望通过这个平台，能够与更多的开发者交流学习，共同进步。
+            独立开发者｜Rust 爱好者｜把你的独立作品展示给全世界。
+            <a
+              href="https://soloforge.dev"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              https://soloforge.dev
+            </a>
           </p>
-
-          <h2 class="text-2xl font-bold text-gray-900 mb-4">技术栈</h2>
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-            <div>
-              <h3 class="text-lg font-semibold text-gray-900 mb-3">前端技术</h3>
-              <ul class="space-y-2">
-                <li class="flex items-center">
-                  <span class="w-2 h-2 bg-blue-500 rounded-full mr-3"></span>
-                  Vue 3 + Composition API
-                </li>
-                <li class="flex items-center">
-                  <span class="w-2 h-2 bg-blue-500 rounded-full mr-3"></span>
-                  Vite 构建工具
-                </li>
-                <li class="flex items-center">
-                  <span class="w-2 h-2 bg-blue-500 rounded-full mr-3"></span>
-                  Tailwind CSS
-                </li>
-                <li class="flex items-center">
-                  <span class="w-2 h-2 bg-blue-500 rounded-full mr-3"></span>
-                  Vue Router
-                </li>
-              </ul>
-            </div>
-            <div>
-              <h3 class="text-lg font-semibold text-gray-900 mb-3">后端技术</h3>
-              <ul class="space-y-2">
-                <li class="flex items-center">
-                  <span class="w-2 h-2 bg-green-500 rounded-full mr-3"></span>
-                  Spring Boot
-                </li>
-                <li class="flex items-center">
-                  <span class="w-2 h-2 bg-green-500 rounded-full mr-3"></span>
-                  Spring Data JPA
-                </li>
-                <li class="flex items-center">
-                  <span class="w-2 h-2 bg-green-500 rounded-full mr-3"></span>
-                  MySQL 数据库
-                </li>
-                <li class="flex items-center">
-                  <span class="w-2 h-2 bg-green-500 rounded-full mr-3"></span>
-                  RESTful API
-                </li>
-              </ul>
-            </div>
-          </div>
 
           <h2 class="text-2xl font-bold text-gray-900 mb-4">联系方式</h2>
           <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">

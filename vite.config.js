@@ -1,4 +1,4 @@
-import { defineConfig } from "vite";
+import { defineConfig, loadEnv } from "vite";
 import vue from "@vitejs/plugin-vue";
 import AutoImport from "unplugin-auto-import/vite";
 import Components from "unplugin-vue-components/vite";
@@ -6,7 +6,17 @@ import { ElementPlusResolver } from "unplugin-vue-components/resolvers";
 import { resolve } from "path";
 
 // https://vite.dev/config/
-export default defineConfig({
+export default defineConfig(({ mode }) => {
+  const env = loadEnv(mode, process.cwd(), "");
+  const apiProxyTarget =
+    env.VITE_API_PROXY_TARGET ||
+    (env.VITE_SERVER_HOST
+      ? env.VITE_SERVER_HOST.startsWith("http")
+        ? env.VITE_SERVER_HOST
+        : `http://${env.VITE_SERVER_HOST}`
+      : "http://localhost:8888");
+
+  return {
   // 设置基础路径为根路径，确保资源正确加载
   base: "/",
   plugins: [
@@ -34,7 +44,7 @@ export default defineConfig({
   server: {
     proxy: {
       "/api": {
-        target: "http://localhost:8888",
+        target: apiProxyTarget,
         changeOrigin: true,
       },
     },
@@ -65,4 +75,5 @@ export default defineConfig({
       },
     },
   },
+  };
 });

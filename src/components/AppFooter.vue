@@ -1,5 +1,8 @@
 <template>
-  <footer class="border-t border-gray-200 bg-gray-50 mt-auto">
+  <footer
+    class="border-t border-gray-200 bg-gray-50 mt-auto"
+    @click="closeNonAiStatement"
+  >
     <div class="max-w-7xl mx-auto px-4 py-4">
       <div class="flex flex-col items-center text-sm text-gray-600 space-y-2">
         <!-- 版权信息 -->
@@ -10,6 +13,79 @@
             class="w-6 h-6 object-cover"
           />
           <p>© {{ currentYear }} ApexBlog. All rights reserved.</p>
+
+          <div class="relative" @click.stop>
+            <button
+              type="button"
+              class="ml-1 inline-flex items-center gap-2 rounded-full border border-gray-300 bg-white px-3 py-1 text-xs font-semibold text-gray-700 hover:bg-gray-50 active:bg-gray-100 transition-colors"
+              :aria-expanded="isNonAiStatementOpen"
+              aria-haspopup="dialog"
+              @click="toggleNonAiStatement"
+            >
+              <span
+                class="inline-flex h-5 w-5 items-center justify-center rounded-full border border-gray-300 bg-white text-[11px] leading-none"
+                aria-hidden="true"
+              >
+                :)
+              </span>
+              <span>非 AI 生成</span>
+            </button>
+
+            <div
+              v-if="isNonAiStatementOpen"
+              class="absolute bottom-full left-1/2 z-50 mb-3 w-[320px] -translate-x-1/2 rounded-2xl border border-gray-200 bg-white shadow-xl"
+              role="dialog"
+              aria-label="非 AI 生成说明"
+              @click.stop
+            >
+              <div class="px-5 py-4 text-gray-800">
+                <div class="mb-3 flex items-center gap-3">
+                  <div
+                    class="flex items-center gap-2 rounded-2xl border-2 border-gray-900 px-4 py-2"
+                  >
+                    <span
+                      class="inline-flex h-8 w-8 items-center justify-center rounded-full border-2 border-gray-900 text-sm font-bold"
+                      aria-hidden="true"
+                    >
+                      :)
+                    </span>
+                    <div class="leading-tight">
+                      <div class="text-xs font-semibold text-gray-700">
+                        真人撰写
+                      </div>
+                      <div class="text-lg font-extrabold tracking-wide">
+                        非AI生成
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="text-base leading-7">
+                  除特别注明的引用内容外，本站文章没有任何一句话由 AI 生成。
+                </div>
+
+                <div class="mt-4">
+                  <RouterLink
+                    to="/about"
+                    class="inline-flex items-center gap-1 text-base font-semibold text-gray-900 hover:underline"
+                    @click="closeNonAiStatement"
+                  >
+                    了解更多 <span aria-hidden="true">↗</span>
+                  </RouterLink>
+                </div>
+              </div>
+
+              <div
+                class="absolute left-1/2 top-full z-10 h-0 w-0 -translate-x-1/2 border-x-8 border-t-8 border-x-transparent border-t-white"
+                aria-hidden="true"
+              />
+              <div
+                class="absolute left-1/2 top-full z-0 h-0 w-0 -translate-x-1/2 border-x-[9px] border-t-[9px] border-x-transparent border-t-gray-200"
+                style="margin-top: 1px"
+                aria-hidden="true"
+              />
+            </div>
+          </div>
         </div>
 
         <!-- 备案信息 -->
@@ -56,7 +132,19 @@
 </template>
 
 <script setup>
-import { computed } from "vue";
+import { computed, ref } from "vue";
 
 const currentYear = computed(() => new Date().getFullYear());
+
+const isNonAiStatementOpen = ref(false);
+
+/** 切换页脚“非 AI 生成”说明弹层显示状态 */
+const toggleNonAiStatement = () => {
+  isNonAiStatementOpen.value = !isNonAiStatementOpen.value;
+};
+
+/** 关闭页脚“非 AI 生成”说明弹层 */
+const closeNonAiStatement = () => {
+  isNonAiStatementOpen.value = false;
+};
 </script>
