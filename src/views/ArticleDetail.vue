@@ -643,6 +643,11 @@ watch(
   @apply text-gray-700;
 }
 
+/* 代码块字体设置 - Typestar OCR */
+.prose :deep(pre) {
+  font-family: "Typestar OCR", monospace !important;
+}
+
 .prose :deep(h1),
 .prose :deep(h2),
 .prose :deep(h3),
@@ -671,6 +676,7 @@ watch(
 
 .prose :deep(pre) {
   @apply bg-gray-800/50 border border-gray-600;
+  font-family: "Typestar OCR", monospace !important;
 }
 
 .prose :deep(a) {
@@ -896,11 +902,13 @@ html.light .prose pre {
   background: #1e293b !important; /* 强制暗色背景 */
   color: #e2e8f0 !important; /* 强制亮色文字 */
   border: 1px solid #334155 !important;
+  font-family: "Typestar OCR", monospace !important;
 }
 
 html.light .prose pre code {
   background: transparent !important;
   color: inherit !important;
+  font-family: "Typestar OCR", monospace !important;
 }
 
 /* 内联代码在亮色模式下的样式 */
@@ -916,11 +924,13 @@ html.light .prose code:not(pre code) {
 html.light .glass-effect pre {
   background: #1e293b !important;
   color: #e2e8f0 !important;
+  font-family: "Typestar OCR", monospace !important;
 }
 
 html.light .glass-effect pre code {
   background: transparent !important;
   color: inherit !important;
+  font-family: "Typestar OCR", monospace !important;
 }
 
 /* 移除可能影响代码块的其他白色覆盖 */

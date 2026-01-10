@@ -1,3 +1,15 @@
+/* Typestar OCR 字体声明 - 使用本地 OTF 文件 */
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap');
+
+@font-face {
+  font-family: "Typestar OCR";
+  src: url("/fonts/Typestar-OCR.otf") format("opentype"),
+       local("Typestar OCR");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -230,8 +242,8 @@ body {
   @apply m-0 overflow-x-auto;
   background: #1e1e1e !important;
   padding: 1.5rem;
-  font-family: "Fira Code", "JetBrains Mono", "Cascadia Code", "SF Mono",
-    Consolas, monospace;
+  font-family: "Typestar OCR", "Fira Code", "JetBrains Mono", "Cascadia Code", "SF Mono",
+    Consolas, monospace !important;
   font-size: 0.875rem;
   line-height: 1.6;
 }
@@ -241,6 +253,8 @@ body {
   padding: 0 !important;
   border-radius: 0 !important;
   font-size: inherit !important;
+  font-family: "Typestar OCR", "Fira Code", "JetBrains Mono", "Cascadia Code", "SF Mono",
+    Consolas, monospace !important;
 }
 
 /* 行内代码样式 */

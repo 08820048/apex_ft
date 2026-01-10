@@ -11,7 +11,7 @@
             class="nav-link"
             :class="{ 'nav-link-active': $route.path === item.path }"
           >
-            {{ t(item.labelKey) }}
+            {{ item.label }}
           </RouterLink>
         </nav>
 
@@ -22,7 +22,7 @@
               v-model="searchKeyword"
               @keyup.enter="handleSearch"
               type="text"
-              :placeholder="t('search.placeholder')"
+              placeholder="搜索文章..."
               class="w-64 px-4 py-2 pl-10 bg-white border-2 border-gray-300 text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all shadow-sm search-input"
             />
             <SearchIcon
@@ -34,17 +34,9 @@
             class="px-4 py-2 text-white hover:opacity-90 transition-all search-btn"
             style="background-color: #0751cf"
           >
-            {{ t("search.action") }}
+            搜索
           </button>
-          <button
-            type="button"
-            class="p-2 text-gray-700 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-all duration-200 inline-flex items-center gap-2"
-            :title="t('language.toggle')"
-            @click="toggleLocale"
-          >
-            <LanguageIcon class="w-6 h-6" />
-            <span class="text-sm font-medium">{{ currentLocaleLabel }}</span>
-          </button>
+          
         </div>
 
         <!-- 移动端菜单按钮 -->
@@ -77,7 +69,7 @@
               @click="closeMobileMenu"
               class="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-100 transition-colors mobile-nav-link"
             >
-              {{ t(item.labelKey) }}
+{{ item.label }}
             </RouterLink>
 
             <!-- 移动端搜索 -->
@@ -87,7 +79,7 @@
                   v-model="searchKeyword"
                   @keyup.enter="handleSearch"
                   type="text"
-                  :placeholder="t('search.placeholder')"
+placeholder="搜索文章..."
                   class="w-full px-4 py-2 pl-10 bg-white border-2 border-gray-300 text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all shadow-sm mobile-search-input"
                 />
                 <SearchIcon
@@ -96,14 +88,7 @@
               </div>
             </div>
 
-            <button
-              type="button"
-              class="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-100 transition-colors mobile-nav-link"
-              @click="toggleLocaleFromMobile"
-            >
-              <LanguageIcon class="w-5 h-5 mr-3" />
-              {{ t("language.toggle") }}：{{ currentLocaleLabel }}
-            </button>
+            
           </div>
         </div>
       </Transition>
@@ -114,7 +99,6 @@
 <script setup>
 import { computed, ref } from "vue";
 import { useRouter } from "vue-router";
-import { useI18n } from "vue-i18n";
 
 // 图标组件 (使用简单的 SVG)
 const HomeIcon = {
@@ -157,41 +141,22 @@ const XIcon = {
   template:
     '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>',
 };
-const LanguageIcon = {
-  template:
-    '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.486 2 2 6.486 2 12s4.486 10 10 10 10-4.486 10-10S17.514 2 12 2zm7.938 9h-3.095a15.64 15.64 0 00-1.2-5.067A8.03 8.03 0 0119.938 11zM12 4.062c.93 1.19 1.72 3.12 2.15 5.938h-4.3C10.28 7.182 11.07 5.252 12 4.062zM4.062 13h3.095c.22 1.8.73 3.55 1.2 5.067A8.03 8.03 0 014.062 13zM7.157 11H4.062a8.03 8.03 0 014.295-5.067A15.64 15.64 0 007.157 11zM7.157 13h3.438c.26 2.11.8 4.03 1.405 5.525-.16.01-.318.013-.476.013-1.38 0-2.67-.35-3.8-.96A13.45 13.45 0 017.157 13zm3.438-2H7.157c.18-1.72.64-3.35 1.205-4.72A8.046 8.046 0 0111.524 5.5c-.605 1.495-1.145 3.39-1.405 5.5zM12.476 18.525c.605-1.495 1.145-3.39 1.405-5.525h3.438c-.18 1.72-.64 3.35-1.205 4.72a8.046 8.046 0 01-3.638.805c-.158 0-.316-.003-.476-.013zM13.881 11c-.26-2.11-.8-4.005-1.405-5.5a8.046 8.046 0 013.638.805c.565 1.37 1.025 3 1.205 4.695h-3.438zM15.643 18.067A15.64 15.64 0 0016.843 13h3.095a8.03 8.03 0 01-4.295 5.067z"/></svg>',
-};
+
 
 const router = useRouter();
-const { t, locale } = useI18n();
 const searchKeyword = ref("");
 const mobileMenuOpen = ref(false);
 
 const navItems = [
-  { labelKey: "nav.home", path: "/" },
-  { labelKey: "nav.categories", path: "/categories" },
-  { labelKey: "nav.tags", path: "/tags" },
-  { labelKey: "nav.portfolios", path: "/portfolios" },
-  { labelKey: "nav.friendLinks", path: "/friend-links" },
-  { labelKey: "nav.subscribe", path: "/subscribe" },
-  { labelKey: "nav.goods", path: "/goods" },
-  { labelKey: "nav.about", path: "/about" },
+  { label: "首页", path: "/" },
+  { label: "分类", path: "/categories" },
+  { label: "标签", path: "/tags" },
+  { label: "作品", path: "/portfolios" },
+  { label: "友链", path: "/friend-links" },
+  { label: "订阅", path: "/subscribe" },
+  { label: "好物", path: "/goods" },
+  { label: "关于", path: "/about" },
 ];
-
-const currentLocaleLabel = computed(() =>
-  locale.value === "en" ? t("language.en") : t("language.zh")
-);
-
-const toggleLocale = () => {
-  const next = locale.value === "en" ? "zh-CN" : "en";
-  locale.value = next;
-  localStorage.setItem("ornata_locale", next);
-};
-
-const toggleLocaleFromMobile = () => {
-  toggleLocale();
-  closeMobileMenu();
-};
 
 const handleSearch = () => {
   if (searchKeyword.value.trim()) {
