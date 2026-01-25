@@ -6,14 +6,16 @@
     <div class="relative z-20 bg-[#0751cf] text-white">
       <div class="max-w-7xl mx-auto px-4 py-2 text-center text-sm">
         <span class="mr-1" aria-hidden="true">🎉</span>
-        <span>我的新产品 soloforge 已上线，让世界看见你的独立产品，访问：</span>
+        <span
+          >一款追求极致性能、纯粹、轻量化现代化的 markdown 编辑器 -></span
+        >
         <a
-          href="https://soloforge.dev"
+          href="https://ornata.app"
           target="_blank"
           rel="noopener noreferrer"
           class="font-semibold underline underline-offset-4"
         >
-          https://soloforge.dev
+          https://ornata.app
         </a>
       </div>
     </div>
