@@ -79,6 +79,12 @@ const routes = [
     component: () => import("../views/Goods.vue"),
     meta: { title: "好物推荐 - ApexBlog" },
   },
+  {
+    path: "/safe",
+    name: "safe",
+    component: () => import("../views/Safe.vue"),
+    meta: { title: "网络安全管理方案 - ApexBlog" },
+  },
 ];
 
 const router = createRouter({

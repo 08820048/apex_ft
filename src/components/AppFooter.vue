@@ -116,15 +116,6 @@
             </b>
           </a>
 
-          <!-- 赞助广告 -->
-          <a
-            href="https://www.effectivegatecpm.com/guvgbqy6?key=a3cdb29d42de224641aa927b06170887"
-            target="_blank"
-            rel="noopener noreferrer nofollow sponsored"
-            class="hover:text-gray-700 transition-colors"
-          >
-            赞助广告
-          </a>
         </div>
       </div>
     </div>
